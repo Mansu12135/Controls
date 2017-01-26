@@ -60,7 +60,7 @@ namespace Controls
             Format.alignRight.CommandTarget = TextBox.MainControl;
             Format.comboBoxFont.SelectionChanged += ((s, e) => TextBox.MainControl.Focus());
             Format.FontFamily.SelectionChanged += ((s, e) => TextBox.MainControl.Focus());
-            Format.ButtonDictionary.MouseUp += ButtonDictionary_MouseUp;
+           // Format.ButtonDictionary.MouseUp += ButtonDictionary_MouseUp;
             Format.ExportButton.MouseUp += ExportButton_MouseUp;
             BrowseProject.HidenProject.MouseUp += HidenProject_MouseUp;
             NotesBrowser.HidenNotes.MouseUp += HidenNotes_MouseUp;
@@ -370,7 +370,7 @@ namespace Controls
         private void AddFlag()
         {
             new TextRange(TextBox.MainControl.Selection.Start, TextBox.MainControl.Selection.End).ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
-            var tempImage = Properties.Resources.flag_pole_with_black_flag;
+            var tempImage = Properties.Resources.noteFlag;
             var ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
       tempImage.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));
 
@@ -378,8 +378,8 @@ namespace Controls
             image.Source = ScreenCapture;
             image.Stretch = Stretch.Fill;
             image.Cursor = Cursors.Hand;
-            image.Height = 20;
-            image.Width = 20;
+            image.Height = 14;
+            image.Width = 14;
             image.Tag = NotesBrowser.Notes.Last().Key;
             image.MouseUp += Image_MouseUp;
             TextPointer p = TextBox.MainControl.Selection.Start;
@@ -415,7 +415,7 @@ namespace Controls
         private FlowDocument LoadFile(string path)
         {
             FlowDocument document = new FlowDocument();
-            FileWorkerManager.Do(document, path, null, false);
+            FileWorkerManager.Do(document, path, false);
             //using (var stream = new FileStream(path, FileMode.Open))
             //{
             //    var range = new TextRange(document.ContentStart, document.ContentEnd);

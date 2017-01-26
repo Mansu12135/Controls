@@ -107,7 +107,7 @@
     </UserControl.Resources>
     <Grid x:Name="NotesContainer" Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="90"/>
+            <RowDefinition Height="90*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Label x:Name="HidenNotes" HorizontalAlignment="Left" Margin="8,0,0,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand">
@@ -115,7 +115,7 @@
         </Label>
         <StackPanel Margin="0,25,0,0">
             <Label Content="NOTES" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Arial Rounded MT Bold" Foreground="#FF7C7B7B"/>
-            <Border BorderThickness="1" HorizontalAlignment="Center" Height="25" Margin="0" VerticalAlignment="Center" Width="25">
+            <Border BorderThickness="1" HorizontalAlignment="Center" Height="22" Margin="0" VerticalAlignment="Center" Width="22">
                 <Border.Background>
                     <ImageBrush ImageSource="Resources/romb.png"/>
                 </Border.Background>
@@ -136,7 +136,7 @@
                             >
                                     <StackPanel>
                                         <DockPanel Cursor="Hand" HorizontalAlignment="Stretch">
-                                            <TextBox Text="{Binding Value.Name}" Tag="{Binding Key}" Name="TextName" MaxWidth="150" Width="125" HorizontalAlignment="Right" FontSize="14" BorderBrush="{x:Null}" MouseDoubleClick="TextName_OnMouseDoubleClick" IsEnabled="True"/>
+                                            <TextBox Text="{Binding Value.Name}" Tag="{Binding Key}" Name="TextName" MaxWidth="150" Width="125" HorizontalAlignment="Right" FontSize="14" BorderBrush="{x:Null}" MouseDoubleClick="TextName_OnMouseDoubleClick" IsEnabled="False"/>
                                             <!--<Button Name="Edit" Width="15"  HorizontalAlignment="Right" Margin="3,0,0,0">
                                                 <Image Tag="{Binding Value.Name}" Name="EditImage" Source="Resources/edit-512.png" Cursor="Hand" >
                                                 </Image>

@@ -113,14 +113,14 @@
 
         <StackPanel Margin="0,25,1,0">
             <Label Content="PROJECTS" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Arial Rounded MT Bold" Foreground="#FF7C7B7B"/>
-            <Border BorderThickness="1" HorizontalAlignment="Center" Height="25" Margin="0" VerticalAlignment="Center" Width="25">
+            <Border BorderThickness="1" HorizontalAlignment="Center" Height="22" Margin="0" VerticalAlignment="Center" Width="22">
                 <Border.Background>
                     <ImageBrush ImageSource="Resources/romb.png"/>
                 </Border.Background>
             </Border>
 
         </StackPanel>
-        <Border BorderThickness="1" x:Name="ButAddProject" x:FieldModifier="public" HorizontalAlignment="Center" Height="30" Margin="0" Grid.Row="2" VerticalAlignment="Center" >
+        <Border BorderThickness="1" x:Name="ButAddProject" x:FieldModifier="public" HorizontalAlignment="Center" Height="30" Margin="0,0,0,15" Grid.Row="2" VerticalAlignment="Center" >
             <Border.BorderBrush>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                     <GradientStop Color="#FF10660A" Offset="0"/>
@@ -139,7 +139,7 @@
                                     <StackPanel>
                                         <StackPanel Orientation="Horizontal">
                                             <Label PreviewMouseDoubleClick="ProjectName_MouseDoubleClick">
-                                                <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" KeyDown="TextNameFile_OnKeyDown" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}" Width="Auto" LostFocus="TextProjName_LostFocus">
+                                                <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" KeyDown="TextNameFile_OnKeyDown" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}" Width="Auto">
                                                     <TextBox.Resources>
                                                         <Style TargetType="{x:Type TextBox}"
        x:Key="ExpandingTextBox">

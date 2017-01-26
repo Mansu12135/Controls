@@ -136,7 +136,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TextRedactor.resx</DependentUpon>
     </Compile>
-    <Compile Include="ValidatingTextBox.xaml.cs" />
     <Compile Include="XComboBox.cs" />
     <Compile Include="XToggleButton.cs" />
   </ItemGroup>
@@ -244,9 +243,6 @@
     <Resource Include="Resources\flag.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\italic.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\stressed.png" />
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +264,14 @@
     <Content Include="kindlegen.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\noteFlag.png" />
+    <Resource Include="Resources\GrayFlag.png" />
+    <Resource Include="Resources\numericList.png" />
+    <Resource Include="Resources\bublList.png" />
+    <Resource Include="Resources\underline.png" />
+    <Resource Include="Resources\italic.png" />
+    <Resource Include="Resources\bold.png" />
+    <Resource Include="Resources\romb.png" />
     <Resource Include="Resources\emblem.png" />
     <Resource Include="Resources\flag-pole-with-black-flag.png" />
     <Resource Include="Resources\double-up-arrow-angles.png" />
@@ -280,7 +284,6 @@
     <Resource Include="Resources\picture.png" />
     <Resource Include="Resources\edit-512.png" />
     <Resource Include="Resources\close_icon.png" />
-    <Resource Include="Resources\romb.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

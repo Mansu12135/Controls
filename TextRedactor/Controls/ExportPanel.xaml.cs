@@ -39,7 +39,7 @@ namespace Controls
                 //{
                 try
                 {
-                    FileWorkerManager.Do(paragraph, doc.Path, null, false);
+                    FileWorkerManager.Do(paragraph, doc.Path, false);
                     //  new TextRange(paragraph.ContentStart, paragraph.ContentEnd).Load(fStream, System.Windows.DataFormats.Rtf);
                 }
                 catch (Exception ex)

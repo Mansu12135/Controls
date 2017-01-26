@@ -43,8 +43,8 @@ namespace Controls
             CloneTextBox.Text = originalControl.Text;
             CloneTextBox.Tag = originalControl.Tag;
             Grid.SetRow(CloneTextBox, 1);
-            CloneTextBox.Margin = new Thickness(CloneTextBoxLocation.X-30, 10, 0, 0);
-           
+            CloneTextBox.Margin = new Thickness(CloneTextBoxLocation.X - 30, 10, 0, 0);
+
             AttachDynamicEvents();
         }
 
@@ -86,7 +86,7 @@ namespace Controls
         }
 
         protected virtual void OnSave(string Name) { }
-      
+
         public void RemoveItem(string caption)
         {
             if (string.IsNullOrEmpty(caption) || !Notes.ContainsKey(caption)) { return; }

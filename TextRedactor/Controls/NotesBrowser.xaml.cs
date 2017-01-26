@@ -126,7 +126,7 @@ namespace Controls
 
         protected override void OnValidate()
         {
-            if (!Notes.ContainsKey(CloneTextBox.Tag.ToString()) || Notes.ContainsKey(CloneTextBox.Text)  || !File.Exists(ParentControl.BrowseProject.LoadedFile))
+            if (!Notes.ContainsKey(CloneTextBox.Tag.ToString()) || Notes.ContainsKey(CloneTextBox.Text) || !File.Exists(ParentControl.BrowseProject.LoadedFile))
             {
                 IsValid = false;
                 if (Binding == null) { Binding = CloneTextBox.GetBindingExpression(TextBox.TextProperty); }
@@ -142,10 +142,10 @@ namespace Controls
         private void TextName_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             TextBox text = sender as TextBox;
-                if (text != null)
-                {
-                    BeginChangingDynamicItem(text);
-                }
+            if (text != null)
+            {
+                BeginChangingDynamicItem(text);
+            }
         }
     }
 }

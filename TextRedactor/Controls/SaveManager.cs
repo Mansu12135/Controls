@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Linq;
-using System.Windows.Threading;
 
 namespace Controls
 {
@@ -41,7 +40,7 @@ namespace Controls
         private void CreateDocument()
         {
             Document = new FlowDocument();
-            FileWorkerManager.Do(Document, FilePath, null, false);
+            FileWorkerManager.Do(Document, FilePath, false);
             //using (
             //    FileStream stream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.None,
             //        20 * 1024 * 1024))
@@ -134,13 +133,15 @@ namespace Controls
                     //}
                     FileWorkerManager.Do(Document, FilePath);
                     if (new TextRange(Document.ContentStart, Document.ContentEnd).Text != CallStack[0].CheckingText) {
-                        
-                            FileWorkerManager.Do(Document, FilePath, Document.Dispatcher);
+                        Document.Dispatcher.Invoke(() =>
+                        {
+                            FileWorkerManager.Do(Document, FilePath);
                             //    using (FileStream stream = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.None,
                             //20 * 1024 * 1024))
                             //    {
                             //        new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Save(stream, DataFormats.Rtf);
                             //    }
+                        });
                     }
                     CallStack.RemoveAt(0);
                     Monitor.Exit(LockObject);
@@ -174,49 +175,25 @@ namespace Controls
 
     internal static class FileWorkerManager
     {
-
-        private static void Write(FlowDocument document, string path)
-        {
-            using (FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None,
-   20 * 1024 * 1024))
-            {
-                new TextRange(document.ContentStart, document.ContentEnd).Save(stream, DataFormats.Rtf);
-            }
-        }
-
-        private static void Read(FlowDocument document, string path)
-        {
-            using (
-             FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None,
-                 20 * 1024 * 1024))
-            {
-                new TextRange(document.ContentStart, document.ContentEnd).Load(stream, DataFormats.Rtf);
-            }
-        }
-        public static void Do(FlowDocument document, string path, Dispatcher dispatcher = null, bool write = true)
+        public static void Do(FlowDocument document, string path, bool write = true)
         {
             lock (path)
             {
                 if (write)
                 {
-                    if (dispatcher == null)
+                    using (FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None,
+                       20 * 1024 * 1024))
                     {
-                        Write(document, path);
-                    }
-                    else
-                    {
-                        dispatcher.Invoke(() => Write(document, path));
+                        new TextRange(document.ContentStart, document.ContentEnd).Save(stream, DataFormats.Rtf);
                     }
                 }
                 else
                 {
-                    if (dispatcher == null)
+                    using (
+              FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None,
+                  20 * 1024 * 1024))
                     {
-                        Read(document, path);
-                    }
-                    else
-                    {
-                        dispatcher.Invoke(() => Read(document, path));
+                        new TextRange(document.ContentStart, document.ContentEnd).Load(stream, DataFormats.Rtf);
                     }
                 }
             }

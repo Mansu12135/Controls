@@ -9,11 +9,8 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Net.Sgoliver.NRtfTree.Util;
 using System.Windows.Media.Imaging;
-using System.Windows.Interop;
 using System.Drawing;
 using System.Windows.Media;
-using Point = System.Drawing.Point;
-using Size = System.Windows.Size;
 
 namespace Controls
 {
@@ -323,7 +320,7 @@ namespace Controls
             System.Windows.Controls.Image replacementImage;
             new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, ParentControl.TextBox.MainControl.Document.ContentEnd).ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
 
-            byte[] flag = getJPGFromImageControl(Properties.Resources.flag_pole_with_black_flag);
+            byte[] flag = getJPGFromImageControl(Properties.Resources.noteFlag);
 
             var blocks = ParentControl.TextBox.MainControl.Document.Blocks.ToList();
             for (int b = 0; b < blocks.Count; b++)
@@ -396,7 +393,7 @@ namespace Controls
                 TextPointer startPos = GetTextPointAt(startPointer, start);
                 TextPointer endPos = GetTextPointAt(startPointer, end);
                 new TextRange(startPos, endPos).ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.PaleGreen);
-                var tempImage = Properties.Resources.flag_pole_with_black_flag;
+                var tempImage = Properties.Resources.noteFlag;
                 var ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
           tempImage.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));
 
@@ -404,8 +401,8 @@ namespace Controls
                 image.Source = ScreenCapture;
                 image.Stretch = Stretch.Fill;
                 image.Cursor = Cursors.Hand;
-                image.Height = 20;
-                image.Width = 20;
+                image.Height = 14;
+                image.Width = 14;
                 image.Tag = note.Key;
                 image.MouseUp += NoteFlag_MouseUp;
                 TextPointer p = startPos;
@@ -478,7 +475,7 @@ namespace Controls
         {
             propertForm = new PropertiesForm(Notes[projName]);
             propertForm.Closing -= PropertForm_Closing;
-            propertForm.Closing += PropertForm_Closing; //(s, r) => MainProjectList.Items.Refresh();
+            propertForm.Closing += PropertForm_Closing;
             propertForm.CalledControl = this;
             propertForm.Init();
             ((ProjectProperties)propertForm.Element.Child).isCreateFile = isCreateFile;
@@ -507,13 +504,6 @@ namespace Controls
             if (project == null) { return; }
             CurentProject = project;
         }
-
-        private void TextProjName_LostFocus(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-
 
         private void TextNameFile_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -582,7 +572,7 @@ namespace Controls
 
         protected override void CloneTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            base.CloneTextBox_LostFocus(sender,e);
+            base.CloneTextBox_LostFocus(sender, e);
             if (!IsValid) { return; }
             var mouseEventArgs = e as MouseEventArgs;
             if (mouseEventArgs == null) { return; }
