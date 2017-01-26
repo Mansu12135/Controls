@@ -1,0 +1,269 @@
+﻿<controls:BasicPanel x:TypeArguments="controls:Project" xmlns:controls="clr-namespace:Controls"  x:Class="Controls.BrowseProject"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="250">
+    <UserControl.Resources>
+        <Style x:Key="ScrollBarLineButtonStyle" TargetType="{x:Type RepeatButton}">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Canvas Height="0">
+                            <Polygon Fill="{x:Null}" Points="3,15 15,15 9,3"></Polygon>
+                        </Canvas>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarLineButtonBottomStyle" TargetType="{x:Type RepeatButton}">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Canvas Height="0">
+                            <Polygon Fill="{x:Null}" Points="3,3 9,15 15,3"></Polygon>
+                        </Canvas>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarPageButtonStyle" TargetType="{x:Type RepeatButton}">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border BorderBrush="Transparent"></Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Margin" Value="1,0,1,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <!--<Ellipse Margin="4,2" Fill="#FFB8B3B3" StrokeThickness="0"></Ellipse>-->
+                        <Rectangle Fill="#FFDCDCDE" Margin="4,2"></Rectangle>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="18"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition MaxHeight="18"/>
+                </Grid.RowDefinitions>
+
+                <RepeatButton Grid.Row="0" Height="0"
+                          Style="{StaticResource ScrollBarLineButtonStyle}"
+                          Command="ScrollBar.LineUpCommand" >
+                </RepeatButton>
+                <Track Name="PART_Track" Grid.Row="1" 
+                   IsDirectionReversed="True">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Command="ScrollBar.PageUpCommand" Style="{StaticResource ScrollBarPageButtonStyle}">
+                        </RepeatButton>
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource ScrollBarThumbStyle}">
+                        </Thumb>
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Command="ScrollBar.PageDownCommand" Style="{StaticResource ScrollBarPageButtonStyle}">
+                        </RepeatButton>
+                    </Track.IncreaseRepeatButton>
+                </Track>
+                <RepeatButton Grid.Row="3" Height="0"
+                          Style="{StaticResource ScrollBarLineButtonBottomStyle}"
+                          Command="ScrollBar.LineDownCommand">
+                </RepeatButton>
+            </Grid>
+        </ControlTemplate>
+
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Template" Value="{StaticResource VerticalScrollBar}"/>
+        </Style>
+
+
+    </UserControl.Resources>
+    <Grid x:Name="BrowseContainer" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="90"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <!--<Polygon Points="50, 0 0, 50 0,80 65, 140 140, 65 80,0" StrokeThickness="0"
+         Fill="#FFF1F1F1" Panel.ZIndex="-1" Grid.RowSpan="3" Grid.ColumnSpan="2" />-->
+
+        <Label x:Name="HidenProject" HorizontalAlignment="Right" Margin="0,0,8,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand">
+            <TextBlock TextDecorations="Underline">Hide Project Panel</TextBlock>
+        </Label>
+
+        <StackPanel Margin="0,25,1,0">
+            <Label Content="PROJECTS" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Arial Rounded MT Bold" Foreground="#FF7C7B7B"/>
+            <Border BorderThickness="1" HorizontalAlignment="Center" Height="25" Margin="0" VerticalAlignment="Center" Width="25">
+                <Border.Background>
+                    <ImageBrush ImageSource="Resources/romb.png"/>
+                </Border.Background>
+            </Border>
+
+        </StackPanel>
+        <Border BorderThickness="1" x:Name="ButAddProject" x:FieldModifier="public" HorizontalAlignment="Center" Height="30" Margin="0" Grid.Row="2" VerticalAlignment="Center" >
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <GradientStop Color="#FF10660A" Offset="0"/>
+                    <GradientStop Color="#FF5BC355" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+            <Label Content="ADD PROJECT"  MouseDown="ButAddProject_MouseDown" Cursor="Hand" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold" />
+        </Border>
+        <ListBox x:Name="MainProjectList" ItemsSource="{Binding Notes, RelativeSource={RelativeSource FindAncestor,AncestorType=controls:BrowseProject}}"   Margin="0" Grid.Row="1" Padding="30,0" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="MainProjectList_SelectionChanged" >
+            <ListBox.Resources>
+                <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border Name="HighlightBorder"  BorderBrush="Transparent" BorderThickness="1" CornerRadius="5" Padding="0,0,0,6">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label PreviewMouseDoubleClick="ProjectName_MouseDoubleClick">
+                                                <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" KeyDown="TextNameFile_OnKeyDown" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}" Width="Auto" LostFocus="TextProjName_LostFocus">
+                                                    <TextBox.Resources>
+                                                        <Style TargetType="{x:Type TextBox}"
+       x:Key="ExpandingTextBox">
+                                                            <Setter Property="OverridesDefaultStyle"
+            Value="True" />
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="TextBox">
+                                                                        <Grid>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="1*">
+                                                                                    <ColumnDefinition.MaxWidth>
+                                                                                        <Binding Path="MaxWidth"
+                                         RelativeSource="{RelativeSource TemplatedParent}">
+                                                                                        </Binding>
+                                                                                    </ColumnDefinition.MaxWidth>
+                                                                                </ColumnDefinition>
+                                                                                <ColumnDefinition Width="0*" />
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <TextBox  Text="{TemplateBinding Text}">
+                                                                                <TextBox.MaxWidth>
+                                                                                    <Binding Path="MaxWidth"
+                                     RelativeSource="{RelativeSource TemplatedParent}" />
+                                                                                </TextBox.MaxWidth>
+                                                                            </TextBox>
+                                                                        </Grid>
+                                                                        <ControlTemplate.Triggers>
+                                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                                <Setter  Property="Foreground" Value="Gold"/>
+                                                                            </Trigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </TextBox.Resources>
+                                                </TextBox>
+                                            </Label>
+                                            <Border x:Name="Propert" Visibility="Hidden" Width="20" Height="20" HorizontalAlignment="Right" Cursor="Hand">
+                                                <Image Source="Resources/kservices.png" MouseUp="Propert_Click" Tag="{Binding Key}"></Image>
+                                            </Border>
+                                        </StackPanel>
+                                        <ListBox x:Name="FileListBox" ItemsSource="{Binding  Value.ListFiles}"  Margin="6,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" SelectionChanged ="FileListBox_SelectionChanged" >
+                                            <ListBox.Resources>
+                                                <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ListBoxItem">
+                                                                <Border Name="HighlightBorder2"  
+                            Padding="0"
+                            BorderBrush="Transparent"
+                            BorderThickness="0"
+                           
+                            >
+                                                                    <DockPanel Cursor="Hand" HorizontalAlignment="Stretch">
+                                                                        <Image Name="Romb" Source="Resources/romb.png" Margin="0,1" Height="0" Width="0"></Image>
+                                                                        <Label Padding="1"  x:Name="buttonOpenFile" Tag="{Binding Path}" PreviewMouseDoubleClick="buttonOpenFile_PreviewMouseDoubleClick" MouseDown="buttonOpenFile_MouseDown" Cursor="Hand" Height="Auto" HorizontalAlignment="Stretch" >
+                                                                            <TextBox x:Name="TextNameFile" BorderThickness="0" KeyDown="TextNameFile_OnKeyDown"  Text="{Binding  Name}"  Tag="{Binding Path}" IsEnabled="False" LostFocus="TextNameFile_LostFocus" ></TextBox>
+                                                                        </Label>
+                                                                        <!--<TextBlock x:Name="buttonOpenFile" Padding="1" Text="{Binding  Name}" Tag="{Binding Path}" MouseDown="buttonOpenFile_MouseDown" Cursor="Hand" Height="Auto" HorizontalAlignment="Stretch" ></TextBlock>-->
+
+                                                                    </DockPanel>
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter TargetName="HighlightBorder2" Property="Background" Value="Transparent"/>
+                                                                    </Trigger>
+                                                                    <Trigger Property="IsSelected" Value="True">
+                                                                        <Setter TargetName="HighlightBorder2" Property="Background" Value="Transparent"/>
+                                                                        <Setter TargetName="Romb" Property="Width" Value="10"/>
+                                                                        <Setter TargetName="Romb" Property="Height" Value="12"/>
+
+                                                                    </Trigger>
+                                                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                                                        <Setter TargetName="HighlightBorder2" Property="Background" Value="Transparent"/>
+                                                                        <Setter TargetName="Romb" Property="Width" Value="10"/>
+                                                                        <Setter TargetName="Romb" Property="Height" Value="12"/>
+
+                                                                    </Trigger>
+                                                                    <Trigger Property="IsSelected" Value="False">
+                                                                        <Setter TargetName="HighlightBorder2" Property="Background" Value="Transparent"/>
+                                                                        <Setter TargetName="Romb" Property="Width" Value="0"/>
+                                                                        <Setter TargetName="Romb" Property="Height" Value="0"/>
+
+                                                                    </Trigger>
+                                                                    <!--<Trigger Property="TextBox.IsEnabled" Value="False">
+                                                                        <Setter TargetName="TextNameFile" Property="Foreground" Value="Red" />
+                                                                    </Trigger>-->
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                                </Style>
+                                            </ListBox.Resources>
+                                        </ListBox>
+                                        <TextBlock x:Name="buttonAddFile" Tag="{Binding Key}" TextDecorations="Underline" Text="+ Add new chapter" FontStyle="Italic" Foreground="#FF707070" HorizontalAlignment="Right" Cursor="Hand" MouseDown="buttonAddFile_MouseDown" Padding="0" />
+
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="HighlightBorder" Property="Background" Value="Transparent"/>
+                                        <Setter TargetName="Propert" Property="Visibility" Value="Visible"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="False">
+                                        <Setter TargetName="Propert" Property="Visibility" Value="Hidden"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="HighlightBorder" Property="Background" Value="Transparent"/>
+                                        <Setter TargetName="Propert" Property="Visibility" Value="Visible"/>
+                                    </Trigger>
+                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                        <Setter TargetName="HighlightBorder" Property="Background" Value="Transparent"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                </Style>
+            </ListBox.Resources>
+        </ListBox>
+
+
+    </Grid>
+</controls:BasicPanel>

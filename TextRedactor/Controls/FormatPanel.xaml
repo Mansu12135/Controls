@@ -1,0 +1,70 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+  xmlns:wpfx="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit/extended"
+    xmlns:controls="clr-namespace:Controls"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    x:Class="Controls.FormatPanel" 
+             mc:Ignorable="d" d:DesignWidth="800" Height="50" Width="Auto">
+
+    <Grid>
+        <controls:XComboBox x:Name="FontFamily"  Command="{x:Static controls:MyCommands.SetFontFamily}" Background="#FFFDFDFD" BorderThickness="0.5" BorderBrush="#FFC5C5C5" HorizontalAlignment="Left" Margin="17,14,0,14" Width="119" VerticalAlignment="Center" ItemsSource="{x:Static Fonts.SystemFontFamilies}" SelectedIndex="0" >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" FontFamily="{Binding}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </controls:XComboBox>
+        <controls:XComboBox x:Name="comboBoxFont" Command="{x:Static controls:MyCommands.SetFontSize}" HorizontalAlignment="Left" Margin="146,14,0,14" VerticalAlignment="Center" Width="40"  ItemsSource="{Binding Source={x:Static controls:FormatPanel.FontSize}, Path=Values}" SelectedIndex="0" Focusable="False">
+
+        </controls:XComboBox>
+        <xctk:ColorPicker x:Name="ColorPicker1"   Height="26" DisplayColorAndName="True"
+                    Margin="198,12,0,12" Width="36" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <controls:XToggleButton x:Name="fontItalic" x:FieldModifier="public" Width="20" Height="20"  Command="{x:Static EditingCommands.ToggleItalic}" Margin="239,15,0,15"  HorizontalAlignment="Left" Focusable="False" Background="{x:Null}" BorderBrush="{x:Null}">
+            <Image Source="Resources/italic.png"></Image>
+        </controls:XToggleButton>
+        <controls:XToggleButton Width="20" Height="20" Margin="262,15,0,15"  Command="{x:Static EditingCommands.ToggleBold}"  x:Name="fontBold" x:FieldModifier="public" HorizontalAlignment="Left" Focusable="False" Background="{x:Null}" BorderBrush="{x:Null}">
+            <Image Source="Resources/Bold_font.png"></Image>
+        </controls:XToggleButton>
+        <controls:XToggleButton  x:Name="fontUnder" BorderThickness="1" HorizontalAlignment="Left" Command="{x:Static EditingCommands.ToggleUnderline}" Height="18" Margin="286,16,0,16" VerticalAlignment="Center" Width="18" x:FieldModifier="public" Focusable="False" Background="{x:Null}" BorderBrush="{x:Null}">
+            <Image Source="Resources/stressed.png"/>
+        </controls:XToggleButton>
+        <controls:XToggleButton x:Name="alignLeft" BorderThickness="1" HorizontalAlignment="Left" Height="18" Command="{x:Static EditingCommands.AlignLeft}" Margin="309,16,0,16" VerticalAlignment="Center" Width="18" x:FieldModifier="public" Focusable="False" Background="{x:Null}" BorderBrush="{x:Null}">
+            <Image Source="Resources/Выровнять по левому краю Filled-50.png"/>
+        </controls:XToggleButton>
+        <controls:XToggleButton  x:Name="alignAll" BorderThickness="1" HorizontalAlignment="Left" Height="18" Margin="329,16,0,16" Command="{x:Static EditingCommands.AlignJustify}" VerticalAlignment="Center" Width="18" x:FieldModifier="public" Focusable="False" Background="{x:Null}" BorderBrush="{x:Null}">
+            <Image Source="Resources/Выровнять обоснование Filled-50.png"/>
+        </controls:XToggleButton>
+        <controls:XToggleButton x:Name="alignRight" BorderThickness="1" HorizontalAlignment="Left" Height="18" Margin="349,16,0,16" Command="{x:Static EditingCommands.AlignRight}" VerticalAlignment="Center" Width="18" x:FieldModifier="public" Focusable="False" Background="{x:Null}" BorderBrush="{x:Null}">
+            <Image Source="Resources/Выровнять по правому краю Filled-50.png"/>
+        </controls:XToggleButton>
+        <controls:XToggleButton x:Name="alignCenter" BorderThickness="1" HorizontalAlignment="Left" Height="18" Margin="369,16,0,16" Command="{x:Static EditingCommands.AlignCenter}" VerticalAlignment="Center" Width="18" x:FieldModifier="public" Focusable="False" Background="{x:Null}" BorderBrush="{x:Null}">
+            <Image Source="Resources/align_center-512.png"/>
+        </controls:XToggleButton>
+        <Label Content="Margin wigth:" HorizontalAlignment="Left" Margin="408,12,0,0" VerticalAlignment="Top" Width="81"/>
+        <ComboBox x:Name="comboWigth"  x:FieldModifier="public" HorizontalAlignment="Left" Margin="491,14,0,0" VerticalAlignment="Top" Width="50" SelectedIndex="0" ItemsSource ="{Binding Source={x:Static controls:FormatPanel.MarginWigth}, Path=Values}" IsEditable="True"/>
+
+        <Border x:Name="ButtonAddNote" x:FieldModifier="public" BorderThickness="1" HorizontalAlignment="Left" Height="18" Margin="552,15,0,17" VerticalAlignment="Center" Width="18" Cursor="Hand">
+            <Border.Background>
+                <ImageBrush ImageSource="Resources/flag.png"/>
+            </Border.Background>
+        </Border>
+        <Border BorderBrush="#FF33A000" BorderThickness="1" HorizontalAlignment="Left" Height="26" Margin="706,12,0,12" VerticalAlignment="Center" Width="72">
+            <Label  Name="ExportButton" Content="EXPORT" HorizontalContentAlignment="Center" Cursor="Hand"/>
+        </Border>
+        <Border BorderBrush="#FF33A000" BorderThickness="1" HorizontalAlignment="Left" Height="26" Margin="620,12,0,12" VerticalAlignment="Center" Width="72">
+            <Label x:Name="ButtonDictionary" x:FieldModifier="public" Content="Look up" HorizontalContentAlignment="Center" Cursor="Hand" Padding="5,2" VerticalContentAlignment="Center"/>
+        </Border>
+        <Border BorderThickness="1" HorizontalAlignment="Left" Height="22" Margin="580,13,0,0" VerticalAlignment="Top" Width="20">
+            <Label x:Name="LabelImage" x:FieldModifier="public" Padding="0" HorizontalContentAlignment="Center" Height="20" VerticalAlignment="Top" Cursor="Hand">
+                <Label.Background>
+                    <ImageBrush ImageSource="Resources/picture.png"/>
+                </Label.Background>
+            </Label>
+        </Border>
+
+
+    </Grid>
+</UserControl>

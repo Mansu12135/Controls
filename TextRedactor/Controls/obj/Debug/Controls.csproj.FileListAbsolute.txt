@@ -1,0 +1,103 @@
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\Controls.csprojResolveAssemblyReference.cache
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\Controls.csproj.ResolveComReference.cache
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\Note.baml
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\NotesBrowser.baml
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\SuperRichTextBox.baml
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\FormatPanel.g.cs
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\Note.g.cs
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\NotesBrowser.g.cs
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\SuperRichTextBox.g.cs
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\SuperTextRedactor.g.cs
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\Controls_MarkupCompile.cache
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\Controls_MarkupCompile.lref
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\SuperTextRedactor.baml
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\Controls.dll
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\Controls.pdb
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\bin\Debug\Controls.dll
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\bin\Debug\Controls.pdb
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\bin\Debug\WPFToolkit.Extended.dll
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\FormatPanel.baml
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\Controls.g.resources
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\Controls.Properties.Resources.resources
+C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\Controls.csproj.GenerateResource.Cache
+D:\textEditor\TextRedactor\Controls\bin\Debug\kindlegen.exe
+D:\textEditor\TextRedactor\Controls\bin\Debug\Controls.dll
+D:\textEditor\TextRedactor\Controls\bin\Debug\Controls.pdb
+D:\textEditor\TextRedactor\Controls\bin\Debug\Spire.Doc.dll
+D:\textEditor\TextRedactor\Controls\bin\Debug\Spire.License.dll
+D:\textEditor\TextRedactor\Controls\bin\Debug\Spire.Pdf.dll
+D:\textEditor\TextRedactor\Controls\bin\Debug\WPFToolkit.Extended.dll
+D:\textEditor\TextRedactor\Controls\bin\Debug\Spire.Doc.xml
+D:\textEditor\TextRedactor\Controls\bin\Debug\Spire.License.xml
+D:\textEditor\TextRedactor\Controls\obj\Debug\Controls.csprojResolveAssemblyReference.cache
+D:\textEditor\TextRedactor\Controls\obj\Debug\Controls.csproj.ResolveComReference.cache
+D:\textEditor\TextRedactor\Controls\obj\Debug\Note.baml
+D:\textEditor\TextRedactor\Controls\obj\Debug\SuperRichTextBox.baml
+D:\textEditor\TextRedactor\Controls\obj\Debug\BrowseProject.g.cs
+D:\textEditor\TextRedactor\Controls\obj\Debug\FormatPanel.g.cs
+D:\textEditor\TextRedactor\Controls\obj\Debug\Note.g.cs
+D:\textEditor\TextRedactor\Controls\obj\Debug\NotesBrowser.g.cs
+D:\textEditor\TextRedactor\Controls\obj\Debug\SuperRichTextBox.g.cs
+D:\textEditor\TextRedactor\Controls\obj\Debug\SuperTextRedactor.g.cs
+D:\textEditor\TextRedactor\Controls\obj\Debug\GeneratedInternalTypeHelper.g.cs
+D:\textEditor\TextRedactor\Controls\obj\Debug\Controls_MarkupCompile.cache
+D:\textEditor\TextRedactor\Controls\obj\Debug\Controls_MarkupCompile.lref
+D:\textEditor\TextRedactor\Controls\obj\Debug\BrowseProject.baml
+D:\textEditor\TextRedactor\Controls\obj\Debug\FormatPanel.baml
+D:\textEditor\TextRedactor\Controls\obj\Debug\NotesBrowser.baml
+D:\textEditor\TextRedactor\Controls\obj\Debug\SuperTextRedactor.baml
+D:\textEditor\TextRedactor\Controls\obj\Debug\Controls.g.resources
+D:\textEditor\TextRedactor\Controls\obj\Debug\Controls.Properties.Resources.resources
+D:\textEditor\TextRedactor\Controls\obj\Debug\Controls.csproj.GenerateResource.Cache
+D:\textEditor\TextRedactor\Controls\obj\Debug\Controls.dll
+D:\textEditor\TextRedactor\Controls\obj\Debug\Controls.pdb
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\kindlegen.exe
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\Controls.dll
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\Controls.pdb
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\HtmlToXamlConverter.dll
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\JetBrains.Annotations.dll
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\nrtftree-library.dll
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\Spire.Doc.dll
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\Spire.License.dll
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\Spire.Pdf.dll
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\Microsoft.mshtml.dll
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\JetBrains.Annotations.xml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\Spire.Doc.xml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\bin\Debug\Spire.License.xml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\Controls.csproj.ResolveComReference.cache
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\BrowseProject.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\DictionaryPanel.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\ExportPanel.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\FilesBrowser.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\FormatPanel.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\InformationForm.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\NotesBrowser.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\Options.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\ProjectProperties.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\PropertiesForm.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\SearchPanel.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\SuperRichTextBox.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\SuperTextRedactor.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\Controls_MarkupCompile.cache
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\Controls_MarkupCompile.lref
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\BrowseProject.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\DictionaryPanel.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\ExportPanel.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\FilesBrowser.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\FormatPanel.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\InformationForm.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\NotesBrowser.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\Options.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\ProjectProperties.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\PropertiesForm.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\SearchPanel.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\SuperRichTextBox.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\SuperTextRedactor.baml
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\Controls.g.resources
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\Controls.Properties.Resources.resources
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\Controls.TextRedactor.resources
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\Controls.csproj.GenerateResource.Cache
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\Controls.dll
+C:\Users\Никита\Documents\Visual Studio 2013\Projects\TextRedactor\Controls\obj\Debug\Controls.pdb

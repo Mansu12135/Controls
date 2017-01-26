@@ -1,0 +1,9 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:Controls;assembly=Controls" x:Class="TextRedactor.MainWindow"
+        Title="MainWindow" Width="1250" Height="600" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Controls:SuperTextRedactor x:Name="TextRedactor"/>
+    </Grid>
+</Window>
