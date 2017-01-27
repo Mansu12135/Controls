@@ -564,9 +564,11 @@ namespace Controls
             var point = control.TranslatePoint(new System.Windows.Point(0, 0), MainProjectList);
             return new Rectangle((int)point.X, (int)point.Y, (int)control.ActualWidth, (int)control.ActualHeight);
         }
+
         protected override void AddDynamicControls()
         {
             BrowseContainer.Children.Add(CloneTextBox);
+            CloneTextBox.Focus();
             BrowseContainer.PreviewMouseDown -= CloneTextBox_LostFocus;
             BrowseContainer.PreviewMouseDown += CloneTextBox_LostFocus;
             MainProjectList.IsEnabled = false;

@@ -69,5 +69,23 @@ namespace Controls {
                 return ResourceManager.GetString("Information", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Wrong note name. Please chage it or press ESC to restore..
+        /// </summary>
+        internal static string NoteErrorMessage {
+            get {
+                return ResourceManager.GetString("NoteErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Wrong project name. Please change it or press ESC to restore..
+        /// </summary>
+        internal static string PathErrorMessage {
+            get {
+                return ResourceManager.GetString("PathErrorMessage", resourceCulture);
+            }
+        }
     }
 }

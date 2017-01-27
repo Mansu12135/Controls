@@ -125,4 +125,10 @@
 
 ©Ivan Samokish | www.samokish.ca</value>
   </data>
+  <data name="NoteErrorMessage" xml:space="preserve">
+    <value>Wrong note name. Please chage it or press ESC to restore.</value>
+  </data>
+  <data name="PathErrorMessage" xml:space="preserve">
+    <value>Wrong project name. Please change it or press ESC to restore.</value>
+  </data>
 </root>
