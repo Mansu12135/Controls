@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using System.Windows.Controls;
@@ -125,6 +125,12 @@ namespace Controls
             }
         }
 
+        protected override Rectangle GetCloneControlLocation(TextBox control)
+        {
+            var point = control.TranslatePoint(new System.Windows.Point(0, 0), MainControl);
+            return new Rectangle((int)point.X, (int)point.Y, (int)control.ActualWidth, (int)control.ActualHeight);
+        }
+
         protected override void OnValidate()
         {
             if (!Notes.ContainsKey(CloneTextBox.Tag.ToString()) || Notes.ContainsKey(CloneTextBox.Text) || !File.Exists(ParentControl.BrowseProject.LoadedFile))
@@ -132,7 +138,12 @@ namespace Controls
                 IsValid = false;
                 if (Binding == null) { Binding = CloneTextBox.GetBindingExpression(TextBox.TextProperty); }
                 Validation.MarkInvalid(Binding, new ValidationError(new ExceptionValidationRule(), Binding));
-
+                if (ErrorToolTip == null)
+                {
+                    ErrorToolTip = new ToolTip {Content = TextRedactor.PathErrorMessage};
+                    CloneTextBox.ToolTip = ErrorToolTip;
+                }
+                ErrorToolTip.IsOpen = true;
             }
             else
             {

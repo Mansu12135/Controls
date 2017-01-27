@@ -5,13 +5,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
-using Point = System.Windows.Point;
 
 namespace Controls
 {
     public abstract class BasicPanel<T> : UserControl, IBasicPanel<T> where T : Item
     {
+        protected ToolTip ErrorToolTip;
         protected BindingExpression Binding { get; set; }
         protected bool IsValid { get; set; }
         private char[] WrongSymbols = System.IO.Path.GetInvalidFileNameChars();
@@ -113,6 +112,12 @@ namespace Controls
             if (!IsValid)
             {
                 Validation.MarkInvalid(Binding, new ValidationError(new ExceptionValidationRule(), Binding));
+                if (ErrorToolTip == null)
+                {
+                    ErrorToolTip = new ToolTip {Content = TextRedactor.PathErrorMessage};
+                    CloneTextBox.ToolTip = ErrorToolTip;
+                }
+                ErrorToolTip.IsOpen = true;
             }
         }
 
@@ -142,6 +147,9 @@ namespace Controls
         protected void EndChangingDynamicItem()
         {
             Validation.ClearInvalid(CloneTextBox.GetBindingExpression(TextBox.TextProperty));
+            ErrorToolTip.IsOpen = false;
+            ErrorToolTip = null;
+            Binding = null;
             RemoveDynamicControls();
             DisposeDynamicItems();
         }
