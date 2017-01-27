@@ -60,7 +60,7 @@ namespace Controls
             Format.alignRight.CommandTarget = TextBox.MainControl;
             Format.comboBoxFont.SelectionChanged += ((s, e) => TextBox.MainControl.Focus());
             Format.FontFamily.SelectionChanged += ((s, e) => TextBox.MainControl.Focus());
-           // Format.ButtonDictionary.MouseUp += ButtonDictionary_MouseUp;
+            // Format.ButtonDictionary.MouseUp += ButtonDictionary_MouseUp;
             Format.ExportButton.MouseUp += ExportButton_MouseUp;
             BrowseProject.HidenProject.MouseUp += HidenProject_MouseUp;
             NotesBrowser.HidenNotes.MouseUp += HidenNotes_MouseUp;
@@ -71,7 +71,7 @@ namespace Controls
             Format.comboWigth.KeyDown += ComboWigth_KeyDown;
         }
 
-       
+
 
         private void ComboWigth_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -130,7 +130,7 @@ namespace Controls
         {
             defaultMarginWight = (Convert.ToDouble(value));
             Format.comboWigth.SelectedIndex = Format.comboWigth.Items.IndexOf(defaultMarginWight);
-          //  Format.comboWigth.Text = Format.comboWigth.Items.IndexOf(defaultMarginWight).ToString();
+            //  Format.comboWigth.Text = Format.comboWigth.Items.IndexOf(defaultMarginWight).ToString();
         }
         public void SetTextFont(string value)
         {

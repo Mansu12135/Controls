@@ -22,7 +22,9 @@ namespace Controls
         internal string LoadedFile { get; private set; }
         public Project CurentProject;
         public string CurentFile;
-        bool IsChangeFileName = false;
+        private bool IsChangeFileName = false;
+        private bool ChangedFileName;
+
         public BrowseProject() : base()
         {
             InitializeComponent();
@@ -105,7 +107,8 @@ namespace Controls
         private void buttonAddFile_MouseDown(object sender, MouseButtonEventArgs e)
         {
             string projName = ((TextBlock)sender).Tag.ToString();
-            onOpenProperty(projName, true);
+            AddNewFileToProject(projName, GenerateName("Chapter",ProjectsPath+"\\"+projName+"\\Files", false));
+            MainProjectList.Items.Refresh();
         }
 
         private void CreateProjectFile(Project project, string path)
@@ -117,17 +120,29 @@ namespace Controls
             }
         }
 
-        internal override string GenerateName(string name)
+        internal override string GenerateName(string name,string path, bool isProg = true)
         {
-            List<DirectoryInfo> directories = new DirectoryInfo(ProjectsPath).GetDirectories().ToList();
             string generattingName = name;
             int i = 0;
-            while (true)
+            if (isProg)
             {
-                if (directories.FindIndex(dir => dir.Name == generattingName) < 0) { return generattingName; }
-                i++;
-                generattingName = name + i;
-
+                List<DirectoryInfo> directories = new DirectoryInfo(path).GetDirectories().ToList();
+                while (true)
+                {
+                    if (directories.FindIndex(dir => dir.Name == generattingName) < 0) { return generattingName; }
+                    i++;
+                    generattingName = name + i;
+                }
+            }
+            else
+            {
+                List<FileInfo> directories = new DirectoryInfo(path).GetFiles().ToList();
+                while (true)
+                {
+                    if (directories.FindIndex(dir => Path.GetFileNameWithoutExtension(dir.Name) == generattingName) < 0) { return generattingName; }
+                    i++;
+                    generattingName = name + i;
+                }
             }
         }
         public void CreateProject()
@@ -137,7 +152,7 @@ namespace Controls
                 Directory.CreateDirectory(ProjectsPath);
             }
 
-            string name = GenerateName("NewProject");
+            string name = GenerateName("NewProject",ProjectsPath);
             string path = ProjectsPath + "\\" + name;
             if (File.Exists(path)) { return; }
             Directory.CreateDirectory(path);
@@ -242,7 +257,7 @@ namespace Controls
 
         internal void OpenFile(string path, string content)
         {
-           
+
             ParentControl.TextBox.MainControl.FilePath = "";
             var range = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, ParentControl.TextBox.MainControl.Document.ContentEnd);
             using (var fStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read))
@@ -315,7 +330,7 @@ namespace Controls
         private void UpdateNoteInFile()
         {
             ParentControl.NotesBrowser.Notes.Clear();
-           Type inlineType;
+            Type inlineType;
             InlineUIContainer uic;
             System.Windows.Controls.Image replacementImage;
             new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, ParentControl.TextBox.MainControl.Document.ContentEnd).ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
@@ -508,17 +523,7 @@ namespace Controls
         private void TextNameFile_LostFocus(object sender, RoutedEventArgs e)
         {
 
-            IsChangeFileName = false;
-            TextBox t = sender as TextBox;
-            if (t != null)
-            {
-                LoadedFile file = Notes[CurentProject.Name].Files.Where(item => item.Path == t.Tag.ToString()).FirstOrDefault();
-                if (file == null) { return; }
-                string directoryPath = Path.GetDirectoryName(file.Path) + "\\";
-                RenameFileInProject(Directory.GetParent(directoryPath).Parent.Name, file, t.Text);
-                t.IsEnabled = false;
-                MainProjectList.Items.Refresh();
-            }
+
         }
 
         private void buttonOpenFile_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -529,6 +534,8 @@ namespace Controls
                 TextBox t = lab.Content as TextBox;
                 if (t != null)
                 {
+                    BeginChangingDynamicItem(t);
+                    ChangedFileName = true;
                     IsChangeFileName = true;
                 }
             }
@@ -536,10 +543,7 @@ namespace Controls
 
         private void TextNameFile_OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                ParentControl.TextBox.MainControl.Focus();
-            }
+
         }
 
         private void ProjectName_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -551,10 +555,15 @@ namespace Controls
                 if (text != null)
                 {
                     BeginChangingDynamicItem(text);
+                    ChangedFileName = false;
                 }
             }
         }
-
+        protected override Rectangle GetCloneControlLocation(TextBox control)
+        {
+            var point = control.TranslatePoint(new System.Windows.Point(0, 0), MainProjectList);
+            return new Rectangle((int)point.X, (int)point.Y, (int)control.ActualWidth, (int)control.ActualHeight);
+        }
         protected override void AddDynamicControls()
         {
             BrowseContainer.Children.Add(CloneTextBox);
@@ -576,12 +585,23 @@ namespace Controls
             if (!IsValid) { return; }
             var mouseEventArgs = e as MouseEventArgs;
             if (mouseEventArgs == null) { return; }
-            var positionCLick = mouseEventArgs.GetPosition(Application.Current.MainWindow);
+            var positionCLick = mouseEventArgs.GetPosition(MainProjectList);
             if (!CloneTextBoxLocation.Contains((int)positionCLick.X, (int)positionCLick.Y))
             {
                 if (CloneTextBox.Tag.ToString() != CloneTextBox.Text)
                 {
-                    RenameProject(CloneTextBox.Tag.ToString(), CloneTextBox.Text);
+                    if (!ChangedFileName)
+                    {
+                        RenameProject(CloneTextBox.Tag.ToString(), CloneTextBox.Text);
+                    }
+                    else
+                    {
+                        LoadedFile file = Notes[CurentProject.Name].Files.Where(item => item.Path == CloneTextBox.Tag.ToString()).FirstOrDefault();
+                        if (file == null) { return; }
+                        string directoryPath = Path.GetDirectoryName(file.Path) + "\\";
+                        RenameFileInProject(Directory.GetParent(directoryPath).Parent.Name, file, CloneTextBox.Text);
+                        IsChangeFileName = false;
+                    }
                 }
                 MainProjectList.Items.Refresh();
                 EndChangingDynamicItem();

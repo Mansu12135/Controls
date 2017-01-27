@@ -107,7 +107,7 @@
     </UserControl.Resources>
     <Grid x:Name="NotesContainer" Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="90*"/>
+            <RowDefinition Height="90"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Label x:Name="HidenNotes" HorizontalAlignment="Left" Margin="8,0,0,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand">

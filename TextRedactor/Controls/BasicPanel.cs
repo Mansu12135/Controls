@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using Point = System.Windows.Point;
 
 namespace Controls
@@ -37,14 +38,17 @@ namespace Controls
         private void InitializeDynamicControls(TextBox originalControl)
         {
             CloneTextBox = new TextBox();
+            Grid.SetRow(CloneTextBox, 1);
             CloneTextBox.Height = originalControl.ActualHeight;
             CloneTextBox.Width = originalControl.ActualWidth;
             InitializeBinding();
             CloneTextBox.Text = originalControl.Text;
+            CloneTextBox.FontSize = originalControl.FontSize;
+            CloneTextBox.VerticalAlignment = VerticalAlignment.Top;
+            CloneTextBox.HorizontalAlignment = HorizontalAlignment.Left;
+            CloneTextBox.Margin = new Thickness(CloneTextBoxLocation.X, CloneTextBoxLocation.Y, 0, 0);
+            CloneTextBox.Padding = originalControl.Padding;
             CloneTextBox.Tag = originalControl.Tag;
-            Grid.SetRow(CloneTextBox, 1);
-            CloneTextBox.Margin = new Thickness(CloneTextBoxLocation.X - 30, 10, 0, 0);
-
             AttachDynamicEvents();
         }
 
@@ -124,15 +128,14 @@ namespace Controls
         }
         protected void BeginChangingDynamicItem(TextBox originalControl)
         {
-            InitializeDynamicControls(originalControl);
             CloneTextBoxLocation = GetCloneControlLocation(originalControl);
+            InitializeDynamicControls(originalControl);
             AddDynamicControls();
         }
 
-        private Rectangle GetCloneControlLocation(TextBox control)
+        protected virtual Rectangle GetCloneControlLocation(TextBox control)
         {
-            var point = control.TranslatePoint(new Point(0, 0), this);
-            return new Rectangle((int)point.X, (int)point.Y, (int)control.ActualWidth, (int)control.ActualHeight);
+            throw new NotImplementedException();
         }
         protected virtual void AddDynamicControls() { throw new NotImplementedException(); }
         protected virtual void RemoveDynamicControls() { throw new NotImplementedException(); }
@@ -143,7 +146,7 @@ namespace Controls
             DisposeDynamicItems();
         }
 
-        internal abstract string GenerateName(string name);
+        internal abstract string GenerateName(string name, string path = "", bool isProg = true);
 
         public void AddItem(T item)
         {

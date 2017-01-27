@@ -32,7 +32,7 @@ namespace Controls
             }
         }
 
-        internal override string GenerateName(string name)
+        internal override string GenerateName(string name, string path = "", bool isProg = false)
         {
             string generattingName = name;
             int i = 0;
@@ -48,7 +48,8 @@ namespace Controls
         internal void LoadNotes(string path)
         {
             BinaryFormatter serializer = new BinaryFormatter();
-            if (!File.Exists(path)) {
+            if (!File.Exists(path))
+            {
                 Notes.Clear();
                 return;
             }
@@ -67,7 +68,7 @@ namespace Controls
             //    RemoveItem(Notes.ElementAt(i).Value.Name);
             //    i--;
             //}
-           
+
             foreach (var note in collection)
             {
                 AddItem(note.Value);
@@ -80,10 +81,10 @@ namespace Controls
             var im = sender as System.Windows.Controls.Image;
             if (im != null)
             {
-               // ParentControl.BrowseProject.DelFlag(Notes[im.Tag.ToString()]);
+                // ParentControl.BrowseProject.DelFlag(Notes[im.Tag.ToString()]);
                 Notes.Remove(im.Tag.ToString());
                 ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
-              //  MainControl.Items.Refresh();
+                //  MainControl.Items.Refresh();
             }
         }
 
