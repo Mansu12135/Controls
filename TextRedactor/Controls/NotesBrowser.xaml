@@ -136,13 +136,13 @@
                             >
                                     <StackPanel>
                                         <DockPanel Cursor="Hand" HorizontalAlignment="Stretch">
-                                            <TextBox Text="{Binding Value.Name}" Tag="{Binding Key}" Name="TextName" MaxWidth="150" Width="125" HorizontalAlignment="Right" FontSize="14" BorderBrush="{x:Null}" MouseDoubleClick="TextName_OnMouseDoubleClick" IsEnabled="False"/>
-                                            <!--<Button Name="Edit" Width="15"  HorizontalAlignment="Right" Margin="3,0,0,0">
-                                                <Image Tag="{Binding Value.Name}" Name="EditImage" Source="Resources/edit-512.png" Cursor="Hand" >
+                                            <TextBox Text="{Binding Value.Name}" Tag="{Binding Key}" Name="TextName" MaxWidth="150" Width="125" HorizontalAlignment="Right" FontSize="14" IsEnabled="False"/>
+                                            <Button Name="Edit" Tag="{Binding Key}" Width="15" Click="EditNoteName_MouseDown"  HorizontalAlignment="Right" Margin="3,0,0,0">
+                                                <Image  Name="EditNoteName" Source="Resources/edit.png" Cursor="Hand" >
                                                 </Image>
-                                        </Button>-->
+                                        </Button>
                                             <Border Width="15" HorizontalAlignment="Right" Padding="0" Height="15">
-                                                <Image Tag="{Binding Value.Name}" x:Name="DelNote" Source="Resources/close_icon.png" MouseUp="DelNote_MouseUp">
+                                                <Image Tag="{Binding Value.Name}" x:Name="DelNote" Source="Resources/closeNote.png" MouseUp="DelNote_MouseUp">
                                                 </Image>
                                             </Border>
                                         </DockPanel>

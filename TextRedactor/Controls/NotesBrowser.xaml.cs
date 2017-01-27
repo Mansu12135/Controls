@@ -140,12 +140,14 @@ namespace Controls
             }
         }
 
-        private void TextName_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void EditNoteName_MouseDown(object sender, RoutedEventArgs e)
         {
-            TextBox text = sender as TextBox;
-            if (text != null)
+            var text = sender as Button;
+            var panel = text.Parent as Panel;
+            var t = panel.Children[0] as TextBox;
+            if (t != null)
             {
-                BeginChangingDynamicItem(text);
+                BeginChangingDynamicItem(t);
             }
         }
     }

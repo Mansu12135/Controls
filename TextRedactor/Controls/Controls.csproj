@@ -264,6 +264,8 @@
     <Content Include="kindlegen.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\closeNote.png" />
+    <Resource Include="Resources\edit.png" />
     <Resource Include="Resources\noteFlag.png" />
     <Resource Include="Resources\GrayFlag.png" />
     <Resource Include="Resources\numericList.png" />
