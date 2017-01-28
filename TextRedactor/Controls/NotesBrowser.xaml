@@ -137,7 +137,7 @@
                             >
                                     <StackPanel x:Name="stackPanel">
                                         <DockPanel Cursor="Hand" >
-                                            <TextBox Text="{Binding Value.Name}" BorderThickness="0" Tag="{Binding Key}" Name="TextName" Width="{Binding Path=ActualWidth, ElementName=stackPanel, Converter={converters:PercentageConverter}, ConverterParameter='36'}" HorizontalAlignment="Stretch" FontSize="14" IsEnabled="False"/>
+                                            <TextBox Text="{Binding Value.Name}" BorderThickness="0" Tag="{Binding Key}" Name="TextName" Width="{Binding ActualWidth, ElementName=stackPanel, Converter={converters:PercentageConverter}, ConverterParameter='36'}" HorizontalAlignment="Stretch" FontSize="14" IsEnabled="False"/>
                                             <Border BorderThickness="0" Name="Edit" Tag="{Binding Key}" Width="15"  Height="15"  MouseDown="EditNoteName_MouseDown"  HorizontalAlignment="Right" Margin="3,0,0,0">
                                                 <Image  Name="EditNoteName" Source="Resources/edit.png" Cursor="Hand" >
                                                 </Image>
@@ -147,7 +147,7 @@
                                                 </Image>
                                             </Border>
                                         </DockPanel>
-                                        <TextBox Text="{Binding Value.Text}" BorderThickness="0"  Name="TextValue" BorderBrush="{x:Null}"  MaxWidth="{Binding ActualWidth, ElementName=stackPanel, Mode=OneWay}" Margin="0,6,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch"/>
+                                        <TextBox Text="{Binding Value.Text}" BorderThickness="0"  Name="TextValue" BorderBrush="{x:Null}"  Width="{Binding ActualWidth, ElementName=stackPanel, Mode=OneWay}" Margin="0,6,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch"/>
                                     </StackPanel>
                                 </Border>
                                 <ControlTemplate.Triggers>

@@ -170,12 +170,12 @@ namespace Controls
         {
             if (MainControl.SelectedIndex > -1)
             {
-                //var par = MainControl.SelectedValue as KeyValuePair<string, Note>;
-                //if (par != null)
-                //{
-                //    ParentControl.TextBox.MainControl.Focus();
-                //    ParentControl.TextBox.MainControl.CaretPosition = BrowseProject.GetTextPointAt(ParentControl.TextBox.MainControl.Document.ContentStart, par.Value.OffsetStart);
-                //}
+                var par = (KeyValuePair <string, Note>)MainControl.SelectedValue;
+                if (!string.IsNullOrEmpty(par.Key))
+                {
+                    ParentControl.TextBox.MainControl.Focus();
+                    ParentControl.TextBox.MainControl.CaretPosition = BrowseProject.GetTextPointAt(ParentControl.TextBox.MainControl.Document.ContentStart, par.Value.OffsetStart);
+                }
             }
         }
     }
