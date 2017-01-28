@@ -204,6 +204,7 @@ namespace Controls
                 string lastFile = System.IO.Path.GetFileName(LoadedFile);
                 LoadedFile = ProjectsPath + "\\" + newName + "\\Files\\" + lastFile;
             }
+            ((ISettings)ParentControl.Parent).SaveSettings();
             if (propertForm == null) { return; }
             propertForm.value.Name = newName;
             ((Project)propertForm.value).Files = newProject.Files;
@@ -247,6 +248,7 @@ namespace Controls
             }
             Notes[project].Files[index] = new LoadedFile(System.IO.Path.GetDirectoryName(file.Path) + "\\" + newFile, ProjectsPath + "\\" + project);
             OnSave(project);
+            ((ISettings)ParentControl.Parent).SaveSettings();
         }
 
         public void AddFileToProject(string project, string filePath)
@@ -592,28 +594,29 @@ namespace Controls
             base.CloneTextBox_LostFocus(sender, e);
             if (!IsValid) { return; }
             var mouseEventArgs = e as MouseEventArgs;
-            if (mouseEventArgs == null) { return; }
-            var positionCLick = mouseEventArgs.GetPosition(MainProjectList);
-            if (!CloneTextBoxLocation.Contains((int)positionCLick.X, (int)positionCLick.Y))
+            if (e != null && mouseEventArgs == null) { return; }
+            if (e != null)
             {
-                if (CloneTextBox.Tag.ToString() != CloneTextBox.Text)
-                {
-                    if (!ChangedFileName)
-                    {
-                        RenameProject(CloneTextBox.Tag.ToString(), CloneTextBox.Text);
-                    }
-                    else
-                    {
-                        LoadedFile file = Notes[CurentProject.Name].Files.Where(item => item.Path == CloneTextBox.Tag.ToString()).FirstOrDefault();
-                        if (file == null) { return; }
-                        string directoryPath = Path.GetDirectoryName(file.Path) + "\\";
-                        RenameFileInProject(Directory.GetParent(directoryPath).Parent.Name, file, CloneTextBox.Text);
-                        IsChangeFileName = false;
-                    }
-                }
-                MainProjectList.Items.Refresh();
-                EndChangingDynamicItem();
+                var clickPosition = mouseEventArgs.GetPosition(MainProjectList);
+                if (CloneTextBoxLocation.Contains((int)clickPosition.X, (int)clickPosition.Y)) { return; }
             }
+            if (CloneTextBox.Tag.ToString() != CloneTextBox.Text)
+            {
+                if (!ChangedFileName)
+                {
+                    RenameProject(CloneTextBox.Tag.ToString(), CloneTextBox.Text);
+                }
+                else
+                {
+                    LoadedFile file = Notes[CurentProject.Name].Files.Where(item => item.Path == CloneTextBox.Tag.ToString()).FirstOrDefault();
+                    if (file == null) { return; }
+                    string directoryPath = Path.GetDirectoryName(file.Path) + "\\";
+                    RenameFileInProject(Directory.GetParent(directoryPath).Parent.Name, file, CloneTextBox.Text);
+                    IsChangeFileName = false;
+                }
+            }
+            MainProjectList.Items.Refresh();
+            EndChangingDynamicItem();
         }
     }
 }

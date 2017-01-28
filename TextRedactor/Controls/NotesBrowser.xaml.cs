@@ -108,11 +108,13 @@ namespace Controls
             base.CloneTextBox_LostFocus(sender, e);
             if (!IsValid) { return; }
             var mouseEventArgs = e as MouseEventArgs;
-            if (mouseEventArgs == null) { return; }
-            var positionCLick = mouseEventArgs.GetPosition(Application.Current.MainWindow);
-            if (!CloneTextBoxLocation.Contains((int)positionCLick.X, (int)positionCLick.Y))
+            if (e != null && mouseEventArgs == null) { return; }
+            if (e != null)
             {
-                if (CloneTextBox.Tag.ToString() != CloneTextBox.Text)
+                var clickPosition = mouseEventArgs.GetPosition(MainControl);
+                if (CloneTextBoxLocation.Contains((int)clickPosition.X, (int)clickPosition.Y)) { return; }
+            }
+            if (CloneTextBox.Tag.ToString() != CloneTextBox.Text)
                 {
                     string name = CloneTextBox.Tag.ToString();
                     //File.Move(file, Path.GetDirectoryName(file) + "\\" + CloneTextBox.Text + Path.GetExtension(file));
@@ -122,7 +124,6 @@ namespace Controls
                 }
                 MainControl.Items.Refresh();
                 EndChangingDynamicItem();
-            }
         }
 
         protected override Rectangle GetCloneControlLocation(TextBox control)

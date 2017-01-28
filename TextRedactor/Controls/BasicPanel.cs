@@ -75,7 +75,7 @@ namespace Controls
         {
             if (e.Key == Key.Enter)
             {
-                CloneTextBox_LostFocus(null, new MouseEventArgs(InputManager.Current.PrimaryMouseDevice, 1000));
+                CloneTextBox_LostFocus(null, null);
             }
             else if (e.Key == Key.Escape)
             {
@@ -147,8 +147,11 @@ namespace Controls
         protected void EndChangingDynamicItem()
         {
             Validation.ClearInvalid(CloneTextBox.GetBindingExpression(TextBox.TextProperty));
-            ErrorToolTip.IsOpen = false;
-            ErrorToolTip = null;
+            if (ErrorToolTip != null)
+            {
+                ErrorToolTip.IsOpen = false;
+                ErrorToolTip = null;
+            }
             Binding = null;
             RemoveDynamicControls();
             DisposeDynamicItems();

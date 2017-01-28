@@ -27,7 +27,7 @@ namespace Controls
         private Command OnlyTextCommand;
         private Command OnlyProjectCommand;
         private Command ProjectAndNoteCommand;
-        private Window Parent;
+        internal Window Parent;
         private List<SearchResult> ResultSearch;
         private int FlowPosition;
         private int activeFindIndex;
@@ -632,6 +632,7 @@ namespace Controls
         }
         public void InitFullScr(Window w)
         {
+            if(!(w is ISettings)) { throw new Exception();}
             Parent = w;
             OnlyTextCommand = new Command(Parent)
             {

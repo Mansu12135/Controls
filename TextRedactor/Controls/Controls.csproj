@@ -95,6 +95,7 @@
     <Compile Include="InformationForm.xaml.cs">
       <DependentUpon>InformationForm.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ISettings.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="MyCommands.cs" />
     <Compile Include="Note.cs" />
