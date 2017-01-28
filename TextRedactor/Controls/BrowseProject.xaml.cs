@@ -33,6 +33,7 @@ namespace Controls
         public void Dispose()
         {
             if (string.IsNullOrEmpty(LoadedFile)) { return; }
+            ParentControl.BrowseProject.UpdateNoteAfterOpening();
             ParentControl.NotesBrowser.CloseNotes(LoadedFile);
         }
         private void CopyAll(DirectoryInfo source, DirectoryInfo target)
@@ -83,7 +84,7 @@ namespace Controls
 
         internal void DelFlag(Note note)
         {
-
+            UpdateNoteAfterOpening();
         }
 
         private string vProjectPath = "";
@@ -113,7 +114,7 @@ namespace Controls
         private void buttonAddFile_MouseDown(object sender, MouseButtonEventArgs e)
         {
             string projName = ((TextBlock)sender).Tag.ToString();
-            AddNewFileToProject(projName, GenerateName("Chapter",ProjectsPath+"\\"+projName+"\\Files", false));
+            AddNewFileToProject(projName, GenerateName("Chapter", ProjectsPath + "\\" + projName + "\\Files", false));
             MainProjectList.Items.Refresh();
         }
 
@@ -126,7 +127,7 @@ namespace Controls
             }
         }
 
-        internal override string GenerateName(string name,string path, bool isProg = true)
+        internal override string GenerateName(string name, string path, bool isProg = true)
         {
             string generattingName = name;
             int i = 0;
@@ -158,7 +159,7 @@ namespace Controls
                 Directory.CreateDirectory(ProjectsPath);
             }
 
-            string name = GenerateName("NewProject",ProjectsPath);
+            string name = GenerateName("NewProject", ProjectsPath);
             string path = ProjectsPath + "\\" + name;
             if (File.Exists(path)) { return; }
             Directory.CreateDirectory(path);
@@ -265,7 +266,10 @@ namespace Controls
 
         internal void OpenFile(string path, string content)
         {
-
+            if (!string.IsNullOrEmpty(LoadedFile))
+            {
+                UpdateNoteAfterOpening();
+            }
             ParentControl.TextBox.MainControl.FilePath = "";
             var range = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, ParentControl.TextBox.MainControl.Document.ContentEnd);
             using (var fStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read))
@@ -282,17 +286,9 @@ namespace Controls
                 string folder = Path.GetDirectoryName(path);
                 OnFileOpen(folder + "\\", content);
                 LoadedFile = folder + "\\" + content + ".not";
-                if (!String.IsNullOrEmpty(LoadedFile))
-                {
-                    UpdateNoteAfterOpening();
-                }
-                //UpdateNoteInFile();
-                //AddNoteAfterOpenFile();
-
+                
             }
-            //  DirectoryInfo dir = new DirectoryInfo(System.IO.Path.GetDirectoryName(path) + "\\");
             ParentControl.TextBox.MainControl.FilePath = path;
-            //Notes[dir.Parent.Name].Files.Find(item => item.Name == content).Path;
         }
         private void buttonOpenFile_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -304,11 +300,15 @@ namespace Controls
             if (!ParentControl.TextBox.MainControl.IsEnabled)
             {
                 ParentControl.TextBox.MainControl.IsEnabled = true;
+                ParentControl.Format.IsEnabled = true;
             }
             var textBlock = (System.Windows.Controls.Label)sender;
             if (CurentFile == textBlock.Tag.ToString()) { return; }
             OpenFile(textBlock.Tag.ToString(), Path.GetFileNameWithoutExtension(textBlock.Tag.ToString()));
-
+            if (!string.IsNullOrEmpty(LoadedFile))
+            {
+                UpdateTagOnFlags();
+            }
         }
         public byte[] getJPGFromImageControl(BitmapImage imageC)
         {
@@ -445,53 +445,93 @@ namespace Controls
             }
         }
 
-        private void UpdateNoteAfterOpening()
+        internal void UpdateNoteAfterOpening()
         {
-            System.Windows.Controls.Image replacementImage;
-
-
-            var blocks = ParentControl.TextBox.MainControl.Document.Blocks.Where(item => item.GetType()==typeof(Paragraph)).
-                Select(item => ((Paragraph)item).Inlines.Where(x=>x.GetType() == typeof(InlineUIContainer) || item.Background == System.Windows.Media.Brushes.PaleGreen)).ToList();
-
-            foreach (var item in blocks)
+            var inlines = ParentControl.TextBox.MainControl.Document.Blocks.Where(item => item.GetType() == typeof(Paragraph)).
+                SelectMany(item => ((Paragraph)item).Inlines.Where(x => x.GetType() == typeof(InlineUIContainer) || (x.Background !=null && (x.Background as SolidColorBrush).Color == System.Windows.Media.Brushes.PaleGreen.Color))).ToList();
+          //  byte[] flag = getJPGFromImageControl(Properties.Resources.noteFlag);
+            int n = inlines.Count;
+            for (int j = 0; j < n; j++)
             {
-                var inlines = ((Paragraph)item).Inlines.ToList();
-                int n = inlines.Count;
-                for (int j = 0; j < n; j++)
-                {
-                    var inline = inlines[j] as InlineUIContainer;
-                    if (inline == null) { continue; }
-                        var image = inline.Child as System.Windows.Controls.Image;
-                        if (image == null) { continue; }
-                        replacementImage = image;
-                        if (replacementImage.Tag == null) { continue; }
-                        string key = replacementImage.Tag.ToString();
-                        if (ParentControl.NotesBrowser.Notes.ContainsKey(key))
-                        {
-                            int start = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentStart).Text.Length;
-                            if (ParentControl.NotesBrowser.Notes[key].OffsetStart != start)
-                            {
-                                ParentControl.NotesBrowser.Notes[key].OffsetStart = start;
-                            }
+                var inline = inlines[j] as InlineUIContainer;
+                if (inline == null) { continue; }
+                var image = inline.Child as System.Windows.Controls.Image;
+                if (image == null) { continue; }
+             //   byte[] byt = getJPGFromImageControl(image.Source as BitmapImage);
+                //сравнивает картинки
+                //if (byt.Length == flag.Length)
+                //{
+                //    bool isflag = true;
+                //    for (int t = 0; t < byt.Length; t++)
+                //    {
+                //        if (byt[t] != flag[t]) { isflag = false; break; }
+                //    }
+                    if (image.Tag == null) continue;
 
-                            if (j == inlines.Count - 1)
+                    var key = image.Tag.ToString();
+                    int i = j;
+                    int start = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentStart).Text.Length;
+                    while (j < inlines.Count - 1 && inlines[j + 1].Background!=null && (inlines[j + 1].Background as SolidColorBrush).Color == System.Windows.Media.Brushes.PaleGreen.Color)
+                    {
+                        j++;
+                    }
+                    if (ParentControl.NotesBrowser.Notes.ContainsKey(key))
+                    {
+                        if (ParentControl.NotesBrowser.Notes[key].OffsetStart != start)
+                        {
+                            ParentControl.NotesBrowser.Notes[key].OffsetStart = start;
+                        }
+                        ParentControl.NotesBrowser.Notes[key].OffsetEnd = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentEnd).Text.Length;
+                    }
+                    else
+                    {
+                    new TextRange(inlines[i].ContentStart, inlines[j].ContentEnd).ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
+                    foreach (var block in ParentControl.TextBox.MainControl.Document.Blocks)
+                    {
+                        if (block is Paragraph)
+                        {
+                            var paragraph = block as Paragraph;
+
+                            if (paragraph.Inlines.Contains(inline))
                             {
-                                ParentControl.NotesBrowser.Notes[key].OffsetEnd = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentEnd).Text.Length;
+                                paragraph.Inlines.Remove(inline);
+                                break;
                             }
-                            else
-                            {
-                                int i = j + 1;
-                                while (i < inlines.Count && inlines[i].Background == System.Windows.Media.Brushes.PaleGreen)
-                                {
-                                    i++;
-                                }
-                                ParentControl.NotesBrowser.Notes[key].OffsetEnd = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[i > 0 ? i-- : i].ContentEnd).Text.Length;
-                            }
+                        }
+                    }
+                    }
+               // }
+            }
+        }
+        public void UpdateTagOnFlags()
+        {
+            var inlines = ParentControl.TextBox.MainControl.Document.Blocks.Where(item => item.GetType() == typeof(Paragraph)).
+               SelectMany(item => ((Paragraph)item).Inlines.Where(x => x.GetType() == typeof(InlineUIContainer))).ToList();
+            byte[] flag = getJPGFromImageControl(Properties.Resources.noteFlag);
+            int n = inlines.Count;
+            foreach (var item in inlines)
+            {
+                var image = ((InlineUIContainer)item).Child as System.Windows.Controls.Image;
+                if (image == null) { continue; }
+                byte[] byt = getJPGFromImageControl(image.Source as BitmapImage);
+                //сравнивает картинки
+                if (byt.Length == flag.Length)
+                {
+                    bool isflag = true;
+                    for (int t = 0; t < byt.Length; t++)
+                    {
+                        if (byt[t] != flag[t]) { isflag = false; break; }
+                    }
+                    if (!isflag) continue;
+                    int start = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, item.ContentStart).Text.Length;
+                    var key = ParentControl.NotesBrowser.Notes.Where(x => x.Value.OffsetStart == start);
+                    if (key.Any())
+                    {
+                        image.Tag = key.First().Key;
                     }
                 }
             }
         }
-
         PropertiesForm propertForm;
         private void Propert_Click(object sender, RoutedEventArgs e)
         {

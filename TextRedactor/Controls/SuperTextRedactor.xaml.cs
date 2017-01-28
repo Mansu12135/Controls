@@ -73,14 +73,23 @@ namespace Controls
             Format.comboWigth.KeyDown += ComboWigth_KeyDown;
         }
 
+      
+
         private void ButListBubl_MouseUp(object sender, MouseButtonEventArgs e)
         {
             List list = new List();
             list.MarkerStyle = TextMarkerStyle.Disc;
             var listItem = new ListItem();
             list.ListItems.Add(listItem);
-            TextBox.MainControl.Document.Blocks.Add(list);
-            TextBox.MainControl.CaretPosition = TextBox.MainControl.Document.ContentEnd;
+            //TextBox.MainControl.Document.Blocks.Add(list);
+            //  TextBox.MainControl.CaretPosition = TextBox.MainControl.Document.ContentEnd;
+            TextBox.MainControl.Focus();
+            TextPointer p = TextBox.MainControl.CaretPosition;
+           // TextBox.MainControl.BeginChange();
+            System.Windows.Clipboard.SetData(System.Windows.DataFormats.StringFormat, list);
+            TextBox.MainControl.Paste();
+            //  var imageContainer = new InlineUIContainer(list, p);
+         //   TextBox.MainControl.EndChange();
         }
 
 
@@ -261,10 +270,22 @@ namespace Controls
             if (panel == null)
             {
                 panel = new DictionaryPanel();
-                panel.HidenDictionary.MouseUp += new MouseButtonEventHandler((s, r) => { Container.Child = null; panel = null; });
+                panel.HidenDictionary.MouseUp += new MouseButtonEventHandler((s, r) => { MainContainer.Children.Remove(panel); NotesBrowser.Visibility = Visibility.Visible; panel = null; });
                 panel.Name = "dictionary";
+                if (ShowNotes.Visibility == Visibility.Visible)
+                {
+                    ShowNotes_MouseUp(null, null);
+                }
                 panel.TextWord.KeyUp += TextWord_KeyUp;
-                Container.Child = panel;
+                panel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
+                panel.VerticalAlignment = VerticalAlignment.Stretch;
+                //  panel.zIndex = 2;
+                NotesBrowser.Visibility = Visibility.Hidden;
+                Grid.SetColumn(panel, 2);
+                Grid.SetRowSpan(panel, 2);
+                System.Windows.Controls.Panel.SetZIndex(panel, 2);
+                MainContainer.Children.Add(panel);
+             //   Container.Child = panel;
             }
             panel.TextWord.Text = GetCurrentWord();// this.TextBox.MainControl.Selection.Text;
             ShowDictionaryResult(panel.TextWord.Text);
@@ -275,6 +296,7 @@ namespace Controls
         }
         private string GetCurrentWord()
         {
+            if (TextBox.MainControl.IsReadOnly == true) return "";
             if (!string.IsNullOrEmpty(TextBox.MainControl.Selection.Text))
             {
                 return TextBox.MainControl.Selection.Text;
@@ -378,13 +400,6 @@ namespace Controls
         {
             int start = new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.Start).Text.Length;
             int end = new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.End).Text.Length;
-            //int dif = 0;
-            //foreach (var note in NotesBrowser.Notes)
-            //{
-            //    if (note.Value.OffsetStart < start) dif++;
-            //}
-            //start -= dif;
-            //end -= dif;
             NotesBrowser.AddItem(new Note(NotesBrowser.GenerateName("Note"), text, start, end));
         }
 
@@ -683,6 +698,7 @@ namespace Controls
         private void ShowNotes_MouseUp(object sender, MouseButtonEventArgs e)
         {
             AnimateMargin(RedactorConteiner.Margin, new Thickness(RedactorConteiner.Margin.Left, RedactorConteiner.Margin.Top, 0, RedactorConteiner.Margin.Bottom), RedactorConteiner, false, ShowNotes);
+            ShowNotes.Visibility = Visibility.Hidden;
         }
 
         private void MenuAddPr_Click(object sender, RoutedEventArgs e)
@@ -695,18 +711,34 @@ namespace Controls
             if (searchPanel == null)
             {
                 searchPanel = new SearchPanel();
-                searchPanel.HidenSearch.MouseUp += new MouseButtonEventHandler((s, r) => { Container.Child = null; searchPanel = null; });
+                searchPanel.HidenSearch.MouseUp += new MouseButtonEventHandler((s, r) => { MainContainer.Children.Remove(searchPanel); NotesBrowser.Visibility = Visibility.Visible; searchPanel = null; });
                 searchPanel.GoToNextFind.MouseUp += GoToNextFind_MouseUp;
                 searchPanel.ButReplace.MouseUp += ButReplace_MouseUp;
                 searchPanel.TextWord.KeyUp += TextWord_KeyUp1;
                 searchPanel.Name = "search";
-                Container.Child = searchPanel;
+                if (ShowNotes.Visibility == Visibility.Visible)
+                {
+                    ShowNotes_MouseUp(null, null);
+                }
+                searchPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
+                searchPanel.VerticalAlignment = VerticalAlignment.Stretch;
+                NotesBrowser.Visibility = Visibility.Hidden;
+                Grid.SetColumn(searchPanel, 2);
+                Grid.SetRowSpan(searchPanel, 2);
+                System.Windows.Controls.Panel.SetZIndex(searchPanel, 2);
+                MainContainer.Children.Add(searchPanel);
+              //  Container.Child = searchPanel;
             }
             else
             {
-                Container.Child = searchPanel;
+                //Grid.SetColumn(searchPanel, 2);
+                //Grid.SetRowSpan(searchPanel, 2);
+                //System.Windows.Controls.Panel.SetZIndex(searchPanel, 2);
+                //MainContainer.Children.Add(searchPanel);
+               // Container.Child = searchPanel;
             }
-            GetSearchResalt(GetCurrentWord());
+            if (!TextBox.MainControl.IsReadOnly && !string.IsNullOrWhiteSpace(TextBox.MainControl.Selection.Text))
+            GetSearchResalt(TextBox.MainControl.Selection.Text);
             //   TextBox.MainControl.CaretPosition = BrowseProject.GetTextPointAt(TextBox.MainControl.Document.ContentStart, ResultSearch.ElementAt(activeFindIndex).Key);
         }
         private void GetSearchResalt(string value)
@@ -724,7 +756,10 @@ namespace Controls
         }
         private void TextWord_KeyUp1(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            GetSearchResalt(searchPanel.TextWord.Text);
+            if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(searchPanel.TextWord.Text) &&!string.IsNullOrEmpty(BrowseProject.CurentFile))
+            {
+                GetSearchResalt(searchPanel.TextWord.Text);
+            }
         }
 
         private void RefreshAfterSearch(FlowDocument document)

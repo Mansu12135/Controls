@@ -124,7 +124,7 @@
 
         </StackPanel>
 
-        <ListBox x:Name="MainControl" Grid.Row="1" ItemsSource="{Binding Source={StaticResource cvs}}" Padding="30,0" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,0,0,30" >
+        <ListBox x:Name="MainControl" Grid.Row="1" ItemsSource="{Binding Source={StaticResource cvs}}" Padding="30,0" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,0,0,30" SelectionChanged="MainControl_SelectionChanged" >
             <ListBox.Resources>
                 <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <Setter Property="Template">

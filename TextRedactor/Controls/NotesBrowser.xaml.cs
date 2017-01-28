@@ -81,9 +81,10 @@ namespace Controls
             var im = sender as System.Windows.Controls.Image;
             if (im != null)
             {
-                ParentControl.BrowseProject.DelFlag(Notes[im.Tag.ToString()]);
                 Notes.Remove(im.Tag.ToString());
-               // ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
+                ParentControl.BrowseProject.UpdateNoteAfterOpening();
+                //   ParentControl.BrowseProject.DelFlag();
+                // ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
                 //  MainControl.Items.Refresh();
             }
         }
@@ -115,15 +116,15 @@ namespace Controls
                 if (CloneTextBoxLocation.Contains((int)clickPosition.X, (int)clickPosition.Y)) { return; }
             }
             if (CloneTextBox.Tag.ToString() != CloneTextBox.Text)
-                {
-                    string name = CloneTextBox.Tag.ToString();
-                    //File.Move(file, Path.GetDirectoryName(file) + "\\" + CloneTextBox.Text + Path.GetExtension(file));
-                    Notes.Add(CloneTextBox.Text, Notes[name]);
-                    Notes[CloneTextBox.Text].Name = CloneTextBox.Text;
-                    Notes.Remove(name);
-                }
-                MainControl.Items.Refresh();
-                EndChangingDynamicItem();
+            {
+                string name = CloneTextBox.Tag.ToString();
+                //File.Move(file, Path.GetDirectoryName(file) + "\\" + CloneTextBox.Text + Path.GetExtension(file));
+                Notes.Add(CloneTextBox.Text, Notes[name]);
+                Notes[CloneTextBox.Text].Name = CloneTextBox.Text;
+                Notes.Remove(name);
+            }
+            MainControl.Items.Refresh();
+            EndChangingDynamicItem();
         }
 
         protected override Rectangle GetCloneControlLocation(TextBox control)
@@ -141,7 +142,7 @@ namespace Controls
                 Validation.MarkInvalid(Binding, new ValidationError(new ExceptionValidationRule(), Binding));
                 if (ErrorToolTip == null)
                 {
-                    ErrorToolTip = new ToolTip {Content = TextRedactor.PathErrorMessage};
+                    ErrorToolTip = new ToolTip { Content = TextRedactor.PathErrorMessage };
                     CloneTextBox.ToolTip = ErrorToolTip;
                 }
                 ErrorToolTip.IsOpen = true;
@@ -162,6 +163,19 @@ namespace Controls
             if (t != null)
             {
                 BeginChangingDynamicItem(t);
+            }
+        }
+
+        private void MainControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (MainControl.SelectedIndex > -1)
+            {
+                //var par = MainControl.SelectedValue as KeyValuePair<string, Note>;
+                //if (par != null)
+                //{
+                //    ParentControl.TextBox.MainControl.Focus();
+                //    ParentControl.TextBox.MainControl.CaretPosition = BrowseProject.GetTextPointAt(ParentControl.TextBox.MainControl.Document.ContentStart, par.Value.OffsetStart);
+                //}
             }
         }
     }
