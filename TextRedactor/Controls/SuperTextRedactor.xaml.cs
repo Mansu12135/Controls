@@ -62,6 +62,8 @@ namespace Controls
             Format.FontFamily.SelectionChanged += ((s, e) => TextBox.MainControl.Focus());
             // Format.ButtonDictionary.MouseUp += ButtonDictionary_MouseUp;
             Format.ExportButton.MouseUp += ExportButton_MouseUp;
+            Format.ButListNum.MouseUp += ButListNum_MouseUp;
+            Format.ButListBubl.MouseUp += ButListBubl_MouseUp;
             BrowseProject.HidenProject.MouseUp += HidenProject_MouseUp;
             NotesBrowser.HidenNotes.MouseUp += HidenNotes_MouseUp;
             TextBox.MainControl.Parent = this;
@@ -71,7 +73,26 @@ namespace Controls
             Format.comboWigth.KeyDown += ComboWigth_KeyDown;
         }
 
+        private void ButListBubl_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            List list = new List();
+            list.MarkerStyle = TextMarkerStyle.Disc;
+            var listItem = new ListItem();
+            list.ListItems.Add(listItem);
+            TextBox.MainControl.Document.Blocks.Add(list);
+            TextBox.MainControl.CaretPosition = TextBox.MainControl.Document.ContentEnd;
+        }
 
+
+        private void ButListNum_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            List list = new List();
+            list.MarkerStyle = TextMarkerStyle.Decimal;
+            var listItem = new ListItem();
+            list.ListItems.Add(listItem);
+            TextBox.MainControl.Document.Blocks.Add(list);
+            TextBox.MainControl.CaretPosition = TextBox.MainControl.Document.ContentEnd;
+        }
 
         private void ComboWigth_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {

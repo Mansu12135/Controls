@@ -448,41 +448,45 @@ namespace Controls
         private void UpdateNoteAfterOpening()
         {
             System.Windows.Controls.Image replacementImage;
-            var blocks = ParentControl.TextBox.MainControl.Document.Blocks.ToList();
-            for (int b = 0; b < blocks.Count; b++)
-            {
-                var paragraph = blocks[b] as Paragraph;
-                if (paragraph == null) { continue; }
-                var inlines = paragraph.Inlines.OfType<InlineUIContainer>().ToList();
-                for (int j = 0; j < inlines.Count; j++)
-                {
-                    if (inlines[j] == null) { continue; }
-                    var image = inlines[j].Child as System.Windows.Controls.Image;
-                    if (image == null) { continue; }
-                    replacementImage = image;
-                    if (replacementImage.Tag == null) { continue; }
-                    string key = replacementImage.Tag.ToString();
-                    if (ParentControl.NotesBrowser.Notes.ContainsKey(key))
-                    {
-                        int start = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentStart).Text.Length;
-                        if (ParentControl.NotesBrowser.Notes[key].OffsetStart != start)
-                        {
-                            ParentControl.NotesBrowser.Notes[key].OffsetStart = start;
-                        }
 
-                        if (j == inlines.Count - 1)
+
+            var blocks = ParentControl.TextBox.MainControl.Document.Blocks.Where(item => item.GetType()==typeof(Paragraph)).
+                Select(item => ((Paragraph)item).Inlines.Where(x=>x.GetType() == typeof(InlineUIContainer) || item.Background == System.Windows.Media.Brushes.PaleGreen)).ToList();
+
+            foreach (var item in blocks)
+            {
+                var inlines = ((Paragraph)item).Inlines.ToList();
+                int n = inlines.Count;
+                for (int j = 0; j < n; j++)
+                {
+                    var inline = inlines[j] as InlineUIContainer;
+                    if (inline == null) { continue; }
+                        var image = inline.Child as System.Windows.Controls.Image;
+                        if (image == null) { continue; }
+                        replacementImage = image;
+                        if (replacementImage.Tag == null) { continue; }
+                        string key = replacementImage.Tag.ToString();
+                        if (ParentControl.NotesBrowser.Notes.ContainsKey(key))
                         {
-                            ParentControl.NotesBrowser.Notes[key].OffsetEnd = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentEnd).Text.Length;
-                        }
-                        else
-                        {
-                            int i = j + 1;
-                            while (i < inlines.Count && inlines[i].Background == System.Windows.Media.Brushes.PaleGreen)
+                            int start = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentStart).Text.Length;
+                            if (ParentControl.NotesBrowser.Notes[key].OffsetStart != start)
                             {
-                                i++;
+                                ParentControl.NotesBrowser.Notes[key].OffsetStart = start;
                             }
-                            ParentControl.NotesBrowser.Notes[key].OffsetEnd = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[i > 0 ? i-- : i].ContentEnd).Text.Length;
-                        }
+
+                            if (j == inlines.Count - 1)
+                            {
+                                ParentControl.NotesBrowser.Notes[key].OffsetEnd = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentEnd).Text.Length;
+                            }
+                            else
+                            {
+                                int i = j + 1;
+                                while (i < inlines.Count && inlines[i].Background == System.Windows.Media.Brushes.PaleGreen)
+                                {
+                                    i++;
+                                }
+                                ParentControl.NotesBrowser.Notes[key].OffsetEnd = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[i > 0 ? i-- : i].ContentEnd).Text.Length;
+                            }
                     }
                 }
             }
