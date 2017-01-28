@@ -72,79 +72,89 @@ namespace Controls
             {
                 if (CallStack.Count > 0)
                 {
-                    Monitor.Enter(LockObject);
-                    if (CallStack[0].Stop) { break; }
-                    var paragraphsList = Document.Blocks.ToList();
-                    var paragraphs = GetParagraph();
-                    int i = paragraphs.Count - 1;
-                    int n = paragraphsList.Count - 1;
-                    int diff = CallStack[0].Length - n;
-                    foreach (Paragraph paragraph in paragraphs)
+                    lock (LockObject)
                     {
-                        int currentPosition = CallStack[0].CurrentParagraph - i;
-                        if (diff == i)//add
+                        if (CallStack[0].Stop)
                         {
-                            if (currentPosition <= n)
+                            break;
+                        }
+                        var paragraphsList = Document.Blocks.ToList();
+                        var paragraphs = GetParagraph();
+                        int i = paragraphs.Count - 1;
+                        int n = paragraphsList.Count - 1;
+                        int diff = CallStack[0].Length - n;
+                        foreach (Paragraph paragraph in paragraphs)
+                        {
+                            int currentPosition = CallStack[0].CurrentParagraph - i;
+                            if (diff == i) //add
                             {
-                                paragraphsList[currentPosition] = paragraph;
+                                if (currentPosition <= n)
+                                {
+                                    paragraphsList[currentPosition] = paragraph;
 
-                                //  paragraphsList.Insert(currentPosition, paragraph);
+                                    //  paragraphsList.Insert(currentPosition, paragraph);
+                                }
+                                else //add paragraphs to last position
+                                {
+                                    paragraphsList.Add(paragraph);
+                                }
                             }
-                            else//add paragraphs to last position
+                            else if (diff > 0) //insert
                             {
-                                paragraphsList.Add(paragraph);
+                                if (i >= 1 && currentPosition < paragraphsList.Count) //replace paragraphs after insert
+                                {
+                                    paragraphsList[currentPosition] = paragraph;
+                                }
+                                else
+                                {
+                                    paragraphsList.Insert(currentPosition, paragraph);
+                                }
                             }
-                        }
-                        else if (diff > 0)//insert
-                        {
-                            if (i >= 1 && currentPosition < paragraphsList.Count)//replace paragraphs after insert
+                            else if (diff < 0) //delete
+                            {
+                                if ((paragraphsList.Count - 1 - CallStack[0].Length) > 0)
+                                    //in first iteration delete redudant paragraphs
+                                {
+                                    paragraphsList.RemoveRange(currentPosition + 1, diff * -1);
+                                }
+                                paragraphsList[currentPosition] = paragraph;
+                            }
+                            else if (diff == 0 && i > 0)
                             {
                                 paragraphsList[currentPosition] = paragraph;
                             }
-                            else
-                            {
-                                paragraphsList.Insert(currentPosition, paragraph);
-                            }
+                            i--;
                         }
-                        else if (diff < 0)//delete
+                        Document.Blocks.Clear();
+                        if (paragraphs.Count > 0)
                         {
-                            if ((paragraphsList.Count - 1 - CallStack[0].Length) > 0)//in first iteration delete redudant paragraphs
-                            {
-                                paragraphsList.RemoveRange(currentPosition + 1, diff * -1);
-                            }
-                            paragraphsList[currentPosition] = paragraph;
+                            Document.Blocks.AddRange(paragraphsList);
                         }
-                        else if (diff == 0 && i > 0)
+                        //using (
+                        //FileStream stream = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.None,
+                        //    20 * 1024 * 1024))
+                        //{
+                        //    new TextRange(Document.ContentStart, Document.ContentEnd).Save(stream, DataFormats.Rtf);
+                        //}
+                        if (new TextRange(Document.ContentStart, Document.ContentEnd).Text != CallStack[0].CheckingText)
                         {
-                            paragraphsList[currentPosition] = paragraph;
+                            Document.Dispatcher.Invoke(() =>
+                            {
+                                FileWorkerManager.Do(Document, FilePath);
+                                //    using (FileStream stream = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.None,
+                                //20 * 1024 * 1024))
+                                //    {
+                                //        new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Save(stream, DataFormats.Rtf);
+                                //    }
+                            });
                         }
-                        i--;
-                    }
-                    Document.Blocks.Clear();
-                    if (paragraphs.Count > 0)
-                    {
-                        Document.Blocks.AddRange(paragraphsList);
-                    }
-                    //using (
-                    //FileStream stream = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.None,
-                    //    20 * 1024 * 1024))
-                    //{
-                    //    new TextRange(Document.ContentStart, Document.ContentEnd).Save(stream, DataFormats.Rtf);
-                    //}
-                    FileWorkerManager.Do(Document, FilePath);
-                    if (new TextRange(Document.ContentStart, Document.ContentEnd).Text != CallStack[0].CheckingText) {
-                        Document.Dispatcher.Invoke(() =>
+                        else
                         {
                             FileWorkerManager.Do(Document, FilePath);
-                            //    using (FileStream stream = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.None,
-                            //20 * 1024 * 1024))
-                            //    {
-                            //        new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Save(stream, DataFormats.Rtf);
-                            //    }
-                        });
+                        }
+                        CallStack.RemoveAt(0);
+
                     }
-                    CallStack.RemoveAt(0);
-                    Monitor.Exit(LockObject);
                 }
             }
         }

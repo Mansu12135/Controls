@@ -100,7 +100,7 @@ namespace Controls
                 stratPosition = string.IsNullOrWhiteSpace(new TextRange(list[ParagraphCount].ContentStart, list[ParagraphCount].ContentEnd).Text) ? PreviousParagraphCount - 1 : PreviousParagraphCount;
                 endPosisition = ParagraphCount;
             }
-            else if (OnPasteFlag && PreviousParagraphCount == ParagraphCount)
+            else if (OnPasteFlag && PreviousParagraphCount == ParagraphCount || Selection.IsEmpty)
             {
                 stratPosition = PrevTextPointer;
                 endPosisition = ParagraphCount;
