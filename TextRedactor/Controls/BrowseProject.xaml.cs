@@ -81,6 +81,11 @@ namespace Controls
             }
         }
 
+        internal void DelFlag(Note note)
+        {
+
+        }
+
         private string vProjectPath = "";
 
         public BrowseProject(Dictionary<string, Project> collection)
@@ -93,6 +98,7 @@ namespace Controls
         {
             if (!string.IsNullOrEmpty(LoadedFile)) { ParentControl.NotesBrowser.CloseNotes(LoadedFile); }
             ParentControl.NotesBrowser.LoadNotes(projectPath + System.IO.Path.GetFileNameWithoutExtension(file) + ".not");
+            ParentControl.NotesBrowser.MainControl.Items.Refresh();
         }
 
         public void RefreshNotes(Dictionary<string, Project> collection)
@@ -276,7 +282,7 @@ namespace Controls
                 LoadedFile = folder + "\\" + content + ".not";
                 if (!String.IsNullOrEmpty(LoadedFile))
                 {
-                    UpdateNoteBeforeClosing();
+                    UpdateNoteAfterOpening();
                 }
                 //UpdateNoteInFile();
                 //AddNoteAfterOpenFile();
@@ -390,43 +396,43 @@ namespace Controls
 
             return ret;
         }
-        private void AddNoteAfterOpenFile()
-        {
-            foreach (var note in ParentControl.NotesBrowser.Notes)
-            {
-                int start = note.Value.OffsetStart;
-                int end = note.Value.OffsetEnd;
-                int dif = 0;
-                foreach (var not in ParentControl.NotesBrowser.Notes)
-                {
-                    if (not.Key == note.Key) { break; }
-                    if (not.Value.OffsetStart < start) dif++;
-                }
-                start += dif;
-                end += dif;
-                TextPointer startPointer = ParentControl.TextBox.MainControl.Document.ContentStart;
-                TextPointer startPos = GetTextPointAt(startPointer, start);
-                TextPointer endPos = GetTextPointAt(startPointer, end);
-                new TextRange(startPos, endPos).ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.PaleGreen);
-                var tempImage = Properties.Resources.noteFlag;
-                var ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-          tempImage.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));
+        //private void AddNoteAfterOpenFile()
+        //{
+        //    foreach (var note in ParentControl.NotesBrowser.Notes)
+        //    {
+        //        int start = note.Value.OffsetStart;
+        //        int end = note.Value.OffsetEnd;
+        //        int dif = 0;
+        //        foreach (var not in ParentControl.NotesBrowser.Notes)
+        //        {
+        //            if (not.Key == note.Key) { break; }
+        //            if (not.Value.OffsetStart < start) dif++;
+        //        }
+        //        start += dif;
+        //        end += dif;
+        //        TextPointer startPointer = ParentControl.TextBox.MainControl.Document.ContentStart;
+        //        TextPointer startPos = GetTextPointAt(startPointer, start);
+        //        TextPointer endPos = GetTextPointAt(startPointer, end);
+        //        new TextRange(startPos, endPos).ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.PaleGreen);
+        //        var tempImage = Properties.Resources.noteFlag;
+        //        var ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+        //  tempImage.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));
 
-                System.Windows.Controls.Image image = new System.Windows.Controls.Image();
-                image.Source = ScreenCapture;
-                image.Stretch = Stretch.Fill;
-                image.Cursor = Cursors.Hand;
-                image.Height = 14;
-                image.Width = 14;
-                image.Tag = note.Key;
-                image.MouseUp += NoteFlag_MouseUp;
-                TextPointer p = startPos;
-                ParentControl.TextBox.MainControl.BeginChange();
-                InlineUIContainer imageContainer = new InlineUIContainer(image, p);
-                ParentControl.TextBox.MainControl.EndChange();
-                ParentControl.TextBox.MainControl.Focus();
-            }
-        }
+        //        System.Windows.Controls.Image image = new System.Windows.Controls.Image();
+        //        image.Source = ScreenCapture;
+        //        image.Stretch = Stretch.Fill;
+        //        image.Cursor = Cursors.Hand;
+        //        image.Height = 14;
+        //        image.Width = 14;
+        //        image.Tag = note.Key;
+        //        image.MouseUp += NoteFlag_MouseUp;
+        //        TextPointer p = startPos;
+        //        ParentControl.TextBox.MainControl.BeginChange();
+        //        InlineUIContainer imageContainer = new InlineUIContainer(image, p);
+        //        ParentControl.TextBox.MainControl.EndChange();
+        //        ParentControl.TextBox.MainControl.Focus();
+        //    }
+        //}
 
         private void NoteFlag_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -437,7 +443,7 @@ namespace Controls
             }
         }
 
-        private void UpdateNoteBeforeClosing()
+        private void UpdateNoteAfterOpening()
         {
             System.Windows.Controls.Image replacementImage;
             var blocks = ParentControl.TextBox.MainControl.Document.Blocks.ToList();

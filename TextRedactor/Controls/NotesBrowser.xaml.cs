@@ -81,9 +81,9 @@ namespace Controls
             var im = sender as System.Windows.Controls.Image;
             if (im != null)
             {
-                // ParentControl.BrowseProject.DelFlag(Notes[im.Tag.ToString()]);
+                ParentControl.BrowseProject.DelFlag(Notes[im.Tag.ToString()]);
                 Notes.Remove(im.Tag.ToString());
-                ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
+               // ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
                 //  MainControl.Items.Refresh();
             }
         }
@@ -153,8 +153,10 @@ namespace Controls
 
         private void EditNoteName_MouseDown(object sender, RoutedEventArgs e)
         {
-            var text = sender as Button;
+            var text = sender as Border;
+            if (text == null) return;
             var panel = text.Parent as Panel;
+            if (panel == null) return;
             var t = panel.Children[0] as TextBox;
             if (t != null)
             {

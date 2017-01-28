@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:converters="clr-namespace:Controls"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="250" Width="Auto" Height="Auto">
     <UserControl.Resources>
@@ -134,26 +135,19 @@
                             BorderBrush="Transparent"
                             BorderThickness="1"
                             >
-                                    <StackPanel>
-<<<<<<< HEAD
-                                        <DockPanel Cursor="Hand" HorizontalAlignment="Stretch">
-                                            <TextBox Text="{Binding Value.Name}" Tag="{Binding Key}" Name="TextName" MaxWidth="150" Width="125" HorizontalAlignment="Right" FontSize="14" IsEnabled="False"/>
-                                            <Button Name="Edit" Tag="{Binding Key}" Width="15" Click="EditNoteName_MouseDown"  HorizontalAlignment="Right" Margin="3,0,0,0">
+                                    <StackPanel x:Name="stackPanel">
+                                        <DockPanel Cursor="Hand" >
+                                            <TextBox Text="{Binding Value.Name}" BorderThickness="0" Tag="{Binding Key}" Name="TextName" Width="{Binding Path=ActualWidth, ElementName=stackPanel, Converter={converters:PercentageConverter}, ConverterParameter='36'}" HorizontalAlignment="Stretch" FontSize="14" IsEnabled="False"/>
+                                            <Border BorderThickness="0" Name="Edit" Tag="{Binding Key}" Width="15"  Height="15"  MouseDown="EditNoteName_MouseDown"  HorizontalAlignment="Right" Margin="3,0,0,0">
                                                 <Image  Name="EditNoteName" Source="Resources/edit.png" Cursor="Hand" >
-=======
-                                        <DockPanel HorizontalAlignment="Stretch">
-                                            <TextBox Text="{Binding Value.Name}" Tag="{Binding Key}" Name="TextName" MaxWidth="150" Width="125" HorizontalAlignment="Right" FontSize="14" BorderBrush="{x:Null}" MouseDoubleClick="TextName_OnMouseDoubleClick" IsReadOnly="True"/>
-                                            <!--<Button Name="Edit" Width="15"  HorizontalAlignment="Right" Margin="3,0,0,0">
-                                                <Image Tag="{Binding Value.Name}" Name="EditImage" Source="Resources/edit-512.png" Cursor="Hand" >
->>>>>>> 0eb44a8916cf029390d96e789bc6b9ac6e11971d
                                                 </Image>
-                                        </Button>
-                                            <Border Width="15" HorizontalAlignment="Right" Padding="0" Height="15">
+                                        </Border>
+                                            <Border Width="15" BorderThickness="0" HorizontalAlignment="Right" Padding="0" Height="15"  Margin="3,0,0,0">
                                                 <Image Tag="{Binding Value.Name}" x:Name="DelNote" Source="Resources/closeNote.png" MouseUp="DelNote_MouseUp">
                                                 </Image>
                                             </Border>
                                         </DockPanel>
-                                        <TextBox Text="{Binding Value.Text}"  Name="TextValue" BorderBrush="{x:Null}" Margin="0,6,0,0" TextWrapping="Wrap"  MaxWidth="150"/>
+                                        <TextBox Text="{Binding Value.Text}" BorderThickness="0"  Name="TextValue" BorderBrush="{x:Null}"  MaxWidth="{Binding ActualWidth, ElementName=stackPanel, Mode=OneWay}" Margin="0,6,0,0" TextWrapping="Wrap" HorizontalAlignment="Stretch"/>
                                     </StackPanel>
                                 </Border>
                                 <ControlTemplate.Triggers>

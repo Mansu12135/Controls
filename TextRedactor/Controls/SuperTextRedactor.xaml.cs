@@ -324,7 +324,7 @@ namespace Controls
             {
                 try
                 {
-                    System.Windows.Controls.Image image = new System.Windows.Controls.Image();
+                    var image = new System.Windows.Controls.Image();
                     image.Stretch = Stretch.Fill;
                     image.Cursor = System.Windows.Input.Cursors.Hand;
                     //image.Height = TextBox.MainControl.ActualWidth;
@@ -357,13 +357,13 @@ namespace Controls
         {
             int start = new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.Start).Text.Length;
             int end = new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.End).Text.Length;
-            int dif = 0;
-            foreach (var note in NotesBrowser.Notes)
-            {
-                if (note.Value.OffsetStart < start) dif++;
-            }
-            start -= dif;
-            end -= dif;
+            //int dif = 0;
+            //foreach (var note in NotesBrowser.Notes)
+            //{
+            //    if (note.Value.OffsetStart < start) dif++;
+            //}
+            //start -= dif;
+            //end -= dif;
             NotesBrowser.AddItem(new Note(NotesBrowser.GenerateName("Note"), text, start, end));
         }
 

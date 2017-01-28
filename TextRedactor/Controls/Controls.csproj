@@ -107,6 +107,7 @@
     <Compile Include="Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PercentageConverter.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectProperties.xaml.cs">
       <DependentUpon>ProjectProperties.xaml</DependentUpon>
@@ -264,6 +265,8 @@
     <Content Include="kindlegen.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\set.png" />
+    <Resource Include="Resources\grey_logo.png" />
     <Resource Include="Resources\closeNote.png" />
     <Resource Include="Resources\edit.png" />
     <Resource Include="Resources\noteFlag.png" />

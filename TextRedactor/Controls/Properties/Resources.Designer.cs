@@ -213,6 +213,16 @@ namespace Controls.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap grey_logo {
+            get {
+                object obj = ResourceManager.GetObject("grey_logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap italic {
             get {
                 object obj = ResourceManager.GetObject("italic", resourceCulture);
@@ -276,6 +286,16 @@ namespace Controls.Properties {
         internal static System.Drawing.Bitmap romb {
             get {
                 object obj = ResourceManager.GetObject("romb", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap set {
+            get {
+                object obj = ResourceManager.GetObject("set", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
