@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Linq;
+using System.Windows.Input;
 
 namespace Controls
 {
@@ -15,12 +16,72 @@ namespace Controls
         private FlowDocument Document;
         private string FilePath;
         private BaseRichTextBox RichTextBox;
+        private int PreviousCarrentPositionOffset;
+        private int SelectionEndPosition;
+        private byte[] Buffer;
 
         public SaveManager(string filePath, BaseRichTextBox rtBox)
         {
             FilePath = filePath;
             RichTextBox = rtBox;
+            AttachEventHandler();
             CreateCallStack();
+        }
+
+        private void AttachEventHandler()
+        {
+            RichTextBox.PreviewKeyDown += RichTextBox_PreviewKeyDown;
+            RichTextBox.PreviewMouseRightButtonDown += RichTextBox_PreviewMouseRightButtonDown;
+            RichTextBox.TextChanged -= RichTextBox_TextChanged;
+            RichTextBox.TextChanged += RichTextBox_TextChanged;
+        }
+
+        private void RichTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            lock (RichTextBox)
+            {
+                var range =
+                    new TextRange(RichTextBox.Document.ContentStart.GetPositionAtOffset(PreviousCarrentPositionOffset),
+                        RichTextBox.CaretPosition);
+                        //SelectionEndPosition > -1
+                        //    ? (RichTextBox.Document.ContentStart.GetOffsetToPosition(RichTextBox.Document.ContentEnd) < SelectionEndPosition ? RichTextBox.Document.ContentStart.GetPositionAtOffset(PreviousCarrentPositionOffset) : RichTextBox.Document.ContentStart.GetPositionAtOffset(SelectionEndPosition))
+                        //    : RichTextBox.CaretPosition);
+                using (var stream = new MemoryStream())
+                {
+                    range.Save
+                        (stream, DataFormats.Rtf);
+                    AddTaskToCallStack(new List<byte[]> {stream.ToArray()}, PreviousCarrentPositionOffset,
+                        SelectionEndPosition,
+                        new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Text);
+                }
+            }
+        }
+
+        private void GetPreviousState()
+        {
+            if (RichTextBox.Selection.IsEmpty)
+            {
+                PreviousCarrentPositionOffset =
+                    RichTextBox.Document.ContentStart.GetOffsetToPosition(RichTextBox.CaretPosition);
+                SelectionEndPosition = -1;
+            }
+            else
+            {
+                PreviousCarrentPositionOffset =
+                    RichTextBox.Document.ContentStart.GetOffsetToPosition(RichTextBox.Selection.Start);
+                SelectionEndPosition = RichTextBox.Document.ContentStart.GetOffsetToPosition(RichTextBox.Selection.End);
+            }
+        }
+
+        private void RichTextBox_PreviewMouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            GetPreviousState();
+        }
+
+        private void RichTextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl) { return; }
+            GetPreviousState();
         }
 
         private void CreateCallStack()
@@ -78,65 +139,77 @@ namespace Controls
                         {
                             break;
                         }
-                        var paragraphsList = Document.Blocks.ToList();
-                        var paragraphs = GetParagraph();
-                        int i = paragraphs.Count - 1;
-                        int n = paragraphsList.Count - 1;
-                        int diff = CallStack[0].Length - n;
-                        foreach (Paragraph paragraph in paragraphs)
-                        {
-                            int currentPosition = CallStack[0].CurrentParagraph - i;
-                            if (diff == i) //add
-                            {
-                                if (currentPosition <= n)
-                                {
-                                    paragraphsList[currentPosition] = paragraph;
+                        #region Saving locate on Paragraphs
+                        //var paragraphsList = Document.Blocks.ToList();
+                        //var paragraphs = GetParagraph();
+                        //int i = paragraphs.Count - 1;
+                        //int n = paragraphsList.Count - 1;
+                        //int diff = CallStack[0].Length - n;
+                        //foreach (Paragraph paragraph in paragraphs)
+                        //{
+                        //    int currentPosition = CallStack[0].CurrentParagraph - i;
+                        //    if (diff == i) //add
+                        //    {
+                        //        if (currentPosition <= n)
+                        //        {
+                        //            paragraphsList[currentPosition] = paragraph;
 
-                                    //  paragraphsList.Insert(currentPosition, paragraph);
-                                }
-                                else //add paragraphs to last position
-                                {
-                                    paragraphsList.Add(paragraph);
-                                }
-                            }
-                            else if (diff > 0) //insert
-                            {
-                                if (i >= 1 && currentPosition < paragraphsList.Count) //replace paragraphs after insert
-                                {
-                                    paragraphsList[currentPosition] = paragraph;
-                                }
-                                else
-                                {
-                                    paragraphsList.Insert(currentPosition, paragraph);
-                                }
-                            }
-                            else if (diff < 0) //delete
-                            {
-                                if ((paragraphsList.Count - 1 - CallStack[0].Length) > 0)
-                                    //in first iteration delete redudant paragraphs
-                                {
-                                    paragraphsList.RemoveRange(currentPosition + 1, diff * -1);
-                                }
-                                paragraphsList[currentPosition] = paragraph;
-                            }
-                            else if (diff == 0 && i > 0)
-                            {
-                                paragraphsList[currentPosition] = paragraph;
-                            }
-                            i--;
-                        }
-                        Document.Blocks.Clear();
-                        if (paragraphs.Count > 0)
-                        {
-                            Document.Blocks.AddRange(paragraphsList);
-                        }
+                        //            //  paragraphsList.Insert(currentPosition, paragraph);
+                        //        }
+                        //        else //add paragraphs to last position
+                        //        {
+                        //            paragraphsList.Add(paragraph);
+                        //        }
+                        //    }
+                        //    else if (diff > 0) //insert
+                        //    {
+                        //        if (i >= 1 && currentPosition < paragraphsList.Count) //replace paragraphs after insert
+                        //        {
+                        //            paragraphsList[currentPosition] = paragraph;
+                        //        }
+                        //        else
+                        //        {
+                        //            paragraphsList.Insert(currentPosition, paragraph);
+                        //        }
+                        //    }
+                        //    else if (diff < 0) //delete
+                        //    {
+                        //        if ((paragraphsList.Count - 1 - CallStack[0].Length) > 0)
+                        //            //in first iteration delete redudant paragraphs
+                        //        {
+                        //            paragraphsList.RemoveRange(currentPosition + 1, diff * -1);
+                        //        }
+                        //        paragraphsList[currentPosition] = paragraph;
+                        //    }
+                        //    else if (diff == 0 && i > 0)
+                        //    {
+                        //        paragraphsList[currentPosition] = paragraph;
+                        //    }
+                        //    i--;
+                        //}
+                        //Document.Blocks.Clear();
+                        //if (paragraphs.Count > 0)
+                        //{
+                        //    Document.Blocks.AddRange(paragraphsList);
+                        //}
                         //using (
                         //FileStream stream = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.None,
                         //    20 * 1024 * 1024))
                         //{
                         //    new TextRange(Document.ContentStart, Document.ContentEnd).Save(stream, DataFormats.Rtf);
                         //}
-                        if (new TextRange(Document.ContentStart, Document.ContentEnd).Text != CallStack[0].CheckingText)
+                        #endregion
+
+                        using (var stream = new MemoryStream(CallStack[0].Buffer[0]))
+                        {
+                            var range =
+                                new TextRange(Document.ContentStart.GetPositionAtOffset(CallStack[0].CurrentParagraph),
+                                    CallStack[0].Length > -1
+                                        ? Document.ContentStart.GetPositionAtOffset(CallStack[0].Length)
+                                        : Document.ContentStart.GetPositionAtOffset(CallStack[0].CurrentParagraph));
+                            range.Load(stream, DataFormats.Rtf);
+                        }
+                        if (new TextRange(Document.ContentStart, Document.ContentEnd).Text.Replace("\r\n","") != CallStack[0].CheckingText.Replace("\r\n", ""))
                         {
                             Document.Dispatcher.Invoke(() =>
                             {
@@ -147,6 +220,7 @@ namespace Controls
                                 //        new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Save(stream, DataFormats.Rtf);
                                 //    }
                             });
+                            CreateDocument();
                         }
                         else
                         {
@@ -154,7 +228,7 @@ namespace Controls
                         }
                         CallStack.RemoveAt(0);
 
-                    }
+                        }
                 }
             }
         }

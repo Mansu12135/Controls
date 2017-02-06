@@ -128,7 +128,7 @@ namespace Controls
                     byteArray.Add(stream.ToArray());
                 }
             }
-            SaveManager.AddTaskToCallStack(byteArray, PrevTextPointer, ParagraphCount, text);
+          //  SaveManager.AddTaskToCallStack(byteArray, PrevTextPointer, ParagraphCount, text);
         }
         protected override void OnContextMenuOpening(ContextMenuEventArgs e)
         {
@@ -140,6 +140,7 @@ namespace Controls
 
         protected override void OnTextChanged(TextChangedEventArgs e)
         {
+            base.OnTextChanged(e);
             if (!AutoSave || string.IsNullOrEmpty(FilePath))
             {
                 PreviousParagraphCount = Document.Blocks.ToList().Count - 1;
