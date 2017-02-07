@@ -174,7 +174,7 @@ namespace Controls
                 if (!string.IsNullOrEmpty(par.Key))
                 {
                     ParentControl.TextBox.MainControl.Focus();
-                    ParentControl.TextBox.MainControl.CaretPosition = BrowseProject.GetTextPointAt(ParentControl.TextBox.MainControl.Document.ContentStart, par.Value.OffsetStart);
+                    ParentControl.TextBox.MainControl.CaretPosition = ParentControl.TextBox.MainControl.GetTextPointAt(ParentControl.TextBox.MainControl.Document.ContentStart, par.Value.OffsetStart, System.Windows.Documents.LogicalDirection.Forward);
                 }
             }
         }

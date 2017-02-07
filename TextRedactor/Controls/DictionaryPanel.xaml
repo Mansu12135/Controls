@@ -121,8 +121,9 @@
         <TextBox x:Name="TextWord" Margin="20,6,20,5" Grid.Row="1" TextWrapping="Wrap" Text="Enter word..." HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="Auto" FontSize="14" Padding="0,2" FontStyle="Italic" Foreground="#FF919191" SelectionBrush="#FF8FAECD" Background="White" Grid.ColumnSpan="2" >
         </TextBox>
 
-
-        <TextBlock x:Name="DictionaryResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,10,20,20" Grid.Row="3" Text="TextBlock" Grid.ColumnSpan="2"  Width="Auto" FontSize="14"/>
+        <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,10,3,20" Grid.Row="3" Grid.ColumnSpan="2"  Width="Auto">
+            <TextBlock x:Name="DictionaryResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap"  Text="TextBlock" Width="Auto" FontSize="14"/>
+        </ScrollViewer>
         <Label x:Name="HidenDictionary" Content="Hide dictionary" HorizontalAlignment="Left" Margin="6,0,0,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand"/>
 
         <RadioButton x:Name="ModeDictionary" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="23,0,0,0" Grid.Row="2" Grid.Column="0" Checked="ModeDictionary_Checked">

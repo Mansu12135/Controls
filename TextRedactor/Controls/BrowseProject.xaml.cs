@@ -230,7 +230,13 @@ namespace Controls
         public void DeleteProject(string project)
         {
             if (!Notes.ContainsKey(project)) { return; }
-            if (LoadedFile.StartsWith(ProjectsPath + "\\" + project)) { LoadedFile = ""; }
+            if (!string.IsNullOrEmpty(LoadedFile) && LoadedFile.StartsWith(ProjectsPath + "\\" + project)) { LoadedFile = ""; }
+            if (!string.IsNullOrEmpty(CurentFile) && CurentFile.StartsWith(ProjectsPath + "\\" + project))
+            {
+               // CurentProject = No
+                CurentFile = "";
+            }
+
             Directory.Delete(ProjectsPath + "\\" + project, true);
             Notes.Remove(project);
         }
@@ -286,7 +292,7 @@ namespace Controls
                 string folder = Path.GetDirectoryName(path);
                 OnFileOpen(folder + "\\", content);
                 LoadedFile = folder + "\\" + content + ".not";
-                
+
             }
             ParentControl.TextBox.MainControl.FilePath = path;
         }
@@ -378,26 +384,29 @@ namespace Controls
             }
 
         }
-        public static TextPointer GetTextPointAt(TextPointer from, int pos)
-        {
-            TextPointer ret = from;
-            int i = 0;
 
-            while ((i < pos) && (ret != null))
-            {
-                if ((ret.GetPointerContext(LogicalDirection.Backward) == TextPointerContext.Text) || (ret.GetPointerContext(LogicalDirection.Backward) == TextPointerContext.None))
-                {
-                    i++;
-                }
 
-                if (ret.GetPositionAtOffset(1, LogicalDirection.Forward) == null)
-                    return ret;
-                ret = ret.GetPositionAtOffset(1, LogicalDirection.Forward);
 
-            }
+        //public static TextPointer GetTextPointAt(TextPointer from, int pos)
+        //{
+        //    TextPointer ret = from;
+        //    int i = 0;
 
-            return ret;
-        }
+        //    while ((i < pos) && (ret != null))
+        //    {
+        //        if ((ret.GetPointerContext(LogicalDirection.Backward) == TextPointerContext.Text) || (ret.GetPointerContext(LogicalDirection.Backward) == TextPointerContext.None))
+        //        {
+        //            i++;
+        //        }
+
+        //        if (ret.GetPositionAtOffset(1, LogicalDirection.Forward) == null)
+        //            return ret;
+        //        ret = ret.GetPositionAtOffset(1, LogicalDirection.Forward);
+
+        //    }
+
+        //    return ret;
+        //}
         //private void AddNoteAfterOpenFile()
         //{
         //    foreach (var note in ParentControl.NotesBrowser.Notes)
@@ -447,9 +456,9 @@ namespace Controls
 
         internal void UpdateNoteAfterOpening()
         {
-            var inlines = ParentControl.TextBox.MainControl.Document.Blocks.Where(item => item.GetType() == typeof(Paragraph)).
-                SelectMany(item => ((Paragraph)item).Inlines.Where(x => x.GetType() == typeof(InlineUIContainer) || (x.Background !=null && (x.Background as SolidColorBrush).Color == System.Windows.Media.Brushes.PaleGreen.Color))).ToList();
-          //  byte[] flag = getJPGFromImageControl(Properties.Resources.noteFlag);
+             var inlines = ParentControl.TextBox.MainControl.Document.Blocks.Where(item => item.GetType() == typeof(Paragraph)).
+                SelectMany(item => ((Paragraph)item).Inlines.Where(x => x.GetType() == typeof(InlineUIContainer) || (x.Background != null && (x.Background as SolidColorBrush).Color == System.Windows.Media.Brushes.PaleGreen.Color))).ToList();
+            //  byte[] flag = getJPGFromImageControl(Properties.Resources.noteFlag);
             int n = inlines.Count;
             for (int j = 0; j < n; j++)
             {
@@ -457,34 +466,27 @@ namespace Controls
                 if (inline == null) { continue; }
                 var image = inline.Child as System.Windows.Controls.Image;
                 if (image == null) { continue; }
-             //   byte[] byt = getJPGFromImageControl(image.Source as BitmapImage);
-                //сравнивает картинки
-                //if (byt.Length == flag.Length)
-                //{
-                //    bool isflag = true;
-                //    for (int t = 0; t < byt.Length; t++)
-                //    {
-                //        if (byt[t] != flag[t]) { isflag = false; break; }
-                //    }
-                    if (image.Tag == null) continue;
+              
+                if (image.Tag == null) continue;
 
-                    var key = image.Tag.ToString();
-                    int i = j;
-                    int start = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentStart).Text.Length;
-                    while (j < inlines.Count - 1 && inlines[j + 1].Background!=null && (inlines[j + 1].Background as SolidColorBrush).Color == System.Windows.Media.Brushes.PaleGreen.Color)
+                var key = image.Tag.ToString();
+                int i = j;
+                int start = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(inlines[j].ElementEnd)+1;
+                    //new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentStart).Text.Length;
+                while (j < inlines.Count - 1 && inlines[j + 1].Background != null && (inlines[j + 1].Background as SolidColorBrush).Color == System.Windows.Media.Brushes.PaleGreen.Color)
+                {
+                    j++;
+                }
+                if (ParentControl.NotesBrowser.Notes.ContainsKey(key))
+                {
+                    if (ParentControl.NotesBrowser.Notes[key].OffsetStart != start)
                     {
-                        j++;
+                        ParentControl.NotesBrowser.Notes[key].OffsetStart = start;
                     }
-                    if (ParentControl.NotesBrowser.Notes.ContainsKey(key))
-                    {
-                        if (ParentControl.NotesBrowser.Notes[key].OffsetStart != start)
-                        {
-                            ParentControl.NotesBrowser.Notes[key].OffsetStart = start;
-                        }
-                        ParentControl.NotesBrowser.Notes[key].OffsetEnd = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentEnd).Text.Length;
-                    }
-                    else
-                    {
+                    ParentControl.NotesBrowser.Notes[key].OffsetEnd = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(inlines[j].ContentEnd);// new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentEnd).Text.Length;
+                }
+                else
+                {
                     new TextRange(inlines[i].ContentStart, inlines[j].ContentEnd).ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
                     foreach (var block in ParentControl.TextBox.MainControl.Document.Blocks)
                     {
@@ -499,10 +501,11 @@ namespace Controls
                             }
                         }
                     }
-                    }
-               // }
+                }
+                // }
             }
         }
+
         public void UpdateTagOnFlags()
         {
             var inlines = ParentControl.TextBox.MainControl.Document.Blocks.Where(item => item.GetType() == typeof(Paragraph)).
@@ -523,11 +526,16 @@ namespace Controls
                         if (byt[t] != flag[t]) { isflag = false; break; }
                     }
                     if (!isflag) continue;
-                    int start = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, item.ContentStart).Text.Length;
+                    int start = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(item.ElementEnd)+1;
+                      //  new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, item.ContentStart).Text.Length;
                     var key = ParentControl.NotesBrowser.Notes.Where(x => x.Value.OffsetStart == start);
                     if (key.Any())
                     {
                         image.Tag = key.First().Key;
+                    }
+                    else
+                    {
+
                     }
                 }
             }

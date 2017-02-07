@@ -9,6 +9,8 @@ using System.Windows.Input;
 using System.Linq;
 using System;
 using SpireLicense = Spire.License;
+using System.Text.RegularExpressions;
+using System.Windows.Media;
 
 namespace Controls
 {
@@ -130,8 +132,152 @@ namespace Controls
             }
             SaveManager.AddTaskToCallStack(byteArray, PrevTextPointer, ParagraphCount, text);
         }
+
+        public TextPointer GetTextPointAt(TextPointer startingPoint, int offset, LogicalDirection direction = LogicalDirection.Forward)
+        {
+            TextPointer binarySearchPoint1 = null;
+            TextPointer binarySearchPoint2 = null;
+
+            // setup arguments appropriately
+            if (direction == LogicalDirection.Forward)
+            {
+                binarySearchPoint2 = Document.ContentEnd;
+
+                if (offset < 0)
+                {
+                    offset = Math.Abs(offset);
+                }
+            }
+
+            if (direction == LogicalDirection.Backward)
+            {
+                binarySearchPoint2 = Document.ContentStart;
+
+                if (offset > 0)
+                {
+                    offset = -offset;
+                }
+            }
+
+            // setup for binary search
+            bool isFound = false;
+            TextPointer resultTextPointer = null;
+
+            int offset2 = Math.Abs(GetOffsetInTextLength(startingPoint, binarySearchPoint2));
+            int halfOffset = direction == LogicalDirection.Backward ? -(offset2 / 2) : offset2 / 2;
+
+            binarySearchPoint1 = startingPoint.GetPositionAtOffset(halfOffset, direction);
+            int offset1 = Math.Abs(GetOffsetInTextLength(startingPoint, binarySearchPoint1));
+
+            // binary search loop
+
+            while (isFound == false)
+            {
+                if (Math.Abs(offset1) == Math.Abs(offset))
+                {
+                    isFound = true;
+                    resultTextPointer = binarySearchPoint1;
+                }
+                else
+                if (Math.Abs(offset2) == Math.Abs(offset))
+                {
+                    isFound = true;
+                    resultTextPointer = binarySearchPoint2;
+                }
+                else
+                {
+                    if (Math.Abs(offset) < Math.Abs(offset1))
+                    {
+                        // this is simple case when we search in the 1st half
+                        binarySearchPoint2 = binarySearchPoint1;
+                        offset2 = offset1;
+
+                        halfOffset = direction == LogicalDirection.Backward ? -(offset2 / 2) : offset2 / 2;
+
+                        binarySearchPoint1 = startingPoint.GetPositionAtOffset(halfOffset, direction);
+                        offset1 = Math.Abs(GetOffsetInTextLength(startingPoint, binarySearchPoint1));
+                    }
+                    else
+                    {
+                        // this is more complex case when we search in the 2nd half
+                        int rtfOffset1 = startingPoint.GetOffsetToPosition(binarySearchPoint1);
+                        int rtfOffset2 = startingPoint.GetOffsetToPosition(binarySearchPoint2);
+                        int rtfOffsetMiddle = (Math.Abs(rtfOffset1) + Math.Abs(rtfOffset2)) / 2;
+                        if (direction == LogicalDirection.Backward)
+                        {
+                            rtfOffsetMiddle = -rtfOffsetMiddle;
+                        }
+
+                        TextPointer binarySearchPointMiddle = startingPoint.GetPositionAtOffset(rtfOffsetMiddle, direction);
+                        int offsetMiddle = GetOffsetInTextLength(startingPoint, binarySearchPointMiddle);
+
+                        // two cases possible
+                        if (Math.Abs(offset) < Math.Abs(offsetMiddle))
+                        {
+                            // 3rd quarter of search domain
+                            binarySearchPoint2 = binarySearchPointMiddle;
+                            offset2 = offsetMiddle;
+                        }
+                        else
+                        {
+                            // 4th quarter of the search domain
+                            binarySearchPoint1 = binarySearchPointMiddle;
+                            offset1 = offsetMiddle;
+                        }
+                    }
+                }
+            }
+
+            return resultTextPointer;
+        }
+
+        public void Test(string value)
+        {
+            Regex reg = new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            TextPointer position = Document.ContentStart;
+            List<TextRange> ranges = new List<TextRange>();
+            while (position != null)
+            {
+                if (position.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
+                {
+                    string text = position.GetTextInRun(LogicalDirection.Forward);
+                    var matchs = reg.Matches(text);
+
+                    foreach (Match match in matchs)
+                    {
+
+                        TextPointer start = position.GetPositionAtOffset(match.Index);
+                        TextPointer end = start.GetPositionAtOffset(value.Trim().Length);
+
+                        TextRange textrange = new TextRange(start, end);
+                        ranges.Add(textrange);
+                    }
+                }
+                position = position.GetNextContextPosition(LogicalDirection.Forward);
+            }
+
+
+            foreach (TextRange range in ranges)
+            {
+                range.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(Colors.Red));
+               range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
+            }
+        }
+
+        private int GetOffsetInTextLength(TextPointer pointer1, TextPointer pointer2)
+        {
+            if (pointer1 == null || pointer2 == null)
+                return 0;
+
+            TextRange tr = new TextRange(pointer1, pointer2);
+
+            return tr.Text.Length;
+        }
+
         protected override void OnContextMenuOpening(ContextMenuEventArgs e)
         {
+            Selection.Select(Document.ContentStart, Document.Blocks.ToList()[1].ContentStart);
+            Selection.Select(Document.Blocks.ToList()[2].ContentStart, Document.Blocks.ToList()[5].ContentStart);
             ContextMenu.Items.Clear();
             AddSpellCheckingMenuItems(ContextMenu);
             AddBasicMenuItems(ContextMenu);

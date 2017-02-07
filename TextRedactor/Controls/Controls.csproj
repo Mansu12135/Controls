@@ -127,6 +127,7 @@
     <Compile Include="SearchPanel.xaml.cs">
       <DependentUpon>SearchPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SearchSelector.cs" />
     <Compile Include="SuperRichTextBox.xaml.cs">
       <DependentUpon>SuperRichTextBox.xaml</DependentUpon>
     </Compile>
