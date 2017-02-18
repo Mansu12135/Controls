@@ -237,7 +237,7 @@ namespace Controls
                 CurentFile = "";
             }
 
-            Directory.Delete(ProjectsPath + "\\" + project, true);
+            Directory.Delete(ProjectsPath + "\\" + project,true);
             Notes.Remove(project);
         }
 

@@ -35,25 +35,114 @@ namespace Controls
             RichTextBox.TextChanged -= RichTextBox_TextChanged;
             RichTextBox.TextChanged += RichTextBox_TextChanged;
         }
-
+        bool iscansel = false;
         private void RichTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             lock (RichTextBox)
             {
-                var range =
-                    new TextRange(RichTextBox.Document.ContentStart.GetPositionAtOffset(PreviousCarrentPositionOffset),
-                        RichTextBox.CaretPosition);
-                        //SelectionEndPosition > -1
-                        //    ? (RichTextBox.Document.ContentStart.GetOffsetToPosition(RichTextBox.Document.ContentEnd) < SelectionEndPosition ? RichTextBox.Document.ContentStart.GetPositionAtOffset(PreviousCarrentPositionOffset) : RichTextBox.Document.ContentStart.GetPositionAtOffset(SelectionEndPosition))
-                        //    : RichTextBox.CaretPosition);
-                using (var stream = new MemoryStream())
+                CallStackTask callStackTask = null;
+                int diff = 0;
+                foreach (var change in e.Changes)
                 {
-                    range.Save
-                        (stream, DataFormats.Rtf);
-                    AddTaskToCallStack(new List<byte[]> {stream.ToArray()}, PreviousCarrentPositionOffset,
-                        SelectionEndPosition,
-                        new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Text);
+                    if (change.RemovedLength > 0 && change.AddedLength > 0)
+                    {
+                        if (new TextRange(RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset),
+                       RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset + change.AddedLength)).IsEmpty
+                       && new TextRange(Document.ContentStart.GetPositionAtOffset(change.Offset + diff),
+                       Document.ContentStart.GetPositionAtOffset(change.Offset + change.RemovedLength + diff)).IsEmpty
+                       
+                       || new TextRange(Document.ContentStart.GetPositionAtOffset(change.Offset + diff), Document.ContentStart.GetPositionAtOffset(change.Offset + change.RemovedLength + diff)).Text == new TextRange(RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset), RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset + change.AddedLength)).Text)
+                        {
+                            diff += change.RemovedLength - change.AddedLength;
+                            continue;
+                        }
+                        var range =
+                  new TextRange(RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset),
+                      RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset + change.AddedLength));
+                        using (var stream = new MemoryStream())
+                        {
+                            range.Save
+                                (stream, DataFormats.Rtf);
+                            callStackTask =  new CallStackTask(new List<byte[]> { stream.ToArray() }, change.Offset + diff,
+                                change.Offset + change.RemovedLength + diff,
+                                new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Text);
+                            //AddTaskToCallStack(new List<byte[]> { stream.ToArray() }, change.Offset+diff,
+                            //    change.Offset+change.RemovedLength + diff,
+                            //    new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Text);
+                        }
+                        diff += change.RemovedLength - change.AddedLength;
+                    }
+                    else if (change.RemovedLength > 0)
+                    {
+                        if (new TextRange(Document.ContentStart.GetPositionAtOffset(change.Offset+ diff),
+                       Document.ContentStart.GetPositionAtOffset(change.Offset + change.RemovedLength+diff)).IsEmpty)
+                        {
+                            diff+= change.RemovedLength;
+                            continue;
+                        }
+                        if (callStackTask != null)
+                        {
+                            callStackTask.Length += change.RemovedLength + change.Offset-callStackTask.CurrentParagraph+diff;
+                            continue;
+                        }
+                        var range =
+                   new TextRange(RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset),
+                       RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset));
+                        using (var stream = new MemoryStream())
+                        {
+                            range.Save(stream, DataFormats.Rtf);
+                            //  var b = new byte[] { 0 };
+                           
+                            callStackTask = new CallStackTask
+                           // AddTaskToCallStack
+                                (new List<byte[]> { stream.ToArray() }, change.Offset + diff,
+                                    change.Offset + change.RemovedLength + diff,
+                                    new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Text);
+                        }
+                        diff += change.RemovedLength;
+                    }
+                    else if (change.AddedLength > 0)
+                    {
+                        if (new TextRange(RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset),
+                       RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset + change.AddedLength)).IsEmpty)
+                        {
+                            diff -= change.AddedLength;
+                            continue;
+                        }
+                        var range =
+                   new TextRange(RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset),
+                       RichTextBox.Document.ContentStart.GetPositionAtOffset(change.Offset + change.AddedLength));
+                        using (var stream = new MemoryStream())
+                        {
+                            range.Save
+                                (stream, DataFormats.Rtf);
+                            callStackTask = new CallStackTask
+                          //  AddTaskToCallStack
+                                (new List<byte[]> { stream.ToArray() }, change.Offset + diff,
+                                change.Offset + diff,
+                                new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Text);
+                        }
+                        diff -= change.AddedLength;
+                    }
+                 //   diff += (change.AddedLength - change.RemovedLength);
                 }
+                CallStack.Add(callStackTask);
+                callStackTask = null;
+               // iscansel = true;
+                //var range =
+                //    new TextRange(RichTextBox.Document.ContentStart.GetPositionAtOffset(PreviousCarrentPositionOffset),
+                //        RichTextBox.CaretPosition);
+                //        //SelectionEndPosition > -1
+                //        //    ? (RichTextBox.Document.ContentStart.GetOffsetToPosition(RichTextBox.Document.ContentEnd) < SelectionEndPosition ? RichTextBox.Document.ContentStart.GetPositionAtOffset(PreviousCarrentPositionOffset) : RichTextBox.Document.ContentStart.GetPositionAtOffset(SelectionEndPosition))
+                //        //    : RichTextBox.CaretPosition);
+                //using (var stream = new MemoryStream())
+                //{
+                //    range.Save
+                //        (stream, DataFormats.Rtf);
+                //    AddTaskToCallStack(new List<byte[]> {stream.ToArray()}, PreviousCarrentPositionOffset,
+                //        SelectionEndPosition,
+                //        new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Text);
+                //}
             }
         }
 
@@ -75,13 +164,13 @@ namespace Controls
 
         private void RichTextBox_PreviewMouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            GetPreviousState();
+           // GetPreviousState();
         }
 
         private void RichTextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl) { return; }
-            GetPreviousState();
+         //   GetPreviousState();
         }
 
         private void CreateCallStack()
@@ -199,36 +288,44 @@ namespace Controls
                         //    new TextRange(Document.ContentStart, Document.ContentEnd).Save(stream, DataFormats.Rtf);
                         //}
                         #endregion
-
-                        using (var stream = new MemoryStream(CallStack[0].Buffer[0]))
+                       
+                        using (
+                            var stream = new MemoryStream(CallStack[0].Buffer[0]))
                         {
                             var range =
                                 new TextRange(Document.ContentStart.GetPositionAtOffset(CallStack[0].CurrentParagraph),
-                                    CallStack[0].Length > -1
-                                        ? Document.ContentStart.GetPositionAtOffset(CallStack[0].Length)
-                                        : Document.ContentStart.GetPositionAtOffset(CallStack[0].CurrentParagraph));
+                                        //  CallStack[0].Length > -1  ?
+                                        Document.ContentStart.GetPositionAtOffset(CallStack[0].Length));
+                                        //: Document.ContentStart.GetPositionAtOffset(CallStack[0].CurrentParagraph));
                             range.Load(stream, DataFormats.Rtf);
                         }
-                        if (new TextRange(Document.ContentStart, Document.ContentEnd).Text.Replace("\r\n","") != CallStack[0].CheckingText.Replace("\r\n", ""))
+                        if (new TextRange(Document.ContentStart, Document.ContentEnd).Text.Replace("\r\n", "") != CallStack[0].CheckingText.Replace("\r\n", ""))
                         {
-                            Document.Dispatcher.Invoke(() =>
-                            {
-                                FileWorkerManager.Do(Document, FilePath);
-                                //    using (FileStream stream = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.None,
-                                //20 * 1024 * 1024))
-                                //    {
-                                //        new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Save(stream, DataFormats.Rtf);
-                                //    }
-                            });
-                            CreateDocument();
+                            Console.WriteLine("Error");
                         }
                         else
+                             if (CallStack.Count==1)
                         {
                             FileWorkerManager.Do(Document, FilePath);
                         }
+                        //     Document.Dispatcher.Invoke(() =>
+                        //   {
+                        //     FileWorkerManager.Do(Document, FilePath);
+                        //    using (FileStream stream = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.None,
+                        //20 * 1024 * 1024))
+                        //    {
+                        //        new TextRange(RichTextBox.Document.ContentStart, RichTextBox.Document.ContentEnd).Save(stream, DataFormats.Rtf);
+                        //    }
+                        // });
+                        // CreateDocument();
+                        // }
+                        // else
+                        //if(CallStack[0].Stop) {
+                        //     FileWorkerManager.Do(Document, FilePath);
+                        // }
                         CallStack.RemoveAt(0);
 
-                        }
+                    }
                 }
             }
         }
@@ -244,7 +341,8 @@ namespace Controls
             public int CurrentParagraph;
             public string CheckingText;
             public bool Stop { get; private set; }
-            public CallStackTask() {
+            public CallStackTask()
+            {
                 Stop = true;
             }
             public CallStackTask(List<byte[]> content, int caretPosition, int count, string text)

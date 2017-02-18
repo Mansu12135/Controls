@@ -71,6 +71,7 @@ namespace Controls
             Format.comboWigth.SelectionChanged += ComboWigth_SelectionChanged;
             Format.comboWigth.LostFocus += ComboWigth_LostFocus;
             Format.comboWigth.KeyDown += ComboWigth_KeyDown;
+
         }
 
       
@@ -100,7 +101,7 @@ namespace Controls
             var listItem = new ListItem();
             list.ListItems.Add(listItem);
             TextBox.MainControl.Document.Blocks.Add(list);
-            TextBox.MainControl.CaretPosition = TextBox.MainControl.Document.ContentEnd;
+            TextBox.MainControl.CaretPosition = TextBox.MainControl.Document.ContentEnd; 
         }
 
         private void ComboWigth_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)

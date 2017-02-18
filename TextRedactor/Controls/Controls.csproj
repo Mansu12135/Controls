@@ -267,6 +267,11 @@
     <Content Include="kindlegen.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\BigRomb.png" />
+    <Resource Include="Resources\rombDouble2.png" />
+    <Resource Include="Resources\rombDouble1.png" />
+    <Resource Include="Resources\Rec.jpg" />
+    <Resource Include="Resources\CloseGray.png" />
     <Resource Include="Resources\set.png" />
     <Resource Include="Resources\grey_logo.png" />
     <Resource Include="Resources\closeNote.png" />

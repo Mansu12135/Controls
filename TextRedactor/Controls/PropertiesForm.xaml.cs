@@ -44,9 +44,11 @@ namespace Controls
             else
             {
                 Options opt = new Options();
+                opt.HorizontalAlignment = HorizontalAlignment.Center;
+                opt.VerticalAlignment = VerticalAlignment.Center;
                 opt.ParentControl = this;
                 Element.Child = opt;
-                Width /= 2;
+                Width /= 1.5;
                 Title = "Options";
             }
 
@@ -79,6 +81,11 @@ namespace Controls
         public void AddTask(Task task)
         {
             Tasks.Add(task);
+        }
+
+        private void CanselBut_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Close();
         }
     }
 

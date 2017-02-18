@@ -38,15 +38,21 @@ namespace Controls
             if (control != null)
             {
                 var proj = control.Notes[propertiesForm.value.Name];
-                proj.Files.ForEach(r => listOfFiles.Add(new ListOfFiles() { FileName = r.Name, imageSources = "Resources/close_icon.png", Tags = "del", FilePath = r.Name }));
-                listOfFiles.Add(new ListOfFiles() { FileName = "", imageSources = "Resources/picture.png", Tags = "add", FilePath = "" });
-                FileBrowser.dataGrid.ItemsSource = listOfFiles;
+                proj.Files.ForEach(r => listOfFiles.Add(new ListOfFiles() { FileName = r.Name, FilePath = r.Name }));
+                FileList.ItemsSource = listOfFiles;
+                //     FileBrowser.dataGrid.ItemsSource = listOfFiles;
                 textBoxProjectName.Text = propertiesForm.value.Name;
-                FileBrowser.projectProperties = this;
-                property.Add(new Property("Author", proj.Author));
-                property.Add(new Property("Date of creating", proj.CreateDate.ToShortDateString()));
-                property.Add(new Property("Date of publishing", proj.PublishingDate.ToString()));
-                DetailOfProject.ItemsSource = property;
+                //  FileBrowser.projectProperties = this;
+                Author.Text = proj.Author;
+                DateOfCreating.Text = proj.CreateDate.ToShortDateString();
+                DateOfPublishing.Text = "-";
+                Words.Text = "-";
+                Symbols.Text = "-";
+
+                //property.Add(new Property("Author", proj.Author));
+                //property.Add(new Property("Date of creating", proj.CreateDate.ToShortDateString()));
+                //property.Add(new Property("Date of publishing", proj.PublishingDate.ToString()));
+                //  DetailOfProject.ItemsSource = property;
             }
         }
 
@@ -87,12 +93,74 @@ namespace Controls
         {
             if (isCreateFile)
             {
-                FileBrowser.dataGrid.IsReadOnly = false;
-                FileBrowser.dataGrid.CurrentCell = new DataGridCellInfo(
-                    FileBrowser.dataGrid.Items[FileBrowser.dataGrid.Items.Count - 1], FileBrowser.dataGrid.Columns[0]);
-                FileBrowser.dataGrid.BeginEdit();
-                FileProperties.IsEnabled = false;
+                //FileBrowser.dataGrid.IsReadOnly = false;
+                //FileBrowser.dataGrid.CurrentCell = new DataGridCellInfo(
+                //    FileBrowser.dataGrid.Items[FileBrowser.dataGrid.Items.Count - 1], FileBrowser.dataGrid.Columns[0]);
+                //FileBrowser.dataGrid.BeginEdit();
+                //FileProperties.IsEnabled = false;
             }
+        }
+
+        private void ImportFile_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var dialog = new OpenFileDialog();
+            dialog.CheckPathExists = true;
+            dialog.Filter = "TextFile (*.rtf)|*.rtf";
+            dialog.InitialDirectory = ((BrowseProject)propertiesForm.CalledControl).ProjectsPath + "\\" + propertiesForm.value.Name;
+            var rezult = dialog.ShowDialog();
+            if (rezult != DialogResult.OK) { return; }
+            propertiesForm.AddTask(new System.Threading.Tasks.Task(
+          () =>
+          {
+              ((BrowseProject)propertiesForm.CalledControl).AddFileToProject(propertiesForm.value.Name, dialog.FileName);
+          }));
+            listOfFiles.Add(new ListOfFiles() { FileName = System.IO.Path.GetFileNameWithoutExtension(dialog.FileName), FilePath = System.IO.Path.GetFileNameWithoutExtension(dialog.FileName) });
+            FileList.Items.Refresh();
+        }
+
+        private void textBoxFileName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var text = sender as System.Windows.Controls.TextBox;
+            if (text == null || text.Tag == null) return;
+            string oldName = text.Tag.ToString();
+            string newName = text.Text;
+            if (text.Text == oldName) return;
+            propertiesForm.AddTask(new System.Threading.Tasks.Task(
+               () =>
+               {
+                   ((BrowseProject)propertiesForm.CalledControl).RenameFileInProject(propertiesForm.value.Name,
+                   ((Project)propertiesForm.value).Files.Find(r => r.Name == oldName),
+                  newName);
+               }));
+        }
+
+        private void textBoxFileName_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+       //     var text = sender as System.Windows.Controls.TextBox;
+        //    if (text == null || text.Tag == null) return;
+            if (e.Key == Key.Enter)
+            {
+                FileList.Focus();
+               // text.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
+        }
+
+        private void DelFile_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var image = sender as Image;
+            if (image == null || image.Tag==null) return;
+            string fileName = image.Tag.ToString();
+            propertiesForm.AddTask(new System.Threading.Tasks.Task(
+            () =>
+            {
+                var project = (Project)propertiesForm.value;
+                if (project == null || string.IsNullOrEmpty(fileName)) { return; }
+                string fullFileName = project.ListFiles.Find(file => file.Name == fileName).Path;
+                if (string.IsNullOrEmpty(fullFileName)) { return; }
+                ((BrowseProject)propertiesForm.CalledControl).DeleteFile(project.Name, fullFileName);
+            }));
+            listOfFiles.Remove(listOfFiles.Where(item=>item.FilePath == fileName).First());
+            FileList.Items.Refresh();
         }
     }
     public class ListOfFiles
