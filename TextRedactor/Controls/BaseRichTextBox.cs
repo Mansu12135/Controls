@@ -1,5 +1,4 @@
-﻿using Spire.Doc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -8,10 +7,11 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Linq;
 using System;
-using SpireLicense = Spire.License;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Media;
+using Spire.Doc;
+using SpireHack;
 
 namespace Controls
 {
@@ -382,35 +382,35 @@ namespace Controls
 
         public void SaveAsEpub(ExportInfo info, string filePath)
         {
-            Document document = new Document(filePath);
+            HackDocument document = new HackDocument(filePath);
             document.BuiltinDocumentProperties.Title = info.Title;
             document.BuiltinDocumentProperties.Author = info.Author;
-            document.BuiltinDocumentProperties.CreateDate = (DateTime)info.DatePublish == null ? DateTime.Now : (DateTime)info.DatePublish;
+            //document.BuiltinDocumentProperties.CreateDate = (DateTime)info.DatePublish == null ? DateTime.Now : (DateTime)info.DatePublish;
             //    var section=document.AddSection();
             //    section.Document.LoadRtf(@"C:\test.rtf");
             //  section = document.AddSection();
             //    section.Document.LoadRtf(filePath);
-            document.SaveToFile(info.SavePath + "\\" + Path.GetFileNameWithoutExtension(filePath) + ".epub", FileFormat.EPub);
+            document.PremiumSave(info.SavePath + "\\" + Path.GetFileNameWithoutExtension(filePath) + ".epub", FileFormat.EPub);
         }
-        public byte[] ConvertDocumentToPdf(Stream aInputStream)
-        {
-            byte[] tResult = null;
-            using (MemoryStream tOutput = new MemoryStream())
-            {
-                ConvertDocumentToPdf(aInputStream, tOutput);
-                tResult = tOutput.ToArray();
-            }
-            return tResult;
-        }
+        //public byte[] ConvertDocumentToPdf(Stream aInputStream)
+        //{
+        //    byte[] tResult = null;
+        //    using (MemoryStream tOutput = new MemoryStream())
+        //    {
+        //        ConvertDocumentToPdf(aInputStream, tOutput);
+        //        tResult = tOutput.ToArray();
+        //    }
+        //    return tResult;
+        //}
 
-        public void ConvertDocumentToPdf(Stream aInputStream, Stream aOutputStream)
-        {
-            SpireLicense.LicenseProvider.SetLicenseKey(@"sGB6g9jPENUBAIRgo6LnJuyXETnXf19qM7KMKXiy12yslrfh84Ukseil96/AQOrfQyQOjO6iFpO+28+EgRa2bQK5voH908vfGNak2EmkwZolFWRHzujVNaA9Y95ctuKYBm4iVcelMWn8P6hVLxnasVhESC+cMbOh3jeQW3zE/BbVNQrff/HC8RzIJKMsc47TlOirmeYdjn697g65EeQWSrf+kwjm46UfAsdwdok46z9K8fCgGZMpeFnMXz/zt+NlQrkpwar/kCyoVvB+Zw2Fgv4CfvsoxCjaPUZZ01FctmvbxXwiSSdJY9hbj9tTaHfcoo5stjEvaES6AKMANgFeXDde1dKDO3//wJMFHHfrXghdlGVl5ZB53SwHSnoyGsem3uvr7rehA9wEs6oDlGFFJdKlmVwy+d5ar0ghVF6RZMSC2nskxvu96isVcbS3wr/CnqCGOQxOvtac5JZRaeKhTqMmQDxi+AzgJFYcQyh6/pwo8HgFy+nw2r5mUl4yZofyHD/ivjoPUTuXDHJWDJYm62WGq5QcwDBrxiMqD1KOMC/iAnZ3OqxrAX5KTbfwbjM1d+c7RrTiA7BdsjtNCxRyzLZUoyLreDwQhY2EYf2h2wth/34Ue1u3bihlup88AeuCKbEpsWmY6pt+tXey7JlTRht+UsOsjLBmGUz0K504ik+EvIBiIA00OkFf1+1VHqGAfBZ/SGbD51Fn3WQmrnfraCbyzXhd0BzyfMGv9elVslmfa7ae4vG+uB+rTheS/WCOTrFpytjuIjRKbSKMog98Bsubd1HQKYxQ5KwRVFAkia+XzAX0HBengmrxZlG5mue8UiNc6gHrZfQvvUOEOu7yCsRjhybwc3+gLUkq2r/Q14mRytVN11k/Fl/iNEB0DN2QHNKKu9maLF0oyT9vf7aYFEUbm9iNWH+PXDsyLbQ7VtmZSBf9/vVfJlZ9+p5TBreJFHO0jur6M6VDNRsokfKm+DZyaMzY4ijpLYzLJ0euYwrm/gFOorNpyZCR+7wjxFVZqEstJSsUvXajzy+R8OfAK4Arr66w6LMhSMCNfGE4U8KkIBz2hR3MJtFI91cI5QKFJXj+kCx1TBHFTSTH0UyOFH4nGS/iE80uFCjGOplwejqvF2MFG8H9u0LdfrF9M3vYBIw6/5ZUlef1oGnwtodz2yYLv+3o5Q7Bk4ixlPRw2hehHLqYQix70MmCzEJBgyqsZGQnV59AJDnGyUQutjX9QFrmEAu6cAotMW8Qoh2KSfv+UGJLuffykK7HgZiGvQYT6L//+QlbNscY7F1CTKuBd8yVOtx/U+H3b6L2LLeby8255zdD6dfBN/1e2Thz+LJGedWpytHW/wqkutDoG8gCaMb8zv+JvRy1kRkTxNiEY3os+u/CLQLht0xdiZO7814RGwiaMyH1ixzIiVmtEJzA6RCXDvjUvhSukY2QwVEJfXZMHyGOqWAdLA==");
-            FileFormat tFileFormat = FileFormat.EPub;
-            Document tDocument = new Document(aInputStream);
-            tDocument.SaveToStream(aOutputStream, tFileFormat);
-            tDocument.Close();
-        }
+        //public void ConvertDocumentToPdf(Stream aInputStream, Stream aOutputStream)
+        //{
+        //  //  SpireLicense.LicenseProvider.SetLicenseKey(@"sGB6g9jPENUBAIRgo6LnJuyXETnXf19qM7KMKXiy12yslrfh84Ukseil96/AQOrfQyQOjO6iFpO+28+EgRa2bQK5voH908vfGNak2EmkwZolFWRHzujVNaA9Y95ctuKYBm4iVcelMWn8P6hVLxnasVhESC+cMbOh3jeQW3zE/BbVNQrff/HC8RzIJKMsc47TlOirmeYdjn697g65EeQWSrf+kwjm46UfAsdwdok46z9K8fCgGZMpeFnMXz/zt+NlQrkpwar/kCyoVvB+Zw2Fgv4CfvsoxCjaPUZZ01FctmvbxXwiSSdJY9hbj9tTaHfcoo5stjEvaES6AKMANgFeXDde1dKDO3//wJMFHHfrXghdlGVl5ZB53SwHSnoyGsem3uvr7rehA9wEs6oDlGFFJdKlmVwy+d5ar0ghVF6RZMSC2nskxvu96isVcbS3wr/CnqCGOQxOvtac5JZRaeKhTqMmQDxi+AzgJFYcQyh6/pwo8HgFy+nw2r5mUl4yZofyHD/ivjoPUTuXDHJWDJYm62WGq5QcwDBrxiMqD1KOMC/iAnZ3OqxrAX5KTbfwbjM1d+c7RrTiA7BdsjtNCxRyzLZUoyLreDwQhY2EYf2h2wth/34Ue1u3bihlup88AeuCKbEpsWmY6pt+tXey7JlTRht+UsOsjLBmGUz0K504ik+EvIBiIA00OkFf1+1VHqGAfBZ/SGbD51Fn3WQmrnfraCbyzXhd0BzyfMGv9elVslmfa7ae4vG+uB+rTheS/WCOTrFpytjuIjRKbSKMog98Bsubd1HQKYxQ5KwRVFAkia+XzAX0HBengmrxZlG5mue8UiNc6gHrZfQvvUOEOu7yCsRjhybwc3+gLUkq2r/Q14mRytVN11k/Fl/iNEB0DN2QHNKKu9maLF0oyT9vf7aYFEUbm9iNWH+PXDsyLbQ7VtmZSBf9/vVfJlZ9+p5TBreJFHO0jur6M6VDNRsokfKm+DZyaMzY4ijpLYzLJ0euYwrm/gFOorNpyZCR+7wjxFVZqEstJSsUvXajzy+R8OfAK4Arr66w6LMhSMCNfGE4U8KkIBz2hR3MJtFI91cI5QKFJXj+kCx1TBHFTSTH0UyOFH4nGS/iE80uFCjGOplwejqvF2MFG8H9u0LdfrF9M3vYBIw6/5ZUlef1oGnwtodz2yYLv+3o5Q7Bk4ixlPRw2hehHLqYQix70MmCzEJBgyqsZGQnV59AJDnGyUQutjX9QFrmEAu6cAotMW8Qoh2KSfv+UGJLuffykK7HgZiGvQYT6L//+QlbNscY7F1CTKuBd8yVOtx/U+H3b6L2LLeby8255zdD6dfBN/1e2Thz+LJGedWpytHW/wqkutDoG8gCaMb8zv+JvRy1kRkTxNiEY3os+u/CLQLht0xdiZO7814RGwiaMyH1ixzIiVmtEJzA6RCXDvjUvhSukY2QwVEJfXZMHyGOqWAdLA==");
+        //    FileFormat tFileFormat = FileFormat.EPub;
+        //    Document tDocument = new Document(aInputStream);
+        //    tDocument.SaveToStream(aOutputStream, tFileFormat);
+        //    tDocument.Close();
+        //}
         public void SaveAsMobi(ExportInfo info, string filePath)
         {
             SaveAsEpub(info, filePath);
