@@ -232,6 +232,7 @@ namespace Controls
         public void Dispose()
         {
             BrowseProject.Dispose();
+            TextBox.MainControl.Dispose();
         }
 
         private void ExportButton_MouseUp(object sender, MouseButtonEventArgs e)

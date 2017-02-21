@@ -134,6 +134,7 @@
     <Compile Include="SuperTextRedactor.xaml.cs">
       <DependentUpon>SuperTextRedactor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextRangeList.cs" />
     <Compile Include="TextRedactor.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

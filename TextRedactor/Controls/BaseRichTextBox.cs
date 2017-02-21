@@ -10,6 +10,7 @@ using System.Linq;
 using System;
 using SpireLicense = Spire.License;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Media;
 
 namespace Controls
@@ -20,18 +21,21 @@ namespace Controls
         private DictionaryManager DictionaryManager;
         private int PreviousParagraphCount;
         private int PrevTextPointer;
+        private TextRangeList<TextRange> RangeList;
+        private Thread Thread { get; set; }
 
         public BaseRichTextBox()
         {
             ContextMenu = new ContextMenu();
             DictionaryManager = new DictionaryManager();
             AutoSave = true;
-            DataObject.AddPastingHandler(this, OnPaste);
+            //DataObject.AddPastingHandler(this, OnPaste);
         }
 
         public void Dispose()
         {
-            DataObject.RemovePastingHandler(this, OnPaste);
+            StopSaveManager();
+            // DataObject.RemovePastingHandler(this, OnPaste);
         }
 
         internal SuperTextRedactor Parent;
@@ -44,13 +48,12 @@ namespace Controls
                 filePath = value;
                 if (oldValue != value)
                 {
-                    if (SaveManager != null)
+                    if (Thread != null)
                     {
-                        SaveManager.Dispose();
-                        SaveManager = null;
+                        StopSaveManager();
                     }
                     if (string.IsNullOrEmpty(filePath)) { return; }
-                    SaveManager = new SaveManager(filePath, this);
+                    CreateSaveManager(filePath);
                 }
             }
             private get { return filePath; }
@@ -59,79 +62,78 @@ namespace Controls
 
         public int LetterCount { get; set; }
         public int WordCount { get; set; }
-        private string ww = "";
-        public string WordLetterCount { get { return ww; } set { ww = value; } }
+        public string WordLetterCount { get; set; } = "";
         public bool AutoSave { get; set; }
 
-        public int ParagraphCount
-        {
-            get { return vParagraphCount; }
-            private set
-            {
-                var list = Document.Blocks.ToList();
-                PreviousParagraphCount = vParagraphCount > 0 ? vParagraphCount : 0;
-                vParagraphCount = list.Count - 1;
-                PrevTextPointer = list.IndexOf(CaretPosition.Paragraph);
-                OnParagraphCountChanged();
-            }
-        }
-        private int vParagraphCount;
+        //public int ParagraphCount
+        //{
+        //    get { return vParagraphCount; }
+        //    private set
+        //    {
+        //        var list = Document.Blocks.ToList();
+        //        PreviousParagraphCount = vParagraphCount > 0 ? vParagraphCount : 0;
+        //        vParagraphCount = list.Count - 1;
+        //        PrevTextPointer = list.IndexOf(CaretPosition.Paragraph);
+        //        OnParagraphCountChanged();
+        //    }
+        //}
+        //private int vParagraphCount;
 
-        private bool OnPasteFlag = false;
-        private void OnPaste(object sender, DataObjectPastingEventArgs e)
-        {
-            OnPasteFlag = true;
-        }
+        //private bool OnPasteFlag = false;
+        //private void OnPaste(object sender, DataObjectPastingEventArgs e)
+        //{
+        //    OnPasteFlag = true;
+        //}
 
-        private void OnParagraphCountChanged()
-        {
-            string text = new TextRange(Document.ContentStart, Document.ContentEnd).Text;
-            WordCount = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None).Length;
-            LetterCount = text.Length;
-            ww = "Words: " + WordCount + "; Characters: " + LetterCount;
-            if (string.IsNullOrEmpty(text))
-            {
-                vParagraphCount = 0;
-                SaveManager.AddTaskToCallStack(new List<byte[]>(), PrevTextPointer, ParagraphCount, text);
-                return;
-            }
-            var list = Document.Blocks.ToList();
-            int stratPosition, endPosisition;
-            if (OnPasteFlag && PreviousParagraphCount < ParagraphCount)
-            {
-                stratPosition = string.IsNullOrWhiteSpace(new TextRange(list[ParagraphCount].ContentStart, list[ParagraphCount].ContentEnd).Text) ? PreviousParagraphCount - 1 : PreviousParagraphCount;
-                endPosisition = ParagraphCount;
-            }
-            else if (OnPasteFlag && PreviousParagraphCount == ParagraphCount || Selection.IsEmpty)
-            {
-                stratPosition = PrevTextPointer;
-                endPosisition = ParagraphCount;
-            }
-            else
-            {
-                stratPosition = list.IndexOf(Selection.Start.Paragraph);
-                endPosisition = list.IndexOf(Selection.End.Paragraph);
-                int diff = ParagraphCount - PreviousParagraphCount;
-                if (endPosisition - stratPosition != diff && diff > 0/*I think diff>0 it's general case, but that fixed your bug need checking equals diff 1 */)
-                {
-                    stratPosition = endPosisition - ParagraphCount + PreviousParagraphCount;
-                }
-            }
-            stratPosition = stratPosition > 0 ? stratPosition : 0;
-            PrevTextPointer = (PrevTextPointer < endPosisition) ? endPosisition : PrevTextPointer;
-            OnPasteFlag = false;
-            List<byte[]> byteArray = new List<byte[]>();
-            for (int i = stratPosition; i <= endPosisition; i++)
-            {
-                using (var stream = new MemoryStream())
-                {
-                    TextRange range = new TextRange(list[i].ContentStart, list[i].ContentEnd);
-                    range.Save(stream, DataFormats.Rtf);
-                    byteArray.Add(stream.ToArray());
-                }
-            }
-          //  SaveManager.AddTaskToCallStack(byteArray, PrevTextPointer, ParagraphCount, text);
-        }
+        //private void OnParagraphCountChanged()
+        //{
+        //    string text = new TextRange(Document.ContentStart, Document.ContentEnd).Text;
+        //    WordCount = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None).Length;
+        //    LetterCount = text.Length;
+        //    ww = "Words: " + WordCount + "; Characters: " + LetterCount;
+        //    if (string.IsNullOrEmpty(text))
+        //    {
+        //        vParagraphCount = 0;
+        //        SaveManager.AddTaskToCallStack(new List<byte[]>(), PrevTextPointer, ParagraphCount, text);
+        //        return;
+        //    }
+        //    var list = Document.Blocks.ToList();
+        //    int stratPosition, endPosisition;
+        //    if (OnPasteFlag && PreviousParagraphCount < ParagraphCount)
+        //    {
+        //        stratPosition = string.IsNullOrWhiteSpace(new TextRange(list[ParagraphCount].ContentStart, list[ParagraphCount].ContentEnd).Text) ? PreviousParagraphCount - 1 : PreviousParagraphCount;
+        //        endPosisition = ParagraphCount;
+        //    }
+        //    else if (OnPasteFlag && PreviousParagraphCount == ParagraphCount || Selection.IsEmpty)
+        //    {
+        //        stratPosition = PrevTextPointer;
+        //        endPosisition = ParagraphCount;
+        //    }
+        //    else
+        //    {
+        //        stratPosition = list.IndexOf(Selection.Start.Paragraph);
+        //        endPosisition = list.IndexOf(Selection.End.Paragraph);
+        //        int diff = ParagraphCount - PreviousParagraphCount;
+        //        if (endPosisition - stratPosition != diff && diff > 0/*I think diff>0 it's general case, but that fixed your bug need checking equals diff 1 */)
+        //        {
+        //            stratPosition = endPosisition - ParagraphCount + PreviousParagraphCount;
+        //        }
+        //    }
+        //    stratPosition = stratPosition > 0 ? stratPosition : 0;
+        //    PrevTextPointer = (PrevTextPointer < endPosisition) ? endPosisition : PrevTextPointer;
+        //    OnPasteFlag = false;
+        //    List<byte[]> byteArray = new List<byte[]>();
+        //    for (int i = stratPosition; i <= endPosisition; i++)
+        //    {
+        //        using (var stream = new MemoryStream())
+        //        {
+        //            TextRange range = new TextRange(list[i].ContentStart, list[i].ContentEnd);
+        //            range.Save(stream, DataFormats.Rtf);
+        //            byteArray.Add(stream.ToArray());
+        //        }
+        //    }
+        //  //  SaveManager.AddTaskToCallStack(byteArray, PrevTextPointer, ParagraphCount, text);
+        //}
 
         public TextPointer GetTextPointAt(TextPointer startingPoint, int offset, LogicalDirection direction = LogicalDirection.Forward)
         {
@@ -274,6 +276,23 @@ namespace Controls
             return tr.Text.Length;
         }
 
+        private void StopSaveManager()
+        {
+            SaveManager.Dispose();
+            Thread.Join();
+            Thread.Abort();
+            Thread = null;
+        }
+
+        private void CreateSaveManager(string filePath)
+        {
+            RangeList = new TextRangeList<TextRange>(Document);
+            SaveManager = new SaveManager();
+            Thread = new Thread(() => SaveManager.DoStart(filePath, RangeList));
+            Thread.SetApartmentState(ApartmentState.STA);
+            Thread.Start();
+        }
+
         protected override void OnContextMenuOpening(ContextMenuEventArgs e)
         {
             Selection.Select(Document.ContentStart, Document.Blocks.ToList()[1].ContentStart);
@@ -287,13 +306,13 @@ namespace Controls
         protected override void OnTextChanged(TextChangedEventArgs e)
         {
             base.OnTextChanged(e);
-            if (!AutoSave || string.IsNullOrEmpty(FilePath))
-            {
-                PreviousParagraphCount = Document.Blocks.ToList().Count - 1;
-                vParagraphCount = PreviousParagraphCount;
-                return;
-            }
-            ParagraphCount = 0;
+            if (!AutoSave || string.IsNullOrEmpty(FilePath) || e.Changes.Count == 0) return;
+            var change = e.Changes.OrderByDescending(item => item.Offset + item.AddedLength + item.RemovedLength).First();
+            RangeList?.OnTextRangeChanged(change.Offset);
+            //PreviousParagraphCount = Document.Blocks.ToList().Count - 1;
+            //vParagraphCount = PreviousParagraphCount;
+            //return;
+            //ParagraphCount = 0;
         }
 
         private MenuItem MenuItemDictionary;
