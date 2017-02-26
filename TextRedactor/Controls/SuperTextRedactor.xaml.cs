@@ -405,7 +405,7 @@ namespace Controls
             int startOffset = TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.Start);// new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.Start).Text.Length;
             int endOffset = TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.End); //new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.End).Text.Length;
             string text = range.Text;
-            NotesBrowser.AddItem(new Note(name, text, startOffset, endOffset));
+            NotesBrowser.AddItem(new Note(name, text, range, startOffset, endOffset));
         }
 
         private void AddFlag(TextSelection range,string name)

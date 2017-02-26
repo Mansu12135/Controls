@@ -57,6 +57,7 @@ namespace Controls
                 TextPointer pointer = startPoistion;
                 startPoistion = GetEnd(pointer);
                 MainList.Add((T)new TextRange(pointer, startPoistion));
+                temp += MainList[MainList.Count - 1].Text.Length;
             }
             //double count = length / TextRangeLength + 1;
             //for (int i = index; i < count; i++)
@@ -79,9 +80,9 @@ namespace Controls
                 {
                     return false;
                 }
-                string a = "";
-                disp.Invoke(() => a = range.Text);
-                return a == range1.Text; //String.Compare(range.Text, range1.Text, StringComparison.CurrentCulture) == 0;
+                TextRange rangeUI = null;
+                disp.Invoke(() => rangeUI = range);
+                return range1.Start.GetOffsetToPosition(range1.End) == rangeUI.Start.GetOffsetToPosition(rangeUI.End); //String.Compare(range.Text, range1.Text, StringComparison.CurrentCulture) == 0;
             }
         }
 
@@ -93,7 +94,7 @@ namespace Controls
                 using (var stream = new MemoryStream())
                 {
                     MainList[index].Save(stream, DataFormats.Rtf);
-                    bytes = stream.GetBuffer();
+                    bytes = stream.ToArray();
                 }
             });
             return bytes;
@@ -105,7 +106,7 @@ namespace Controls
             {
                 range.Load(stream, DataFormats.Rtf);
             }
-            range.Text = range.Text.Remove(range.Text.Length - 2);
+            range = new TextRange(range.Start, range.End.GetNextContextPosition(LogicalDirection.Backward));
             return range;
         }
 

@@ -7,8 +7,8 @@ using System.Windows.Input;
 
 namespace Controls
 {
-	public static class CommandUtil
-	{
+	public static class CommandUtil 
+    {
 		public static bool CanExecute (ICommandSource source)
 		{
 			return CanExecute(source.Command, source.CommandParameter, source.CommandTarget);
@@ -78,9 +78,17 @@ namespace Controls
 			{
 				rcmd.Execute(parameter, target);
 			}
-		}
+            if (OnCommandExecute != null)
+            {
+                OnCommandExecute.Invoke(command, new EventArgs());
+            }
+        }
 
-		public static void SetCurrentValue (CanExecuteRoutedEventArgs e, object value)
+        public delegate void CommandExecuteHandler(object sender, EventArgs e);
+
+        public static event CommandExecuteHandler OnCommandExecute;
+
+        public static void SetCurrentValue (CanExecuteRoutedEventArgs e, object value)
 		{
 			if (e.Parameter is CommandCanExecuteParameter)
 			{

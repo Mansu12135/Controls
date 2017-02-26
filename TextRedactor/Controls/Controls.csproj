@@ -41,16 +41,17 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Spire.Doc, Version=5.8.33.3040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\SpireHack\SpireHack\bin\Debug\Spire.Doc.dll</HintPath>
-    </Reference>
-    <Reference Include="Spire.License, Version=1.3.5.40, Culture=neutral, PublicKeyToken=b1144360237c8b3f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\SpireHack\SpireHack\bin\Debug\Spire.License.dll</HintPath>
-    </Reference>
     <Reference Include="SpireHack">
-      <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\SpireHack\SpireHack\bin\Debug\SpireHack.dll</HintPath>
+      <HintPath>..\..\..\..\..\Загрузка\SpireHack.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire_Doc">
+      <HintPath>..\..\..\..\..\Загрузка\Spire_Doc.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire_License">
+      <HintPath>..\..\..\..\..\Загрузка\Spire_License.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire_Pdf">
+      <HintPath>..\..\..\..\..\Загрузка\Spire_Pdf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -93,6 +94,7 @@
       <DependentUpon>FormatPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="IBasicPanel.cs" />
+    <Compile Include="BaseCommandBinding.cs" />
     <Compile Include="IDictionaryManager.cs" />
     <Compile Include="InformationForm.xaml.cs">
       <DependentUpon>InformationForm.xaml</DependentUpon>

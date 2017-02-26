@@ -12,11 +12,11 @@ namespace Controls
 {
 	static class RichTextBoxCommandBindings
 	{
-        public static void IntializeCommandBindings(RichTextBox richTextBox)
+        public static void IntializeCommandBindings(BaseRichTextBox richTextBox)
         {
             if (richTextBox == null) return;
 
-            richTextBox.CommandBindings.Add(new System.Windows.Input.CommandBinding(
+            richTextBox.CommandBindings.Add(new BaseCommandBinding(
                                         EditingCommands.ToggleBold,
                                         (sender, e) => SetBold(richTextBox, !GetBold(richTextBox)),
                                         (sender, e) =>
@@ -25,7 +25,7 @@ namespace Controls
 
                                             e.CanExecute = true;
                                             e.Handled = true;
-                                        }));
+                                        }, richTextBox));
 
             richTextBox.CommandBindings.Add(new CommandBinding(
                                         EditingCommands.ToggleItalic,

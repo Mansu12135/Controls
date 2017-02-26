@@ -29,6 +29,7 @@ namespace Controls
             ContextMenu = new ContextMenu();
             DictionaryManager = new DictionaryManager();
             AutoSave = true;
+            Document.IsOptimalParagraphEnabled = true;
             //DataObject.AddPastingHandler(this, OnPaste);
         }
 
@@ -64,6 +65,14 @@ namespace Controls
         public int WordCount { get; set; }
         public string WordLetterCount { get; set; } = "";
         public bool AutoSave { get; set; }
+
+        public void OnCommandExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (!AutoSave || string.IsNullOrEmpty(FilePath)) return;
+            var richText = sender as RichTextBox;
+            if (richText == null) return;
+            RangeList?.OnTextRangeChanged(richText.Document.ContentStart.GetOffsetToPosition(richText.Selection.Start));
+        }
 
         //public int ParagraphCount
         //{
@@ -278,6 +287,7 @@ namespace Controls
 
         private void StopSaveManager()
         {
+            if(SaveManager == null) { return; }
             SaveManager.Dispose();
             Thread.Join();
             Thread.Abort();

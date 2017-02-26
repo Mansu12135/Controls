@@ -7,14 +7,16 @@ namespace Controls
     [Serializable]
     public class Note : Item
     {
-        public Note(string caption, string text, int pointerStart, int pointerEnd)
+        public Note(string caption, string text, TextRange range, int pointerStart, int pointerEnd)
         {
             Text = text;
             Name = caption;
             OffsetStart = pointerStart;
             OffsetEnd = pointerEnd;
+            Range = range;
         }
         public int OffsetStart {  set; get; }
+        public TextRange Range { set; get; }
         public int OffsetEnd {  set; get; }
         public string Text { set; get; }
 
