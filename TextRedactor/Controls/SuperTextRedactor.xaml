@@ -19,8 +19,8 @@
         <Color x:Key="SelectedBackgroundColor">#FFC5CBF9</Color>
         <Color x:Key="SelectedUnfocusedColor">#FFDDDDDD</Color>
 
-        <Color x:Key="ControlLightColor">#FFEFEFEF</Color>
-        <Color x:Key="ControlMediumColor">#FFEFEFEF</Color>
+        <Color x:Key="ControlLightColor">#FFDFDEDE</Color>
+        <Color x:Key="ControlMediumColor">#FFE1E1E1</Color>
         <Color x:Key="ControlDarkColor">#FF211AA9</Color>
 
         <Color x:Key="ControlMouseOverColor">#FFCBCBD5</Color>
@@ -171,15 +171,29 @@
                                         <TransformGroup>
                                             <ScaleTransform CenterY="0.5" CenterX="0.5"/>
                                             <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                            <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </LinearGradientBrush.RelativeTransform>
+                                    <GradientStop Color="#E0C3C3C3" Offset="0"/>
+                                    <GradientStop Color="#E0C3C3C3" Offset="1"/>
+                                    <GradientStop Color="#FFE4E4E4" Offset="0.979"/>
+                                    <GradientStop Color="#FFE4E4E4" Offset="0.021"/>
+                                </LinearGradientBrush>
+                                <!--<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
                                             <RotateTransform Angle="-90" CenterY="0.5" CenterX="0.5"/>
                                             <TranslateTransform/>
                                         </TransformGroup>
                                     </LinearGradientBrush.RelativeTransform>
-                                    <GradientStop Color="{DynamicResource ControlLightColor}" Offset="0.957"/>
-                                    <GradientStop Color="{DynamicResource ControlMediumColor}" Offset="0.033"/>
+                                    <GradientStop Color="{DynamicResource ControlLightColor}" Offset="0.966"/>
+                                    <GradientStop Color="{DynamicResource ControlMediumColor}" Offset="0.042"/>
                                     <GradientStop Color="#00E4E4E4" Offset="0.993"/>
                                     <GradientStop/>
-                                </LinearGradientBrush>
+                                </LinearGradientBrush>-->
                             </Border.Background>
                             <Border.BorderBrush>
                                 <LinearGradientBrush StartPoint="0,0"
@@ -640,8 +654,8 @@
                                 <TranslateTransform/>
                             </TransformGroup>
                         </LinearGradientBrush.RelativeTransform>
-                        <GradientStop Color="#E0E4E4E4" Offset="0"/>
-                        <GradientStop Color="#E0E4E4E4" Offset="1"/>
+                        <GradientStop Color="#E0C3C3C3" Offset="0"/>
+                        <GradientStop Color="#E0C3C3C3" Offset="1"/>
                         <GradientStop Color="White" Offset="0.979"/>
                         <GradientStop Color="White" Offset="0.021"/>
                     </LinearGradientBrush>

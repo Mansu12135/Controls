@@ -104,12 +104,12 @@
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <ScrollViewer Margin="20,0">
-            <controls:BaseRichTextBox x:Name="MainControl"  x:FieldModifier="public"  FontSize="14"   BorderThickness="0" SpellCheck.IsEnabled="True" VerticalScrollBarVisibility="Hidden" BorderBrush="{x:Null}" Background="White" Padding="0,30" ScrollViewer.CanContentScroll="True" IsDocumentEnabled="True" IsEnabled="False" HorizontalAlignment="Center">
+            <controls:BaseRichTextBox x:Name="MainControl"  x:FieldModifier="public"  FontSize="14"   BorderThickness="0" SpellCheck.IsEnabled="True" VerticalScrollBarVisibility="Hidden" BorderBrush="{x:Null}" Background="White" Padding="0,30" ScrollViewer.CanContentScroll="True" IsEnabled="False" HorizontalAlignment="Center">
                 <FlowDocument>
                     <BlockUIContainer>
-                        <Image Source="Resources/grey_logo.png" Width="250" />
+                        <Image Source="Resources/grey_logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" MaxWidth="250" />
                     </BlockUIContainer>
-                    <Paragraph TextAlignment="Center" Foreground="#FF838181">
+                    <Paragraph TextAlignment="Center" Foreground="#FF838181" >
                         <Bold>START A PROJECT</Bold>
                     </Paragraph>
                     <BlockUIContainer>

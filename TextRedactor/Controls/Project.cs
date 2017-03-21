@@ -48,12 +48,15 @@ namespace Controls
     {
         public string Name { get; set; }
         public string Path { get; set; }
+        public bool IsOpen { get; set; }
 
-        public LoadedFile(string path, string projectPath)
+
+        public LoadedFile(string path, string projectPath, bool isOpen=false)
         {
             if (!File.Exists(path)) { throw new Exception("Wrong path or bad file."); }
             Path = projectPath+"\\Files\\" + System.IO.Path.GetFileName(path);
             Name = System.IO.Path.GetFileNameWithoutExtension(path);
+            IsOpen = isOpen;
         }
     }
 }

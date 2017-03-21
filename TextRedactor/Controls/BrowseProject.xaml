@@ -140,44 +140,7 @@
                                     <StackPanel x:Name="stackPanel">
                                         <StackPanel  Orientation="Horizontal">
                                             <Label PreviewMouseDoubleClick="ProjectName_MouseDoubleClick" Padding="0">
-                                                <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" KeyDown="TextNameFile_OnKeyDown" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}" Width="{Binding Path=ActualWidth, ElementName=stackPanel, Converter={converters:PercentageConverter}, ConverterParameter='20'}">
-                                                    <!--<TextBox.Resources>
-                                                        <Style TargetType="{x:Type TextBox}"
-       x:Key="ExpandingTextBox">
-                                                            <Setter Property="OverridesDefaultStyle"
-            Value="True" />
-                                                            <Setter Property="Template">
-                                                                <Setter.Value>
-                                                                    <ControlTemplate TargetType="TextBox">
-                                                                        <Grid>
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition Width="1*">
-                                                                                    <ColumnDefinition.MaxWidth>
-                                                                                        <Binding Path="MaxWidth"
-                                         RelativeSource="{RelativeSource TemplatedParent}">
-                                                                                        </Binding>
-                                                                                    </ColumnDefinition.MaxWidth>
-                                                                                </ColumnDefinition>
-                                                                                <ColumnDefinition Width="0*" />
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <TextBox  Text="{TemplateBinding Text}">
-                                                                                <TextBox.MaxWidth>
-                                                                                    <Binding Path="MaxWidth"
-                                     RelativeSource="{RelativeSource TemplatedParent}" />
-                                                                                </TextBox.MaxWidth>
-                                                                            </TextBox>
-                                                                        </Grid>
-                                                                        <ControlTemplate.Triggers>
-                                                                            <Trigger Property="IsEnabled" Value="False">
-                                                                                <Setter  Property="Foreground" Value="Gold"/>
-                                                                            </Trigger>
-                                                                        </ControlTemplate.Triggers>
-                                                                    </ControlTemplate>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </Style>
-                                                    </TextBox.Resources>-->
-                                                </TextBox>
+                                                <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" KeyDown="TextNameFile_OnKeyDown" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}" Width="{Binding Path=ActualWidth, ElementName=stackPanel, Converter={converters:PercentageConverter}, ConverterParameter='20'}"/>
                                             </Label>
                                             <Border x:Name="Propert" Visibility="Hidden" Width="16" Height="16" HorizontalAlignment="Right" Cursor="Hand">
                                                 <Image Source="Resources/set.png" MouseUp="Propert_Click" Tag="{Binding Key}"></Image>
@@ -189,19 +152,12 @@
                                                     <Setter Property="Template">
                                                         <Setter.Value>
                                                             <ControlTemplate TargetType="ListBoxItem">
-                                                                <Border Name="HighlightBorder2"  
-                            Padding="0"
-                            BorderBrush="Transparent"
-                            BorderThickness="0"
-                           
-                            >
+                                                                <Border Name="HighlightBorder2" Padding="0" BorderBrush="Transparent" BorderThickness="0">       
                                                                     <DockPanel Cursor="Hand" HorizontalAlignment="Stretch">
                                                                         <Image Name="Romb" Source="Resources/romb.png" Margin="0,1" Height="0" Width="0"></Image>
                                                                         <Label x:Name="buttonOpenFile" Tag="{Binding Path}" PreviewMouseDoubleClick="buttonOpenFile_PreviewMouseDoubleClick" MouseDown="buttonOpenFile_MouseDown" Cursor="Hand" Height="Auto" HorizontalAlignment="Stretch" Padding="0" >
                                                                             <TextBox x:Name="TextNameFile" BorderThickness="0" Width="{Binding Path=ActualWidth, ElementName=stackPanel, Converter={converters:PercentageConverter}, ConverterParameter='20'}" Text="{Binding  Name}"  Tag="{Binding Path}" IsEnabled="False" ></TextBox>
                                                                         </Label>
-                                                                        <!--<TextBlock x:Name="buttonOpenFile" Padding="1" Text="{Binding  Name}" Tag="{Binding Path}" MouseDown="buttonOpenFile_MouseDown" Cursor="Hand" Height="Auto" HorizontalAlignment="Stretch" ></TextBlock>-->
-
                                                                     </DockPanel>
                                                                 </Border>
                                                                 <ControlTemplate.Triggers>

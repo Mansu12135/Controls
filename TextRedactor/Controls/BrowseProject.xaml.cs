@@ -33,7 +33,7 @@ namespace Controls
         public void Dispose()
         {
             if (string.IsNullOrEmpty(LoadedFile)) { return; }
-            ParentControl.BrowseProject.UpdateNoteAfterOpening();
+            ParentControl.BrowseProject.UpdateOffsetOnNotes();
             ParentControl.NotesBrowser.CloseNotes(LoadedFile);
         }
         private void CopyAll(DirectoryInfo source, DirectoryInfo target)
@@ -84,9 +84,25 @@ namespace Controls
 
         internal void DelFlag(Note note)
         {
-            UpdateNoteAfterOpening();
+          //  UpdateNoteAfterOpening();
         }
-
+        public void OpenFirstFile()
+        {
+            if (Notes.Count > 0 && Notes.First().Value.Files.Count > 0)
+            {
+                if (!ParentControl.TextBox.MainControl.IsEnabled)
+                {
+                    ParentControl.TextBox.MainControl.IsEnabled = true;
+                    ParentControl.Format.IsEnabled = true;
+                }
+                OpenFile(Notes.First().Value.Files[0].Path, Path.GetFileNameWithoutExtension(Notes.First().Value.Files[0].Path));
+                if (!string.IsNullOrEmpty(LoadedFile))
+                {
+                    UpdateRangeOnNotes();
+                    // UpdateTagOnFlags();
+                }
+            }
+        }
         private string vProjectPath = "";
 
         public BrowseProject(Dictionary<string, Project> collection)
@@ -274,7 +290,7 @@ namespace Controls
         {
             if (!string.IsNullOrEmpty(LoadedFile))
             {
-                UpdateNoteAfterOpening();
+                UpdateOffsetOnNotes();
             }
             ParentControl.TextBox.MainControl.FilePath = "";
             var range = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, ParentControl.TextBox.MainControl.Document.ContentEnd);
@@ -313,7 +329,25 @@ namespace Controls
             OpenFile(textBlock.Tag.ToString(), Path.GetFileNameWithoutExtension(textBlock.Tag.ToString()));
             if (!string.IsNullOrEmpty(LoadedFile))
             {
-                UpdateTagOnFlags();
+                UpdateRangeOnNotes();
+               // UpdateTagOnFlags();
+            }
+        }
+
+        public void UpdateRangeOnNotes()
+        {
+            foreach (var note in ParentControl.NotesBrowser.Notes)
+            {
+                note.Value.Range = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetStart),
+                    ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetEnd));
+            }
+        }
+        private void UpdateOffsetOnNotes()
+        {
+            foreach (var note in ParentControl.NotesBrowser.Notes)
+            {
+                note.Value.OffsetStart = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.Start);
+                note.Value.OffsetEnd = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.End);
             }
         }
         public byte[] getJPGFromImageControl(BitmapImage imageC)

@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -10,8 +8,8 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Media;
-using Spire.Doc;
-using SpireHack;
+using EpubConvertor;
+using System.IO;
 
 namespace Controls
 {
@@ -41,6 +39,7 @@ namespace Controls
 
         internal SuperTextRedactor Parent;
 
+       
         internal string FilePath
         {
             set
@@ -271,7 +270,7 @@ namespace Controls
             foreach (TextRange range in ranges)
             {
                 range.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(Colors.Red));
-               range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
+                range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
             }
         }
 
@@ -287,7 +286,7 @@ namespace Controls
 
         private void StopSaveManager()
         {
-            if(SaveManager == null) { return; }
+            if (SaveManager == null) { return; }
             SaveManager.Dispose();
             Thread.Join();
             Thread.Abort();
@@ -305,8 +304,8 @@ namespace Controls
 
         protected override void OnContextMenuOpening(ContextMenuEventArgs e)
         {
-            Selection.Select(Document.ContentStart, Document.Blocks.ToList()[1].ContentStart);
-            Selection.Select(Document.Blocks.ToList()[2].ContentStart, Document.Blocks.ToList()[5].ContentStart);
+            //Selection.Select(Document.ContentStart, Document.Blocks.ToList()[1].ContentStart);
+           // Selection.Select(Document.Blocks.ToList()[2].ContentStart, Document.Blocks.ToList()[5].ContentStart);
             ContextMenu.Items.Clear();
             AddSpellCheckingMenuItems(ContextMenu);
             AddBasicMenuItems(ContextMenu);
@@ -390,17 +389,34 @@ namespace Controls
             return DictionaryManager.GetAntonyms(word);
         }
 
-        public void SaveAsEpub(ExportInfo info, string filePath)
+        public void SaveAsEpub(ExportInfo info, List<LoadedFile> files)
         {
-            HackDocument document = new HackDocument(filePath);
-            document.BuiltinDocumentProperties.Title = info.Title;
-            document.BuiltinDocumentProperties.Author = info.Author;
+            var document = new Document(InputFormat.rtf);
+            foreach (var file in files)
+            {
+                document.AddFile(file.Path);
+            }
+            document.Author = info.Author;
+            document.Language = "en";
+            document.Publisher = "Home entertainment";
+            document.PublicationTime = (DateTime.Today);// info.DatePublish;
+            document.Rights = "all";
+            document.Title = info.Title;
+            if (info.ImagePath != null && !string.IsNullOrEmpty(info.ImagePath))
+            {
+                document.PathToCover = info.ImagePath;
+            }
+            var convertor = new Convertor(document);
+            convertor.CreateEpub(info.SavePath.EndsWith("\\")? info.SavePath: (info.SavePath+"\\") + info.Title + ".epub");
+            //  HackDocument document = new HackDocument(filePath);
+            //  document.BuiltinDocumentProperties.Title = info.Title;
+            //  document.BuiltinDocumentProperties.Author = info.Author;
             //document.BuiltinDocumentProperties.CreateDate = (DateTime)info.DatePublish == null ? DateTime.Now : (DateTime)info.DatePublish;
             //    var section=document.AddSection();
             //    section.Document.LoadRtf(@"C:\test.rtf");
             //  section = document.AddSection();
             //    section.Document.LoadRtf(filePath);
-            document.PremiumSave(info.SavePath + "\\" + Path.GetFileNameWithoutExtension(filePath) + ".epub", FileFormat.EPub);
+            //   document.PremiumSave(info.SavePath + "\\" + Path.GetFileNameWithoutExtension(filePath) + ".epub", FileFormat.EPub);
         }
         //public byte[] ConvertDocumentToPdf(Stream aInputStream)
         //{
@@ -423,15 +439,15 @@ namespace Controls
         //}
         public void SaveAsMobi(ExportInfo info, string filePath)
         {
-            SaveAsEpub(info, filePath);
-            var process = new Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.FileName = System.Windows.Forms.Application.StartupPath + "\\" + "kindlegen.exe";
-            process.StartInfo.Arguments = info.SavePath + "\\ToEpub.epub";
-            process.Start();
-            process.WaitForExit();
-            File.Delete(info.SavePath + "\\ToEpub.epub");
+            //SaveAsEpub(info, filePath);
+            //var process = new Process();
+            //process.StartInfo.UseShellExecute = false;
+            //process.StartInfo.RedirectStandardOutput = true;
+            //process.StartInfo.FileName = System.Windows.Forms.Application.StartupPath + "\\" + "kindlegen.exe";
+            //process.StartInfo.Arguments = info.SavePath + "\\ToEpub.epub";
+            //process.Start();
+            //process.WaitForExit();
+            //File.Delete(info.SavePath + "\\ToEpub.epub");
         }
     }
 }

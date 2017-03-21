@@ -82,15 +82,7 @@ namespace Controls
             list.MarkerStyle = TextMarkerStyle.Disc;
             var listItem = new ListItem();
             list.ListItems.Add(listItem);
-            //TextBox.MainControl.Document.Blocks.Add(list);
-            //  TextBox.MainControl.CaretPosition = TextBox.MainControl.Document.ContentEnd;
-            TextBox.MainControl.Focus();
-            TextPointer p = TextBox.MainControl.CaretPosition;
-           // TextBox.MainControl.BeginChange();
-            System.Windows.Clipboard.SetData(System.Windows.DataFormats.StringFormat, list);
-            TextBox.MainControl.Paste();
-            //  var imageContainer = new InlineUIContainer(list, p);
-         //   TextBox.MainControl.EndChange();
+            TextBox.MainControl.Document.Blocks.Add(list);
         }
 
 
@@ -101,7 +93,6 @@ namespace Controls
             var listItem = new ListItem();
             list.ListItems.Add(listItem);
             TextBox.MainControl.Document.Blocks.Add(list);
-            TextBox.MainControl.CaretPosition = TextBox.MainControl.Document.ContentEnd; 
         }
 
         private void ComboWigth_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -135,6 +126,7 @@ namespace Controls
         private void ColorPicker1_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color> e)
         {
             new TextRange(TextBox.MainControl.Selection.Start, TextBox.MainControl.Selection.End).ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(Format.ColorPicker1.SelectedColor));
+            TextBox.MainControl.OnCommandExecuted(TextBox.MainControl,null);
             TextBox.MainControl.Focus();
         }
 
@@ -144,18 +136,6 @@ namespace Controls
             {
                 TextBox.MainControl.Document.PageWidth = Convert.ToDouble(Format.comboWigth.SelectedValue);
             }
-            //else
-            //{
-            //    double res;
-            //    if (Double.TryParse(Format.comboWigth.Text, out res))
-            //    {
-            //        if (res > 0 && res <= System.Windows.Forms.SystemInformation.VirtualScreen.Width)
-            //        {
-            //            TextBox.MainControl.Document.PageWidth = res;
-            //        }
-            //    }
-            //}
-
         }
         public void SetTextWidth(string value)
         {
@@ -237,16 +217,25 @@ namespace Controls
 
         private void ExportButton_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            exportPanel = new ExportPanel();
-            exportPanel.HidenExport.MouseUp += new MouseButtonEventHandler((s, r) => { Container.Child = null; });
-            exportPanel.Name = "export";
-            exportPanel.ButExport.MouseUp += ButExport_MouseUp;
-            exportPanel.project = BrowseProject.CurentProject;
-            exportPanel.Init();
-            Container.Child = exportPanel;
+            if (exportPanel == null)
+            {
+                exportPanel = new ExportPanel();
+                exportPanel.HidenExport.MouseUp += new MouseButtonEventHandler((s, r) => { Container.Child = null; });
+                exportPanel.Name = "export";
+                exportPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
+                exportPanel.VerticalAlignment = VerticalAlignment.Stretch;
+                exportPanel.ButExport.Click += ButExport_Click; ;
+                exportPanel.project = BrowseProject.CurentProject;
+                exportPanel.Init();
+               // Grid.SetColumn(exportPanel, 2);
+                //Grid.SetRowSpan(exportPanel, 2);
+                //System.Windows.Controls.Panel.SetZIndex(exportPanel, 2);
+                //MainContainer.Children.Add(exportPanel);
+                Container.Child = exportPanel;
+            }
         }
 
-        private void ButExport_MouseUp(object sender, MouseButtonEventArgs e)
+        private void ButExport_Click(object sender, RoutedEventArgs e)
         {
             string folderPath = "";
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
@@ -258,9 +247,10 @@ namespace Controls
                     Title = exportPanel.TextBoxTitle.Text,
                     Author = exportPanel.TextBoxAuthor.Text,
                     DatePublish = exportPanel.TextBoxPublishingDate.SelectedDate,
-                    SavePath = folderPath
+                    SavePath = folderPath,
+                    ImagePath = exportPanel.ImageName.Tag?.ToString()
                 };
-                TextBox.MainControl.SaveAsEpub(exportInfo, BrowseProject.CurentFile);
+                TextBox.MainControl.SaveAsEpub(exportInfo, BrowseProject.CurentProject.Files);
             }
         }
 
@@ -396,7 +386,9 @@ namespace Controls
         {
             var range = TextBox.MainControl.Selection;
             string name = NotesBrowser.GenerateName("Note");
-            AddFlag(range,name);
+         //   range.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
+
+              AddFlag(range,name);
             AddNote(range,name);
             NotesBrowser.MainControl.Items.Refresh();
         }
@@ -405,13 +397,13 @@ namespace Controls
             int startOffset = TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.Start);// new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.Start).Text.Length;
             int endOffset = TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.End); //new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.End).Text.Length;
             string text = range.Text;
-            NotesBrowser.AddItem(new Note(name, text, range, startOffset, endOffset));
+            NotesBrowser.AddItem(new Note(name, text, new TextRange(range.Start,range.End), startOffset, endOffset));
         }
 
         private void AddFlag(TextSelection range,string name)
         {
             range.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
-          //  new TextRange(TextBox.MainControl.Selection.Start, TextBox.MainControl.Selection.End).ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
+            //  new TextRange(TextBox.MainControl.Selection.Start, TextBox.MainControl.Selection.End).ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
             var tempImage = Properties.Resources.noteFlag;
             var ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
                  tempImage.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));

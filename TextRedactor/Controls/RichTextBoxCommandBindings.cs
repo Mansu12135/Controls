@@ -27,7 +27,7 @@ namespace Controls
                                             e.Handled = true;
                                         }, richTextBox));
 
-            richTextBox.CommandBindings.Add(new CommandBinding(
+            richTextBox.CommandBindings.Add(new BaseCommandBinding(
                                         EditingCommands.ToggleItalic,
                                         (sender, e) => SetItalic(richTextBox, !GetItalic(richTextBox)),
                                         (sender, e) =>
@@ -36,8 +36,8 @@ namespace Controls
 
                                                 e.CanExecute = true;
                                                 e.Handled = true;
-                                            }));
-            richTextBox.CommandBindings.Add(new CommandBinding(
+                                            }, richTextBox));
+            richTextBox.CommandBindings.Add(new BaseCommandBinding(
                                        EditingCommands.ToggleUnderline,
                                        (sender, e) => SetUnderline(richTextBox, !GetUnderline(richTextBox)),
                                        (sender, e) =>
@@ -46,8 +46,8 @@ namespace Controls
 
                                            e.CanExecute = true;
                                            e.Handled = true;
-                                       }));
-            richTextBox.CommandBindings.Add(new CommandBinding(
+                                       }, richTextBox));
+            richTextBox.CommandBindings.Add(new BaseCommandBinding(
                                       EditingCommands.AlignLeft,
                                       (sender, e) => SetAlignLeft(richTextBox, !GetAlignLeft(richTextBox)),
                                       (sender, e) =>
@@ -56,8 +56,8 @@ namespace Controls
 
                                           e.CanExecute = true;
                                           e.Handled = true;
-                                      }));
-            richTextBox.CommandBindings.Add(new CommandBinding(
+                                      }, richTextBox));
+            richTextBox.CommandBindings.Add(new BaseCommandBinding(
                                      EditingCommands.AlignCenter,
                                      (sender, e) => SetAlignCenter(richTextBox, !GetAlignCenter(richTextBox)),
                                      (sender, e) =>
@@ -66,8 +66,8 @@ namespace Controls
 
                                          e.CanExecute = true;
                                          e.Handled = true;
-                                     }));
-            richTextBox.CommandBindings.Add(new CommandBinding(
+                                     }, richTextBox));
+            richTextBox.CommandBindings.Add(new BaseCommandBinding(
                          EditingCommands.AlignRight,
                          (sender, e) => SetAlignRight(richTextBox, !GetAlignRight(richTextBox)),
                          (sender, e) =>
@@ -76,8 +76,8 @@ namespace Controls
 
                              e.CanExecute = true;
                              e.Handled = true;
-                         }));
-            richTextBox.CommandBindings.Add(new CommandBinding(
+                         }, richTextBox));
+            richTextBox.CommandBindings.Add(new BaseCommandBinding(
                          EditingCommands.AlignJustify,
                          (sender, e) => SetAlignJustify(richTextBox, !GetAlignJustify(richTextBox)),
                          (sender, e) =>
@@ -86,8 +86,8 @@ namespace Controls
 
                              e.CanExecute = true;
                              e.Handled = true;
-                         }));
-            richTextBox.CommandBindings.Add(new CommandBinding(
+                         }, richTextBox));
+            richTextBox.CommandBindings.Add(new BaseCommandBinding(
                                                 MyCommands.SetFontSize,
                                                 (sender, e) =>
                                                 {
@@ -101,8 +101,8 @@ namespace Controls
                                                     CommandUtil.SetCurrentValue(e, GetFontSize(richTextBox));
                                                     e.CanExecute = true;
                                                     e.Handled = true;
-                                                }));
-            richTextBox.CommandBindings.Add(new CommandBinding(
+                                                }, richTextBox));
+            richTextBox.CommandBindings.Add(new BaseCommandBinding(
                                               MyCommands.SetFontFamily,
                                               (sender, e) =>
                                              
@@ -117,7 +117,7 @@ namespace Controls
                                                     CommandUtil.SetCurrentValue(e, GetFontFamily(richTextBox));
                                                     e.CanExecute = true;
                                                     e.Handled = true;
-                                                }));
+                                                }, richTextBox));
             //richTextBox.CommandBindings.Add(new CommandBinding(
             //                                    MyCommands.SetFontColor,
             //                                    (sender, e) =>

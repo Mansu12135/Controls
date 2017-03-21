@@ -16,7 +16,8 @@ namespace Controls
             Range = range;
         }
         public int OffsetStart {  set; get; }
-        public TextRange Range { set; get; }
+        [NonSerialized]
+        public TextRange Range;// { set; get; }
         public int OffsetEnd {  set; get; }
         public string Text { set; get; }
 

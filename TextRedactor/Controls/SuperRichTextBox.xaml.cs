@@ -13,7 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml;
 using Microsoft.Office.Interop.Word;
-using Spire.Doc;
 using Application = System.Windows.Forms.Application;
 using Point = System.Windows.Point;
 using Word=Microsoft.Office.Interop.Word;

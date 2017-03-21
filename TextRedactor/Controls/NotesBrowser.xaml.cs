@@ -82,7 +82,7 @@ namespace Controls
             if (im != null)
             {
                 Notes.Remove(im.Tag.ToString());
-                ParentControl.BrowseProject.UpdateNoteAfterOpening();
+              //  ParentControl.BrowseProject.UpdateNoteAfterOpening();
                 //   ParentControl.BrowseProject.DelFlag();
                 // ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
                 //  MainControl.Items.Refresh();
@@ -174,7 +174,7 @@ namespace Controls
                 if (!string.IsNullOrEmpty(par.Key))
                 {
                     ParentControl.TextBox.MainControl.Focus();
-                    ParentControl.TextBox.MainControl.CaretPosition = ParentControl.TextBox.MainControl.GetTextPointAt(ParentControl.TextBox.MainControl.Document.ContentStart, par.Value.OffsetStart, System.Windows.Documents.LogicalDirection.Forward);
+                    ParentControl.TextBox.MainControl.CaretPosition = par.Value.Range.Start;// ParentControl.TextBox.MainControl.GetTextPointAt(ParentControl.TextBox.MainControl.Document.ContentStart, par.Value.OffsetStart, System.Windows.Documents.LogicalDirection.Forward);
                 }
             }
         }

@@ -46,7 +46,7 @@
                 <Image x:Name="ButListBubl" Source="Resources/bublList.png" Cursor="Hand" />
             </Border>
             <Border Width="16" Margin="5,2,0,2">
-                <Image x:Name="ButListNum" Source="Resources/numericList.png" Cursor="Hand" IsEnabled="False"></Image>
+                <Image x:Name="ButListNum" Source="Resources/numericList.png" Cursor="Hand"></Image>
             </Border>
             <Label Content="Margin wigth:" Margin="15,0,0,0" Width="Auto" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="2,0"/>
             <ComboBox x:Name="comboWigth"  x:FieldModifier="public"  Margin="3,0,0,0" Width="60" SelectedIndex="0" ItemsSource ="{Binding Source={x:Static controls:FormatPanel.MarginWigth}, Path=Values}" IsEditable="True"/>
