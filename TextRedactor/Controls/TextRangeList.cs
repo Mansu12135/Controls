@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Threading;
@@ -13,7 +12,6 @@ namespace Controls
         private readonly List<TextRange> MainList = new List<TextRange>();
         private FlowDocument Document;
         private int TextRangeLength;
-        private static readonly object Lock = new object();
         private static readonly object Equals = new object();
 
         public TextRangeList(FlowDocument document, int textRangeLength = 3840)
@@ -30,7 +28,7 @@ namespace Controls
             {
                 if (!IsValid(MainList[i]) && !MainList[i].Contains(pointer)) continue;
                 Repopulate(i);
-                break;
+                return;
             }
             OnCollectionChanged(1, Changed.Changed);
         }
@@ -53,7 +51,7 @@ namespace Controls
             int temp = !MainList.Any() ? 0 : MainList[index].Text.Length;
             while (temp < length)
             {
-                if (!CanCreateItem(startPoistion)) { return; }
+                if (!CanCreateItem(startPoistion)) { break; }
                 TextPointer pointer = startPoistion;
                 startPoistion = GetEnd(pointer);
                 MainList.Add((T)new TextRange(pointer, startPoistion));
@@ -112,7 +110,6 @@ namespace Controls
 
         public void SynchronizeTo(TextRangeList<T> list)
         {
-            Monitor.Enter(Lock);
             int count = list.Count;
             for (int i = 0; i < count; i++)
             {
@@ -124,7 +121,6 @@ namespace Controls
                 }
                 LoadTextRange(this[i], list.SereaLize(i));
             }
-            Monitor.Exit(Lock);
         }
 
         private bool IsValid(TextRange item)

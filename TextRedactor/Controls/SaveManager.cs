@@ -3,6 +3,7 @@ using System;
 using System.Windows;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace Controls
 {
@@ -17,9 +18,10 @@ namespace Controls
         private TextRangeList<TextRange> MainList;
         private List<int> l = new List<int>();
         private bool isAlive = true;
+        private static readonly object Lock = new object();
         //private int PreviousCarrentPositionOffset;
         //private int SelectionEndPosition;
-       // private byte[] Buffer;
+        // private byte[] Buffer;
 
         public void DoStart(string filePath, TextRangeList<TextRange> mainList)
         {
@@ -53,9 +55,12 @@ namespace Controls
             {
                 if (l.Count > 0)
                 {
-                    List.SynchronizeTo(MainList);
-                    FileWorkerManager.Do(Document, FilePath);
-                    l.RemoveAt(0);
+                    lock (Lock)
+                    {
+                        List.SynchronizeTo(MainList);
+                        FileWorkerManager.Do(Document, FilePath);
+                        l.RemoveAt(0);
+                    }
                 }
             }
         }
