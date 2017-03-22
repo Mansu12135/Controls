@@ -18,7 +18,7 @@ namespace Controls
         private TextRangeList<TextRange> MainList;
         private List<int> l = new List<int>();
         private bool isAlive = true;
-        private static readonly object Lock = new object();
+        private ManualResetEventSlim Lock = new ManualResetEventSlim(true);
         //private int PreviousCarrentPositionOffset;
         //private int SelectionEndPosition;
         // private byte[] Buffer;
@@ -55,12 +55,10 @@ namespace Controls
             {
                 if (l.Count > 0)
                 {
-                    lock (Lock)
-                    {
-                        List.SynchronizeTo(MainList);
-                        FileWorkerManager.Do(Document, FilePath);
-                        l.RemoveAt(0);
-                    }
+                    Lock.Wait();
+                    List.SynchronizeTo(MainList);
+                    FileWorkerManager.DoAsync(Document, FilePath, Lock);
+                    l.RemoveAt(0);
                 }
             }
         }
@@ -392,6 +390,12 @@ namespace Controls
 
     internal static class FileWorkerManager
     {
+        public static void DoAsync(FlowDocument document, string path, ManualResetEventSlim locker, bool write = true)
+        {
+            Do(document, path, write);
+            locker.Set();
+        }
+
         public static void Do(FlowDocument document, string path, bool write = true)
         {
             lock (path)

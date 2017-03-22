@@ -14,7 +14,7 @@ namespace Controls
         private int TextRangeLength;
         private static readonly object Equals = new object();
 
-        public TextRangeList(FlowDocument document, int textRangeLength = 3840)
+        public TextRangeList(FlowDocument document, int textRangeLength = 10)
         {
             Document = document;
             MainList.Add((T)new TextRange(document.ContentStart, document.ContentEnd));
@@ -24,13 +24,18 @@ namespace Controls
         public void OnTextRangeChanged(int position)
         {
             TextPointer pointer = Document.ContentStart.GetPositionAtOffset(position);
+            int n = 0;
             for (int i = 0; i < MainList.Count; i++)
             {
-                if (!IsValid(MainList[i]) && !MainList[i].Contains(pointer)) continue;
+                if (MainList[i].Contains(pointer))
+                {
+                    n = i;
+                }
+                if (IsValid(MainList[i])) continue;
                 Repopulate(i);
                 return;
             }
-            OnCollectionChanged(1, Changed.Changed);
+            OnCollectionChanged(n, Changed.Changed);
         }
 
         private TextPointer GetEnd(TextPointer pointer)
@@ -125,7 +130,7 @@ namespace Controls
 
         private bool IsValid(TextRange item)
         {
-            return item.Text.Length == 0 || item.Text.Length <= TextRangeLength;
+            return item.Text.Length != 0 && item.Text.Length <= TextRangeLength;
         }
 
         public int Count => MainList.Count;
