@@ -84,7 +84,7 @@ namespace Controls
 
         internal void DelFlag(Note note)
         {
-          //  UpdateNoteAfterOpening();
+            //  UpdateNoteAfterOpening();
         }
         public void OpenFirstFile()
         {
@@ -249,11 +249,11 @@ namespace Controls
             if (!string.IsNullOrEmpty(LoadedFile) && LoadedFile.StartsWith(ProjectsPath + "\\" + project)) { LoadedFile = ""; }
             if (!string.IsNullOrEmpty(CurentFile) && CurentFile.StartsWith(ProjectsPath + "\\" + project))
             {
-               // CurentProject = No
+                // CurentProject = No
                 CurentFile = "";
             }
 
-            Directory.Delete(ProjectsPath + "\\" + project,true);
+            Directory.Delete(ProjectsPath + "\\" + project, true);
             Notes.Remove(project);
         }
 
@@ -291,6 +291,10 @@ namespace Controls
             if (!string.IsNullOrEmpty(LoadedFile))
             {
                 UpdateOffsetOnNotes();
+            }
+            foreach (var item in Notes.Values)
+            {
+                item.Files.ForEach(x => x.IsOpen = (x.Path == path) ? true : false);
             }
             ParentControl.TextBox.MainControl.FilePath = "";
             var range = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, ParentControl.TextBox.MainControl.Document.ContentEnd);
@@ -330,7 +334,7 @@ namespace Controls
             if (!string.IsNullOrEmpty(LoadedFile))
             {
                 UpdateRangeOnNotes();
-               // UpdateTagOnFlags();
+                // UpdateTagOnFlags();
             }
         }
 
@@ -490,8 +494,8 @@ namespace Controls
 
         internal void UpdateNoteAfterOpening()
         {
-             var inlines = ParentControl.TextBox.MainControl.Document.Blocks.Where(item => item.GetType() == typeof(Paragraph)).
-                SelectMany(item => ((Paragraph)item).Inlines.Where(x => x.GetType() == typeof(InlineUIContainer) || (x.Background != null && (x.Background as SolidColorBrush).Color == System.Windows.Media.Brushes.PaleGreen.Color))).ToList();
+            var inlines = ParentControl.TextBox.MainControl.Document.Blocks.Where(item => item.GetType() == typeof(Paragraph)).
+               SelectMany(item => ((Paragraph)item).Inlines.Where(x => x.GetType() == typeof(InlineUIContainer) || (x.Background != null && (x.Background as SolidColorBrush).Color == System.Windows.Media.Brushes.PaleGreen.Color))).ToList();
             //  byte[] flag = getJPGFromImageControl(Properties.Resources.noteFlag);
             int n = inlines.Count;
             for (int j = 0; j < n; j++)
@@ -500,13 +504,13 @@ namespace Controls
                 if (inline == null) { continue; }
                 var image = inline.Child as System.Windows.Controls.Image;
                 if (image == null) { continue; }
-              
+
                 if (image.Tag == null) continue;
 
                 var key = image.Tag.ToString();
                 int i = j;
-                int start = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(inlines[j].ElementEnd)+1;
-                    //new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentStart).Text.Length;
+                int start = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(inlines[j].ElementEnd) + 1;
+                //new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentStart).Text.Length;
                 while (j < inlines.Count - 1 && inlines[j + 1].Background != null && (inlines[j + 1].Background as SolidColorBrush).Color == System.Windows.Media.Brushes.PaleGreen.Color)
                 {
                     j++;
@@ -560,8 +564,8 @@ namespace Controls
                         if (byt[t] != flag[t]) { isflag = false; break; }
                     }
                     if (!isflag) continue;
-                    int start = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(item.ElementEnd)+1;
-                      //  new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, item.ContentStart).Text.Length;
+                    int start = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(item.ElementEnd) + 1;
+                    //  new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, item.ContentStart).Text.Length;
                     var key = ParentControl.NotesBrowser.Notes.Where(x => x.Value.OffsetStart == start);
                     if (key.Any())
                     {

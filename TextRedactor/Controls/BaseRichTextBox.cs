@@ -316,7 +316,7 @@ namespace Controls
         {
             base.OnTextChanged(e);
             if (!AutoSave || string.IsNullOrEmpty(FilePath) || e.Changes.Count == 0) return;
-            var change = e.Changes.OrderByDescending(item => item.Offset + item.AddedLength + item.RemovedLength).First();
+            var change = e.Changes.Where(x=>x.AddedLength!=x.RemovedLength).OrderByDescending(item => item.Offset + item.AddedLength + item.RemovedLength).First();
             RangeList?.OnTextRangeChanged(change.Offset);
             //PreviousParagraphCount = Document.Blocks.ToList().Count - 1;
             //vParagraphCount = PreviousParagraphCount;

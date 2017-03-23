@@ -51,9 +51,9 @@ namespace Controls
         public void Repopulate(int index)
         {
             MainList.RemoveRange(index, MainList.Count - index);
-            TextPointer startPoistion = index != 0 ? MainList[index].End : Document.ContentStart;
+            TextPointer startPoistion = index > 0 ? MainList[index-1].End : Document.ContentStart;
             int length = new TextRange(startPoistion, Document.ContentEnd).Text.Length;
-            int temp = !MainList.Any() ? 0 : MainList[index].Text.Length;
+            int temp = 0;// !MainList.Any() ? 0 : new TextRange(Document.ContentStart, startPoistion).Text.Length;
             while (temp < length)
             {
                 if (!CanCreateItem(startPoistion)) { break; }
