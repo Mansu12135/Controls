@@ -113,10 +113,10 @@ namespace Controls
             return range;
         }
 
-        public void SynchronizeTo(TextRangeList<T> list)
+        public void SynchronizeTo(int from, TextRangeList<T> list)
         {
             int count = list.Count;
-            for (int i = 0; i < count; i++)
+            for (int i = from; i < count; i++)
             {
                 if (Count > i && IsEquals(list[i], this[i], list.Document.Dispatcher)) { continue; }
                 if (Count <= i)

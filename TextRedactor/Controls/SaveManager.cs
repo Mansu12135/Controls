@@ -46,7 +46,7 @@ namespace Controls
 
         private void MainList_CollectionChanged(int index, Changed state)
         {
-            l.Add(0);
+            l.Add(index);
         }
 
         private void DoListen()
@@ -56,7 +56,7 @@ namespace Controls
                 if (l.Count > 0)
                 {
                     Lock.Wait();
-                    List.SynchronizeTo(MainList);
+                    List.SynchronizeTo(l[0], MainList);
                     FileWorkerManager.DoAsync(Document, FilePath, Lock);
                     l.RemoveAt(0);
                 }
