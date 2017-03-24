@@ -1,0 +1,174 @@
+﻿<UserControl x:Class="UILayer.ProjectProperties"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UILayer"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" Width="730" Height="280" Loaded="UserControl_Loaded" >
+    <UserControl.Resources>
+        <Style x:Key="ScrollBarLineButtonStyle" TargetType="{x:Type RepeatButton}">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Canvas Height="0">
+                            <Polygon Fill="{x:Null}" Points="3,15 15,15 9,3"></Polygon>
+                        </Canvas>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarLineButtonBottomStyle" TargetType="{x:Type RepeatButton}">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Canvas Height="0">
+                            <Polygon Fill="{x:Null}" Points="3,3 9,15 15,3"></Polygon>
+                        </Canvas>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarPageButtonStyle" TargetType="{x:Type RepeatButton}">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border BorderBrush="Transparent"></Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Margin" Value="1,0,1,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <!--<Ellipse Margin="4,2" Fill="#FFB8B3B3" StrokeThickness="0"></Ellipse>-->
+                        <Rectangle Fill="#FFDCDCDE" Margin="4,2"></Rectangle>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="18"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition MaxHeight="18"/>
+                </Grid.RowDefinitions>
+
+                <RepeatButton Grid.Row="0" Height="0"
+                          Style="{StaticResource ScrollBarLineButtonStyle}"
+                          Command="ScrollBar.LineUpCommand" >
+                </RepeatButton>
+                <Track Name="PART_Track" Grid.Row="1" 
+                   IsDirectionReversed="True">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Command="ScrollBar.PageUpCommand" Style="{StaticResource ScrollBarPageButtonStyle}">
+                        </RepeatButton>
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource ScrollBarThumbStyle}">
+                        </Thumb>
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Command="ScrollBar.PageDownCommand" Style="{StaticResource ScrollBarPageButtonStyle}">
+                        </RepeatButton>
+                    </Track.IncreaseRepeatButton>
+                </Track>
+                <RepeatButton Grid.Row="3" Height="0"
+                          Style="{StaticResource ScrollBarLineButtonBottomStyle}"
+                          Command="ScrollBar.LineDownCommand">
+                </RepeatButton>
+            </Grid>
+        </ControlTemplate>
+
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Template" Value="{StaticResource VerticalScrollBar}"/>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid Background="White" Width="729">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300*"/>
+            <ColumnDefinition Width="300*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26*"/>
+            <RowDefinition Height="67*"/>
+            <RowDefinition Height="190*"/>
+        </Grid.RowDefinitions>
+        <TextBlock HorizontalAlignment="Center" Text="PROPERTIES" VerticalAlignment="Center" Grid.ColumnSpan="2" FontSize="16" FontWeight="Bold" FontFamily="Times New Roman" Foreground="#FF646464" Height="18" Margin="314,4,313,4" Width="102"/>
+        <StackPanel Orientation="Horizontal"  Margin="20,31,0,0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="25" Width="260" >
+            <TextBox x:Name="textBoxProjectName" x:FieldModifier="public" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Test project" VerticalAlignment="Top" Width="220" FontSize="14" FontFamily="Calibri" LostFocus="textBoxProjectName_LostFocus"  VerticalContentAlignment="Center" Padding="3" Foreground="#FF3C3C3C"/>
+            <Border Margin="9,5,0,5">
+                <Image Name="DeleteProject" Source="Resources/Rec.jpg" Cursor="Hand" MouseUp="DeleteProject_MouseUp"/>
+            </Border>
+        </StackPanel>
+        <TextBlock x:Name="Chapters" Text="Chapters:" HorizontalAlignment="Left" Margin="20,3,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="2" Foreground="#FFAAAAAA" Height="20" Width="62"/>
+        <Border BorderThickness="1" Grid.Row="2" BorderBrush="#FFCDCDCD" Margin="20,27,74,29" Background="#99F5F3F3">
+            <StackPanel>
+                <ListBox x:Name="FileList" Height="106" Background="{x:Null}" BorderBrush="{x:Null}" Margin="5,5,0,0">
+                    <ListBox.Resources>
+                        <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Name="HighlightBorder"  BorderBrush="Transparent" BorderThickness="1" CornerRadius="5" Padding="0,0,0,6">
+                                            <StackPanel  Orientation="Horizontal">
+                                                <TextBox x:Name="textBoxFileName" Text="{Binding FileName, Mode=TwoWay}" Tag="{Binding FilePath, Mode=TwoWay}" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Width="203" FontSize="14" FontFamily="Calibri"  VerticalContentAlignment="Center" Padding="3" Foreground="#FF3C3C3C" LostFocus="textBoxFileName_LostFocus" KeyUp="textBoxFileName_KeyUp"/>
+                                                <Border Margin="6,5,0,5" Width="14">
+                                                    <Image x:Name="DelFile" Cursor="Hand" Source="Resources/Rec.jpg" Tag="{Binding FilePath, Mode=TwoWay}" MouseUp="DelFile_MouseUp"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.Resources>
+                </ListBox>
+                <TextBlock x:Name="ImportFile" Text="+ Import new chapter" Cursor="Hand" MouseUp="ImportFile_MouseUp"  FontStyle="Italic" TextDecorations="Underline" Foreground="#FF6E6E6E" HorizontalAlignment="Right" Margin="0,0,3,0"/>
+            </StackPanel>
+        </Border>
+        <Line Stroke="#FFEEEEEE" StrokeThickness="1" X1="0" Y1="0" X2="0" Y2="220"  Grid.Column="1" Grid.RowSpan="3" Grid.Row="1" Margin="6,15,0,0"></Line>
+        <!--<DataGrid x:Name="DetailOfProject" x:FieldModifier="public" Margin="169,20,49,0" VerticalAlignment="Top" Grid.Row="2" HorizontalContentAlignment="Stretch" FontSize="14" AutoGenerateColumns="False" RowHeaderWidth="0" CanUserResizeRows="False" Height="29" Grid.Column="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" ClipboardContentBinding="{x:Null}" Header="Properties" IsReadOnly="True"/>
+                <DataGridTextColumn Width="*" Binding="{Binding Value,Mode=TwoWay}" ClipboardContentBinding="{x:Null}" Header="Value"/>
+            </DataGrid.Columns>
+
+        </DataGrid>
+        <local:FilesBrowser x:Name="FileBrowser" Margin="95,20,20,20" Grid.Row="2" Grid.Column="1" />-->
+
+        <TextBlock x:Name="label" Text="Name of project:" HorizontalAlignment="Left" Margin="20,8,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="1" Foreground="#FFAAAAAA" Height="20" Width="110"/>
+        <TextBlock Text="Author:" HorizontalAlignment="Left" Margin="74,8,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="1" Foreground="#FFAAAAAA" Height="20" Width="110" Grid.Column="1"/>
+        <TextBlock Text="Date of creating:" HorizontalAlignment="Left" Margin="74,30,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="1" Foreground="#FFAAAAAA" Height="20" Width="110" Grid.Column="1"/>
+        <TextBlock Text="Date of publishing:" HorizontalAlignment="Left" Margin="74,52,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="1" Foreground="#FFAAAAAA" Height="20" Width="125" Grid.Column="1" Grid.RowSpan="2"/>
+        <TextBlock Text="Words:" HorizontalAlignment="Left" Margin="74,7,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="2" Foreground="#FFAAAAAA" Height="20" Width="110" Grid.Column="1"/>
+        <TextBlock Text="Symbols:" HorizontalAlignment="Left" Margin="74,29,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="2" Foreground="#FFAAAAAA" Height="20" Width="110" Grid.Column="1"/>
+
+        <TextBlock x:Name="Author" Text="Author:" Foreground="#FF3C3C3C"  HorizontalAlignment="Left" Margin="229,8,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="1" Height="20" Width="110" Grid.Column="1"/>
+        <TextBlock x:Name="DateOfCreating" Text="Date of creating:" HorizontalAlignment="Left" Margin="229,30,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="1" Foreground="#FF3C3C3C" Height="20" Width="110" Grid.Column="1"/>
+        <TextBlock x:Name="DateOfPublishing" Text="Date of publishing:" HorizontalAlignment="Left" Margin="229,52,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="1" Foreground="#FF3C3C3C" Height="20" Width="125" Grid.Column="1" Grid.RowSpan="2"/>
+        <TextBlock x:Name="Words" Text="Words:" HorizontalAlignment="Left" Margin="229,7,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="2" Foreground="#FF3C3C3C" Height="20" Width="110" Grid.Column="1"/>
+        <TextBlock x:Name="Symbols" Text="Symbols:" HorizontalAlignment="Left" Margin="229,29,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="16" Grid.Row="2" Foreground="#FF3C3C3C" Height="20" Width="110" Grid.Column="1"/>
+
+        <!--<Border BorderThickness="1" Grid.Column="1" HorizontalAlignment="Right" Height="40" Margin="0,8,65,0" VerticalAlignment="Top" Width="40" Grid.Row="1">
+            <Image x:Name="FileProperties" Source="Resources/settings.png" Cursor="Hand" MouseUp="FileProperties_MouseUp"/>
+        </Border>
+        <Border BorderThickness="1" Grid.Column="1" HorizontalAlignment="Right" Height="45" Margin="0,5,20,0" VerticalAlignment="Top" Width="45" Grid.Row="1">
+            <Image Name="DeleteProject" Source="Resources/Recycle.png" Cursor="Hand" MouseUp="DeleteProject_MouseUp"/>
+        </Border>-->
+    </Grid>
+</UserControl>

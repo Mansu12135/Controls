@@ -1,0 +1,116 @@
+﻿<UserControl x:Class="UILayer.ExportPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UILayer"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"  Width="490" Height="600" BorderThickness="1,0,0,0" BorderBrush="#FFC1C1C1">
+    <UserControl.Resources>
+        <!-- Button -->
+        <SolidColorBrush x:Key="GreenBorderColor" Color="#FF8FDC6D"/>
+        <Style TargetType="Button">
+            <Setter Property="SnapsToDevicePixels"
+            Value="true" />
+            <Setter Property="OverridesDefaultStyle"
+            Value="true" />
+            <Setter Property="MinHeight"
+            Value="23" />
+            <Setter Property="MinWidth"
+            Value="75" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border 
+                            Cursor="Hand"
+                            TextBlock.Foreground="{TemplateBinding Foreground}"
+                  x:Name="Border"
+                  CornerRadius="1"
+                  BorderThickness="2"
+                            Padding="0"
+                   BorderBrush="{DynamicResource GreenBorderColor}"         >
+                            <Label VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <ContentPresenter Margin="0"                                              
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              RecognizesAccessKey="True" />
+                            </Label>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid  Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="41*"/>
+            <RowDefinition Height="36*"/>
+            <RowDefinition Height="38*"/>
+            <RowDefinition Height="15*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="0,25,0,0" Grid.ColumnSpan="2">
+            <Label Content="EXPORT PANEL" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Arial Rounded MT Bold" Foreground="#FF7C7B7B"/>
+            <Border BorderThickness="1" HorizontalAlignment="Center" Height="25" Margin="0" VerticalAlignment="Center" Width="25">
+                <Border.Background>
+                    <ImageBrush ImageSource="Resources/romb.png"/>
+                </Border.Background>
+            </Border>
+
+        </StackPanel>
+
+
+        <Label x:Name="HidenExport" Content="Hide export panel" HorizontalAlignment="Left" Margin="6,0,0,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand" Height="26" Width="102"/>
+        <Button  x:Name="ButExport" Content="EXPORT" Cursor="Hand" x:FieldModifier="public" Grid.ColumnSpan="2" FontFamily="Segoe UI Semibold"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="207,18,207,16" Grid.Row="4" Height="26" Width="75"></Button>
+        <!--<Border BorderThickness="1" x:Name="ButExport" x:FieldModifier="public" Height="30" Margin="175,15,175,16" Grid.Row="4" Width="100" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <GradientStop Color="#FF10660A" Offset="0"/>
+                    <GradientStop Color="#FF5BC355" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+            <Label Content="Export" Cursor="Hand" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold" />
+        </Border>-->
+        <Border BorderThickness="1" Margin="110,0" Grid.Row="1" Grid.ColumnSpan="2" Padding="34,30,39,38" Grid.RowSpan="2">
+            <Border.Background>
+                <ImageBrush ImageSource="Resources/tablet2.png"/>
+            </Border.Background>
+            <RichTextBox x:Name="ExportTextBox" BorderBrush="{x:Null}" IsEnabled="False" Padding="10" FontSize="6" IsUndoEnabled="False"></RichTextBox>
+        </Border>
+        <Border BorderThickness="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,58,66,58" Grid.Row="2" VerticalAlignment="Center" Width="28" Height="28">
+            <Image Source="Resources/arrow-of-double-angle-pointing-down.png"></Image>
+        </Border>
+        <Border BorderThickness="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,68,66,68" Grid.Row="1" VerticalAlignment="Center" Width="28" Height="28">
+            <Image Source="Resources/double-up-arrow-angles.png"></Image>
+        </Border>
+        <Label Content="Title:" HorizontalAlignment="Right" Margin="0,5,145,0" Grid.Row="3" VerticalAlignment="Top" Padding="2" FontFamily="Segoe UI Semibold" FontSize="10" Height="17" Width="26"/>
+        <TextBox x:Name="TextBoxTitle" HorizontalAlignment="Right" Height="24" Margin="0,4,34,0" Grid.Row="3" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="109" Padding="0" FontFamily="Times New Roman" VerticalContentAlignment="Center" FontSize="10" BorderBrush="#FFCCCED3" Foreground="#FF8D8D8D" FontStyle="Italic"/>
+        <Label Content="Author:" HorizontalAlignment="Right" Margin="0,32,145,0" Grid.Row="3" VerticalAlignment="Top" Padding="2" FontFamily="Segoe UI Semibold" FontSize="10" Height="17" Width="38"/>
+        <TextBox x:Name="TextBoxAuthor" HorizontalAlignment="Right" Height="24" Margin="0,30,34,0" Grid.Row="3" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="109" Padding="0" FontFamily="Times New Roman" VerticalContentAlignment="Center" FontSize="10" BorderBrush="#FFCCCED3" Foreground="#FF8D8D8D" FontStyle="Italic"/>
+        <TextBlock Text="ISBN or ASIN number:" HorizontalAlignment="Right" Margin="0,53,145,0" Grid.Row="3" VerticalAlignment="Top" Padding="0" FontFamily="Segoe UI Semibold" Width="62" Height="27" TextWrapping="Wrap" FontSize="10" LineHeight="4" TextAlignment="Right"/>
+        <TextBox x:Name="TextBoxISBN" HorizontalAlignment="Right" Height="24" Margin="0,56,34,0" Grid.Row="3" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="109" Padding="0" FontFamily="Times New Roman" VerticalContentAlignment="Center" FontSize="10" BorderBrush="#FFCCCED3" Foreground="#FF8D8D8D" FontStyle="Italic"/>
+        <TextBlock Text="Publishing date:" HorizontalAlignment="Right" Margin="0,79,145,0" Grid.Row="3" VerticalAlignment="Top" Padding="2" FontFamily="Segoe UI Semibold" FontSize="10" Width="52" Height="27" TextWrapping="Wrap" TextAlignment="Right"/>
+        <DatePicker x:Name="TextBoxPublishingDate" HorizontalAlignment="Right" Margin="0,83,34,0" Grid.Row="3" VerticalAlignment="Top" Width="109" FontStyle="Italic" FontFamily="Times New Roman" FontSize="10" BorderBrush="#FFCCCED3" VerticalContentAlignment="Center" Foreground="#FF8D8D8D" Height="30" />
+        <Button x:Name="ButAddCover" Margin="82,118,0,0" Grid.Row="3" Grid.ColumnSpan="1"  Cursor="Hand" HorizontalAlignment="Left" FontFamily="Segoe UI Semibold" FontSize="10" VerticalAlignment="Top" Content="ADD COVER" Click="ButAddCover_Click" Height="27" Width="75"></Button>
+        <!--
+        <Border BorderThickness="1" x:Name="ButAddCover2" Height="21" Margin="82,112,0,0" Grid.Row="3" Width="63" Grid.ColumnSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <GradientStop Color="#FF10660A" Offset="0"/>
+                    <GradientStop Color="#FF5BC355" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+            <Label x:Name="ButAddCover1" Content="ADD COVER" Cursor="Hand" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="10" Padding="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+        </Border>-->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="164,127,0,0" Grid.Row="3" VerticalAlignment="Top">
+            <Label Name="ImageName" FontStyle="Italic" FontFamily="Times New Roman" FontSize="10" Foreground="#FFCCCED3"></Label>
+            <Border Width="5" Margin="0,0,0,4">
+                <Image Name="DeleteImage" Source="Resources/close_icon.png" Visibility="Hidden" MouseUp="DeleteImage_MouseUp"></Image>
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>
