@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Threading;
@@ -24,6 +26,11 @@ namespace ApplicationLayer
         {
             TextPointer pointer = Document.ContentStart.GetPositionAtOffset(position);
             int n = 0;
+            if (!MainList.Any() || MainList[0].Start != Document.ContentStart)
+            {
+                Repopulate(0);
+                return;
+            }
             for (int i = 0; i < MainList.Count; i++)
             {
                 if (MainList[i].Contains(pointer))
@@ -44,6 +51,7 @@ namespace ApplicationLayer
 
         private bool CanCreateItem(TextPointer pointer)
         {
+            if (pointer == null) { return false; }
             return pointer.GetPositionAtOffset(1) != null;
         }
 
@@ -100,16 +108,29 @@ namespace ApplicationLayer
             {
                 range.Load(stream, DataFormats.Rtf);
             }
-            range = new TextRange(range.Start, range.End.GetNextContextPosition(LogicalDirection.Backward));
+           // range = new TextRange(range.Start, range.End.GetNextContextPosition(LogicalDirection.Backward));
             return range;
         }
 
         public void SynchronizeTo(int from, TextRangeList<T> list)
         {
+            list.Document.Dispatcher.Invoke(() => {
+            string s = "";
+            for (int i = 0; i < list.Count; i++)
+            {
+                s += list[i].Text;
+            }
+            Console.WriteLine("IN UI {0}",s);
+        });
+            //if (!MainList.Any())
+            //{
+            //    MainList.RemoveRange(from, MainList.Count - from);
+            //    new TextRange(MainList[from].End, Document.ContentEnd).Text = "";
+            //}
             int count = list.Count;
             for (int i = from; i < count; i++)
             {
-                if (Count > i && IsEquals(list[i], this[i], list.Document.Dispatcher)) { continue; }
+               // if (Count > i && IsEquals(list[i], this[i], list.Document.Dispatcher)) { continue; }
                 if (Count <= i)
                 {
                     MainList.Add((T)LoadTextRange(new TextRange(Document.ContentEnd, Document.ContentEnd), list.SereaLize(i)));
