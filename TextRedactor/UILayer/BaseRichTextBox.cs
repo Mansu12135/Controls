@@ -290,6 +290,7 @@ namespace UILayer
             Thread.Join();
             Thread.Abort();
             Thread = null;
+            SaveManager = null;
         }
 
         private void CreateSaveManager(string filePath)

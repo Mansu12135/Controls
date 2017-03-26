@@ -29,7 +29,6 @@ namespace ApplicationLayer
 
         private void AttachEventHandler()
         {
-           
             MainList.CollectionChanged -= MainList_CollectionChanged;
             MainList.CollectionChanged += MainList_CollectionChanged;
             DoListen();
@@ -44,7 +43,7 @@ namespace ApplicationLayer
         {
             while (isAlive)
             {
-                if (l.Count > 0)
+                if (l.Count > 0 || l.Count > 0)
                 {
                     Lock.Wait();
                     List.SynchronizeTo(l[0], MainList);
@@ -56,6 +55,7 @@ namespace ApplicationLayer
 
         public void Dispose()
         {
+            MainList.CollectionChanged -= MainList_CollectionChanged;
             isAlive = false;
         }
         

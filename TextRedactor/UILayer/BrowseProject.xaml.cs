@@ -298,22 +298,21 @@ namespace UILayer
                 item.Files.ForEach(x => x.IsOpen = (x.Path == path) ? true : false);
             }
             ParentControl.TextBox.MainControl.FilePath = "";
-            var range = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, ParentControl.TextBox.MainControl.Document.ContentEnd);
-            using (var fStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read))
+            try
             {
-                try
+                var range = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, ParentControl.TextBox.MainControl.Document.ContentEnd);
+                using (var fStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read))
                 {
                     range.Load(fStream, System.Windows.DataFormats.Rtf);
+                    string folder = Path.GetDirectoryName(path);
+                    OnFileOpen(folder + "\\", content);
+                    LoadedFile = folder + "\\" + content + ".not";
                 }
-                catch (Exception ex)
-                {
-                    System.Windows.MessageBox.Show(ex.Message);
-                    return;
-                }
-                string folder = Path.GetDirectoryName(path);
-                OnFileOpen(folder + "\\", content);
-                LoadedFile = folder + "\\" + content + ".not";
-
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+                return;
             }
             ParentControl.TextBox.MainControl.FilePath = path;
         }
