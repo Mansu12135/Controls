@@ -16,7 +16,5 @@
 /TextRedactor/packages
 /.vs
 /TextRedactor/ApplicationLayer/obj/Debug
-/TextRedactor/ApplicationLayer/Properties
 /TextRedactor/UILayer/obj/Debug
-/TextRedactor/UILayer/Properties
 /TextRedactor/TextRedactor123
