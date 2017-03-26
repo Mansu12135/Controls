@@ -15,7 +15,7 @@ namespace ApplicationLayer
         private int TextRangeLength;
         private static readonly object Equals = new object();
 
-        public TextRangeList(FlowDocument document, int textRangeLength = 10)
+        public TextRangeList(FlowDocument document, int textRangeLength = 20)
         {
             Document = document;
             MainList.Add((T)new TextRange(document.ContentStart, document.ContentEnd));
@@ -46,7 +46,12 @@ namespace ApplicationLayer
 
         private TextPointer GetEnd(TextPointer pointer)
         {
-            return pointer.GetPositionAtOffset(TextRangeLength) ?? Document.ContentEnd;
+            TextPointer nextPointer = pointer.GetPositionAtOffset(TextRangeLength);
+            if(nextPointer == null)
+            {
+                return Document.ContentEnd;
+            }
+            return nextPointer;//.GetNextContextPosition(LogicalDirection.Backward);
         }
 
         private bool CanCreateItem(TextPointer pointer)
@@ -108,7 +113,13 @@ namespace ApplicationLayer
             {
                 range.Load(stream, DataFormats.Rtf);
             }
-           // range = new TextRange(range.Start, range.End.GetNextContextPosition(LogicalDirection.Backward));
+            //if (range.Text.EndsWith(Environment.NewLine))
+            //{
+            //   return new TextRange(range.Start, range.End.GetPositionAtOffset(2, LogicalDirection.Backward));
+            //}
+           
+            // range.Text = range.Text.TrimEnd(Environment.NewLine.ToCharArray());
+            // range = new TextRange(range.Start, range.End.GetNextContextPosition(LogicalDirection.Backward));
             return range;
         }
 
@@ -122,11 +133,15 @@ namespace ApplicationLayer
             }
             Console.WriteLine("IN UI {0}",s);
         });
+            MainList.Clear();
+            new TextRange(Document.ContentStart, Document.ContentEnd).Text = "";
             //if (!MainList.Any())
             //{
             //    MainList.RemoveRange(from, MainList.Count - from);
-            //    new TextRange(MainList[from].End, Document.ContentEnd).Text = "";
+            //      new TextRange(MainList[from].End, Document.ContentEnd).Text = "";
             //}
+            // Document.ContentEnd = Document.ContentStart;
+            //  new TextRange(Document.ContentStart, Document.ContentEnd) = 
             int count = list.Count;
             for (int i = from; i < count; i++)
             {

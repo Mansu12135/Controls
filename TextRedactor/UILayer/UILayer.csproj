@@ -33,7 +33,6 @@
   <ItemGroup>
     <Reference Include="ApplicationLayer">
       <HintPath>..\ApplicationLayer\bin\Debug\ApplicationLayer.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="HtmlToXamlConverter">
       <HintPath>..\Controls\bin\Debug\HtmlToXamlConverter.dll</HintPath>
