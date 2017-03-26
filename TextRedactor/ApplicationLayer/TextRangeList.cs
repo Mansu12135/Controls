@@ -15,9 +15,12 @@ namespace ApplicationLayer
         private int TextRangeLength;
         private static readonly object Equals = new object();
 
-        public TextRangeList(FlowDocument document, int textRangeLength = 20)
+        public TextRangeList(FlowDocument document, int textRangeLength = 3840)
         {
             Document = document;
+            Document.IsHyphenationEnabled = false;
+            Document.IsOptimalParagraphEnabled = false;
+            Document.LineStackingStrategy = LineStackingStrategy.MaxHeight;
             MainList.Add((T)new TextRange(document.ContentStart, document.ContentEnd));
             TextRangeLength = textRangeLength;
         }
@@ -26,7 +29,7 @@ namespace ApplicationLayer
         {
             TextPointer pointer = Document.ContentStart.GetPositionAtOffset(position);
             int n = 0;
-            if (!MainList.Any() || MainList[0].Start != Document.ContentStart)
+            if (!MainList.Any())
             {
                 Repopulate(0);
                 return;
@@ -117,7 +120,6 @@ namespace ApplicationLayer
             //{
             //   return new TextRange(range.Start, range.End.GetPositionAtOffset(2, LogicalDirection.Backward));
             //}
-           
             // range.Text = range.Text.TrimEnd(Environment.NewLine.ToCharArray());
             // range = new TextRange(range.Start, range.End.GetNextContextPosition(LogicalDirection.Backward));
             return range;
@@ -125,16 +127,16 @@ namespace ApplicationLayer
 
         public void SynchronizeTo(int from, TextRangeList<T> list)
         {
-            list.Document.Dispatcher.Invoke(() => {
-            string s = "";
-            for (int i = 0; i < list.Count; i++)
-            {
-                s += list[i].Text;
-            }
-            Console.WriteLine("IN UI {0}",s);
-        });
-            MainList.Clear();
-            new TextRange(Document.ContentStart, Document.ContentEnd).Text = "";
+        //    list.Document.Dispatcher.Invoke(() => {
+        //    string s = "";
+        //    for (int i = 0; i < list.Count; i++)
+        //    {
+        //        s += list[i].Text;
+        //    }
+        //    Console.WriteLine("IN UI {0}",s);
+        //});
+            MainList.Clear();//RemoveRange(from, MainList.Count - from);
+            new TextRange(/*from > 0 ? MainList[from - 1].End :*/ Document.ContentStart, Document.ContentEnd).Text = "";
             //if (!MainList.Any())
             //{
             //    MainList.RemoveRange(from, MainList.Count - from);
@@ -143,7 +145,7 @@ namespace ApplicationLayer
             // Document.ContentEnd = Document.ContentStart;
             //  new TextRange(Document.ContentStart, Document.ContentEnd) = 
             int count = list.Count;
-            for (int i = from; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                // if (Count > i && IsEquals(list[i], this[i], list.Document.Dispatcher)) { continue; }
                 if (Count <= i)

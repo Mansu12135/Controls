@@ -22,6 +22,9 @@ namespace ApplicationLayer
         {
             FilePath = filePath;
             Document = new FlowDocument();
+            Style style = new Style(typeof(Paragraph));
+            style.Setters.Add(new Setter(Block.MarginProperty, new Thickness(0)));
+            Document.Resources.Add(typeof(Paragraph), style);
             List = new TextRangeList<TextRange>(Document);
             MainList = mainList;
             AttachEventHandler();
