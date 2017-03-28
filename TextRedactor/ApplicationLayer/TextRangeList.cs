@@ -29,7 +29,7 @@ namespace ApplicationLayer
         {
             TextPointer pointer = Document.ContentStart.GetPositionAtOffset(position);
             int n = 0;
-            if (!MainList.Any())
+            if (!MainList.Any() || (MainList.Count == 1 && string.IsNullOrWhiteSpace(MainList[0].Text)))
             {
                 Repopulate(0);
                 return;
@@ -127,14 +127,15 @@ namespace ApplicationLayer
 
         public void SynchronizeTo(int from, TextRangeList<T> list)
         {
-        //    list.Document.Dispatcher.Invoke(() => {
-        //    string s = "";
-        //    for (int i = 0; i < list.Count; i++)
-        //    {
-        //        s += list[i].Text;
-        //    }
-        //    Console.WriteLine("IN UI {0}",s);
-        //});
+            //list.Document.Dispatcher.Invoke(() =>
+            //{
+            //    string s = "";
+            //    for (int i = 0; i < list.Count; i++)
+            //    {
+            //        s += list[i].Text;
+            //    }
+            //    Console.WriteLine("IN UI {0}", s);
+            //});
             MainList.Clear();//RemoveRange(from, MainList.Count - from);
             new TextRange(/*from > 0 ? MainList[from - 1].End :*/ Document.ContentStart, Document.ContentEnd).Text = "";
             //if (!MainList.Any())
