@@ -18,7 +18,7 @@ namespace UILayer
     /// <summary>
     /// Логика взаимодействия для BrowseProject.xaml
     /// </summary>
-    public partial class BrowseProject : BasicPanel<Project>, IDisposable
+    public partial class BrowseProject : BasicPanel<Project>, IFileSystemControl, IDisposable
     {
         internal string LoadedFile { get; private set; }
         public Project CurentProject;
@@ -37,6 +37,7 @@ namespace UILayer
             ParentControl.BrowseProject.UpdateOffsetOnNotes();
             ParentControl.NotesBrowser.CloseNotes(LoadedFile);
         }
+
         private void CopyAll(DirectoryInfo source, DirectoryInfo target)
         {
             if (Directory.Exists(target.FullName) == false)
@@ -584,6 +585,8 @@ namespace UILayer
             }
         }
         PropertiesForm propertForm;
+        private IFileSystemControl _fileSystemControlImplementation;
+
         private void Propert_Click(object sender, RoutedEventArgs e)
         {
             string projName = ((System.Windows.Controls.Image)sender).Tag.ToString();
@@ -713,5 +716,61 @@ namespace UILayer
             MainProjectList.Items.Refresh();
             EndChangingDynamicItem();
         }
+
+        event EventHandler<ProjectArgs> IFileSystemControl.ProjectChanged
+        {
+            add { ProjectChanged += value; }
+            remove { ProjectChanged -= value; }
+        }
+        private EventHandler<ProjectArgs> ProjectChanged;
+
+        event EventHandler<FileArgs> IFileSystemControl.FileChanged
+        {
+            add { FileChanged += value; }
+            remove { FileChanged -= value; }
+        }
+        private EventHandler<FileArgs> FileChanged;
+
+        event EventHandler<ProjectArgs> IFileSystemControl.ProjectDeleted
+        {
+            add { ProjectDeleted += value; }
+            remove { ProjectDeleted -= value; }
+        }
+        private EventHandler<ProjectArgs> ProjectDeleted;
+
+        event EventHandler<FileArgs> IFileSystemControl.FileDeleted
+        {
+            add { FileDeleted += value; }
+            remove { FileDeleted -= value; }
+        }
+        private EventHandler<FileArgs> FileDeleted;
+
+        event EventHandler<ProjectArgs> IFileSystemControl.ProjectRenamed
+        {
+            add { ProjectRenamed += value; }
+            remove { ProjectRenamed -= value; }
+        }
+        private EventHandler<ProjectArgs> ProjectRenamed;
+
+        event EventHandler<FileArgs> IFileSystemControl.FileRenamed
+        {
+            add { FileRenamed += value; }
+            remove { FileRenamed -= value; }
+        }
+        private EventHandler<FileArgs> FileRenamed;
+
+        event EventHandler<ProjectArgs> IFileSystemControl.ProjectCreated
+        {
+            add { ProjectCreated += value; }
+            remove { ProjectCreated -= value; }
+        }
+        private EventHandler<ProjectArgs> ProjectCreated;
+
+        event EventHandler<FileArgs> IFileSystemControl.FileCreated
+        {
+            add { CreatedFile += value; }
+            remove { CreatedFile -= value; }
+        }
+        private EventHandler<FileArgs> CreatedFile;
     }
 }

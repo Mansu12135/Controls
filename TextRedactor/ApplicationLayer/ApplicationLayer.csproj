@@ -51,7 +51,12 @@
   <ItemGroup>
     <Compile Include="DictionaryManager.cs" />
     <Compile Include="DictionaryStructures.cs" />
+    <Compile Include="FileSystem.cs" />
+    <Compile Include="FileSystemQueue.cs" />
+    <Compile Include="FileSystemTask.cs" />
+    <Compile Include="FileSystemWorker.cs" />
     <Compile Include="IDictionaryManager.cs" />
+    <Compile Include="IFileSystemControl.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="PercentageConverter.cs" />
     <Compile Include="RombConverter.cs" />
