@@ -295,8 +295,13 @@ namespace UILayer
             }
             foreach (var item in Notes.Values)
             {
-                item.Files.ForEach(x => x.IsOpen = (x.Path == path) ? true : false);
+                for (int i = 0; i < item.Files.Count; i++)
+                {
+                    item.ListFiles[i].IsOpen = (item.Files[i].Path == path) ? 10 : 0;
+                }
+                //item.Files.ForEach(x => x.IsOpen = (x.Path == path) ? 10 : 0);
             }
+            MainProjectList.Items.Refresh();
             ParentControl.TextBox.MainControl.FilePath = "";
             try
             {

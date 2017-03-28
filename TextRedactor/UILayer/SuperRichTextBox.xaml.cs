@@ -15,6 +15,7 @@ namespace UILayer
             // AttachEventHandler();
         }
 
+
         //private void AttachEventHandler()
         //{
         //    MainControl.TextChanged += MainControl_TextChanged;

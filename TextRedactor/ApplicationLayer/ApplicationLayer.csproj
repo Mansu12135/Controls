@@ -54,6 +54,7 @@
     <Compile Include="IDictionaryManager.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="PercentageConverter.cs" />
+    <Compile Include="RombConverter.cs" />
     <Compile Include="SaveManager.cs" />
     <Compile Include="TextRangeList.cs" />
   </ItemGroup>

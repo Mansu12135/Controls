@@ -72,11 +72,7 @@ namespace UILayer
             Format.comboWigth.SelectionChanged += ComboWigth_SelectionChanged;
             Format.comboWigth.LostFocus += ComboWigth_LostFocus;
             Format.comboWigth.KeyDown += ComboWigth_KeyDown;
-
         }
-
-
-
         private void ButListBubl_MouseUp(object sender, MouseButtonEventArgs e)
         {
             List list = new List();
@@ -657,7 +653,7 @@ namespace UILayer
             }
             foreach (var range in list)
             {
-                range.Range.ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(Colors.Red));
+                range.Range.ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(Colors.Yellow));
                 //   range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
             }
 

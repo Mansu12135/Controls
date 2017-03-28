@@ -9,12 +9,13 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Media;
 using ApplicationLayer;
+using EpubConvertor;
 
 namespace UILayer
 {
     public class BaseRichTextBox : RichTextBox, IDictionaryManager, IDisposable
     {
-        private SaveManager SaveManager;
+        internal SaveManager SaveManager { get; private set; }
         private DictionaryManager DictionaryManager;
         private int PreviousParagraphCount;
         private int PrevTextPointer;
@@ -297,9 +298,16 @@ namespace UILayer
         {
             RangeList = new TextRangeList<TextRange>(Document);
             SaveManager = new SaveManager();
+            SaveManager.OnStatusChanged += SaveManager_OnStatusChanged;
             Thread = new Thread(() => SaveManager.DoStart(filePath, RangeList));
             Thread.SetApartmentState(ApartmentState.STA);
             Thread.Start();
+        }
+
+        private void SaveManager_OnStatusChanged(SaveManagerStatus status, int inQueue)
+        {
+            Parent.TextBox.Dispatcher.Invoke(() => { Parent.TextBox.StateLabel.Content = status + inQueue.ToString(); });
+            
         }
 
         protected override void OnContextMenuOpening(ContextMenuEventArgs e)
@@ -391,32 +399,32 @@ namespace UILayer
 
         public void SaveAsEpub(ExportInfo info, List<LoadedFile> files)
         {
-            //var document = new Document(InputFormat.rtf);
-            //foreach (var file in files)
-            //{
-            //    document.AddFile(file.Path);
-            //}
-            //document.Author = info.Author;
-            //document.Language = "en";
-            //document.Publisher = "Home entertainment";
-            //document.PublicationTime = (DateTime.Today);// info.DatePublish;
-            //document.Rights = "all";
-            //document.Title = info.Title;
-            //if (info.ImagePath != null && !string.IsNullOrEmpty(info.ImagePath))
-            //{
-            //    document.PathToCover = info.ImagePath;
-            //}
-            //var convertor = new Convertor(document);
-            //convertor.CreateEpub(info.SavePath.EndsWith("\\")? info.SavePath: (info.SavePath+"\\") + info.Title + ".epub");
-            //  HackDocument document = new HackDocument(filePath);
-            //  document.BuiltinDocumentProperties.Title = info.Title;
-            //  document.BuiltinDocumentProperties.Author = info.Author;
-            //document.BuiltinDocumentProperties.CreateDate = (DateTime)info.DatePublish == null ? DateTime.Now : (DateTime)info.DatePublish;
-            //    var section=document.AddSection();
-            //    section.Document.LoadRtf(@"C:\test.rtf");
-            //  section = document.AddSection();
-            //    section.Document.LoadRtf(filePath);
-            //   document.PremiumSave(info.SavePath + "\\" + Path.GetFileNameWithoutExtension(filePath) + ".epub", FileFormat.EPub);
+            var document = new Document(InputFormat.rtf);
+            foreach (var file in files)
+            {
+                document.AddFile(file.Path);
+            }
+            document.Author = info.Author;
+            document.Language = "en";
+            document.Publisher = "Home entertainment";
+            document.PublicationTime = (DateTime.Today);// info.DatePublish;
+            document.Rights = "all";
+            document.Title = info.Title;
+            if (info.ImagePath != null && !string.IsNullOrEmpty(info.ImagePath))
+            {
+                document.PathToCover = info.ImagePath;
+            }
+            var convertor = new Convertor(document);
+            convertor.CreateEpub(info.SavePath.EndsWith("\\") ? info.SavePath : (info.SavePath + "\\") + info.Title + ".epub");
+          //  HackDocument document = new HackDocument(filePath);
+           // document.BuiltinDocumentProperties.Title = info.Title;
+          //  document.BuiltinDocumentProperties.Author = info.Author;
+          //  document.BuiltinDocumentProperties.CreateDate = (DateTime)info.DatePublish == null ? DateTime.Now : (DateTime)info.DatePublish;
+         //   var section = document.AddSection();
+         //   section.Document.LoadRtf(@"C:\test.rtf");
+          //  section = document.AddSection();
+          //  section.Document.LoadRtf(filePath);
+         //   document.PremiumSave(info.SavePath + "\\" + Path.GetFileNameWithoutExtension(filePath) + ".epub", FileFormat.EPub);
         }
         //public byte[] ConvertDocumentToPdf(Stream aInputStream)
         //{

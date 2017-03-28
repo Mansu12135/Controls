@@ -5,6 +5,13 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Title="MainWindow" Width="549.747" Height="452.395" WindowStartupLocation="Manual" ResizeMode="NoResize">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="StyleDictionary.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Border BorderThickness="2">
             <Border.BorderBrush>
@@ -18,7 +25,7 @@
                     <RowDefinition Height="390*"/>
                     <RowDefinition Height="49*"/>
                 </Grid.RowDefinitions>
-                <Button x:Name="OK" Content="Ok" HorizontalAlignment="Left" Margin="426,5,0,22" VerticalAlignment="Center" Width="88" Click="OK_OnClick" IsDefault="True" Grid.Row="1" Height="23"/>
+                <Button x:Name="OK" Content="Ok" HorizontalAlignment="Left" Margin="426,1,0,0" VerticalAlignment="Center" Width="88" Click="OK_OnClick" IsDefault="True" Grid.Row="1"/>
                 <Image x:Name="Emblem" Height="77" Margin="0,15,0,0" VerticalAlignment="Top" Width="83" Source="Resources/emblem.png" Stretch="Fill" HorizontalAlignment="Center"/>
                 <RichTextBox x:Name="Info" HorizontalAlignment="Center" Height="281" Margin="35,110,35,0" VerticalAlignment="Top" Width="480" Block.TextAlignment="Center" BorderThickness="0" IsReadOnly="True">
                     <FlowDocument>

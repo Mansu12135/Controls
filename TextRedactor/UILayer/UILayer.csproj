@@ -34,8 +34,17 @@
     <Reference Include="ApplicationLayer">
       <HintPath>..\ApplicationLayer\bin\Debug\ApplicationLayer.dll</HintPath>
     </Reference>
+    <Reference Include="EpubConvertor">
+      <HintPath>..\..\..\..\..\Загрузка\EpubConvertor.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\..\..\..\Загрузка\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlToXamlConverter">
       <HintPath>..\Controls\bin\Debug\HtmlToXamlConverter.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\..\..\..\..\Загрузка\Ionic.Zip.dll</HintPath>
     </Reference>
     <Reference Include="nrtftree-library, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\nrtftree-library.0.4.0\lib\net452\nrtftree-library.dll</HintPath>
@@ -102,6 +111,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SearchPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StyleDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

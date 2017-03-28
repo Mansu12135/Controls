@@ -4,39 +4,11 @@
         xmlns:local="clr-namespace:UILayer" x:Class="UILayer.PropertiesForm"
         Title="MainWindow" Width="770" Height="415" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None">
     <Window.Resources>
-        <!-- Button -->
-        <SolidColorBrush x:Key="GreenBorderColor" Color="#FF8FDC6D"/>
-        <Style TargetType="Button">
-            <Setter Property="SnapsToDevicePixels"
-            Value="true" />
-            <Setter Property="OverridesDefaultStyle"
-            Value="true" />
-            <Setter Property="MinHeight"
-            Value="23" />
-            <Setter Property="MinWidth"
-            Value="75" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border 
-                            Cursor="Hand"
-                            TextBlock.Foreground="{TemplateBinding Foreground}"
-                  x:Name="Border"
-                  CornerRadius="1"
-                  BorderThickness="2"
-                            Padding="0"
-                   BorderBrush="{DynamicResource GreenBorderColor}"         >
-                            <Label VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                <ContentPresenter Margin="0"                                              
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Center"
-                              RecognizesAccessKey="True" />
-                            </Label>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="StyleDictionary.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>

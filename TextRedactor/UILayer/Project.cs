@@ -48,10 +48,10 @@ namespace UILayer
     {
         public string Name { get; set; }
         public string Path { get; set; }
-        public bool IsOpen { get; set; }
+        public double IsOpen { get; set; }
 
 
-        public LoadedFile(string path, string projectPath, bool isOpen=false)
+        public LoadedFile(string path, string projectPath, double isOpen =0)
         {
             if (!File.Exists(path)) { throw new Exception("Wrong path or bad file."); }
             Path = projectPath+"\\Files\\" + System.IO.Path.GetFileName(path);
