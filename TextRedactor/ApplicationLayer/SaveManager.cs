@@ -3,6 +3,8 @@ using System;
 using System.Windows;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.RightsManagement;
 using System.Threading;
 
 namespace ApplicationLayer
@@ -16,7 +18,12 @@ namespace ApplicationLayer
         private List<int> l = new List<int>();
         private bool isAlive = true;
         private ManualResetEventSlim Lock = new ManualResetEventSlim(true);
-       
+
+        public void Dispose()
+        {
+            MainList.CollectionChanged -= MainList_CollectionChanged;
+            isAlive = false;
+        }
 
         public void DoStart(string filePath, TextRangeList<TextRange> mainList)
         {
@@ -39,6 +46,17 @@ namespace ApplicationLayer
 
         private void MainList_CollectionChanged(int index, Changed state)
         {
+            if (OnStatusChanged != null)
+            {
+                if (!l.Any())
+                {
+                    OnStatusChanged.Invoke(SaveManagerStatus.Started, 0);
+                }
+                else
+                {
+                    OnStatusChanged.Invoke(SaveManagerStatus.Running, l.Count + 1);
+                }
+            }
             l.Add(index);
         }
 
@@ -52,16 +70,22 @@ namespace ApplicationLayer
                     List.SynchronizeTo(l[0], MainList);
                     FileWorkerManager.DoAsync(Document, FilePath, Lock);
                     l.RemoveAt(0);
+                    if(l.Any() || OnStatusChanged == null) { continue; }
+                    OnStatusChanged.Invoke(SaveManagerStatus.Stoped, 0);
                 }
             }
         }
 
-        public void Dispose()
-        {
-            MainList.CollectionChanged -= MainList_CollectionChanged;
-            isAlive = false;
-        }
-        
+        public delegate void SaveManagerStatusChangedHandler(SaveManagerStatus status, int inQueue);
+
+        public event SaveManagerStatusChangedHandler OnStatusChanged;
+    }
+
+    public enum SaveManagerStatus
+    {
+        Started,
+        Running,
+        Stoped
     }
 
     public static class FileWorkerManager
