@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
-using System.Windows.Input;
 using Microsoft.Win32.SafeHandles;
 
 namespace ApplicationLayer
@@ -29,6 +24,13 @@ namespace ApplicationLayer
           [In] String lpPathName,
           [In] SafeTransactionHandle hTransaction
       );
+        [ComImport]
+        [Guid("79427A2B-F895-40e0-BE79-B57DC82ED231")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        protected interface IKernelTransaction
+        {
+            void GetHandle(out SafeTransactionHandle ktmHandle);
+        }
 
         private static void CopyDirectories(string path, string pathTo, ref string message)
         {
@@ -102,6 +104,9 @@ namespace ApplicationLayer
                 SafeTransactionHandle txHandle = null;
                 try
                 {
+                    IKernelTransaction kernelTx =
+                       (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
+                    kernelTx.GetHandle(out txHandle);
                     response = CreateDirectoryTransacted(IntPtr.Zero, path, IntPtr.Zero, txHandle);
                     transaction.Complete();
                 }
@@ -128,6 +133,9 @@ namespace ApplicationLayer
                 SafeTransactionHandle txHandle = null;
                 try
                 {
+                    IKernelTransaction kernelTx =
+                      (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
+                    kernelTx.GetHandle(out txHandle);
                     response = RemoveDirectoryTransacted(path, txHandle);
                     transaction.Complete();
                 }

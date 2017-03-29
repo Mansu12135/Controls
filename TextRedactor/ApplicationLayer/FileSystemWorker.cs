@@ -8,7 +8,7 @@ namespace ApplicationLayer
         private FileSystemQueue Queue;
         private string CurrentProject;
         private string CurrentFile;
-        private string WorkDirectory;
+        private string WorkDirectory = @"C:\Users\Никита\Documents\TextRedactor\MyProjects";
         private IFileSystemControl MainCantrol;
 
         public FileSystemWorker(IFileSystemControl control)
@@ -55,6 +55,7 @@ namespace ApplicationLayer
 
         private void Callback(bool b, string message)
         {
+
         }
 
         private void OnProjectDeletedRenamedChanged(object sender, ProjectArgs e)

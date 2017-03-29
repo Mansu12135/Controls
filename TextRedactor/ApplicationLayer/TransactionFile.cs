@@ -132,6 +132,9 @@ namespace ApplicationLayer
                 SafeTransactionHandle txHandle = null;
                 try
                 {
+                    IKernelTransaction kernelTx =
+                       (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
+                    kernelTx.GetHandle(out txHandle);
                     response = CopyFileTransacted(path, pathCopy, IntPtr.Zero, IntPtr.Zero, false,
                         SafeTransactionHandle.Copy.COPY_FILE_FAIL_IF_EXISTS, txHandle);
                     transaction.Complete();
@@ -202,6 +205,9 @@ namespace ApplicationLayer
                 SafeTransactionHandle txHandle = null;
                 try
                 {
+                    IKernelTransaction kernelTx =
+                       (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
+                    kernelTx.GetHandle(out txHandle);
                     response = MoveFileTransacted(path, pathCopy, IntPtr.Zero, IntPtr.Zero, SafeTransactionHandle.Move.MOVEFILE_COPY_ALLOWED, txHandle);
                     transaction.Complete();
                 }

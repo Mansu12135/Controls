@@ -26,12 +26,12 @@ namespace ApplicationLayer
             Priority = priority;
             CallBack = callBack;
             ThreadDispatcher = Dispatcher.FromThread(currentThread);
-            if (Directory.Exists(path) && args is ProjectArgs)
+            if (args is ProjectArgs)
             {
                 IsFolder = true;
                 return;
             }
-            if (File.Exists(path) && args is FileArgs)
+            if (args is FileArgs)
             {
                 IsFolder = false;
                 return;

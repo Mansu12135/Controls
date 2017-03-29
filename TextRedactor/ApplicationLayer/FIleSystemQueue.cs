@@ -27,7 +27,7 @@ namespace ApplicationLayer
         {
             while (Work || CallStack.Any())
             {
-                if (!CallStack.Any()) { continue; }
+                if (CallStack.Count == 0) { continue; }
                 FileSystemTask task = CallStack[0];
                 string message = "";
                 task.DoFeedBack(DoParseAndDo(task, ref message), message);
@@ -71,7 +71,7 @@ namespace ApplicationLayer
                 {
                     if (!TransactionDirectory.MoveDirectory(renamedArgs.From, renamedArgs.To, ref message)) { return false; }
                 }
-                return Do(args.Happened, true, args.Project, ref message);
+                return Do(args.Happened, true, task.Path, ref message);
             }
             else if (task.IsFolder == false)
             {

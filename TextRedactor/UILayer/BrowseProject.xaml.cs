@@ -28,6 +28,7 @@ namespace UILayer
 
         public BrowseProject() : base()
         {
+            new FileSystemWorker(this);
             InitializeComponent();
         }
 
@@ -285,7 +286,8 @@ namespace UILayer
 
         private void ButAddProject_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            CreateProject();
+            ProjectCreated.Invoke(sender, new ProjectArgs(GenerateName("NewProject", ProjectsPath), Happened.Created));
+            //CreateProject();
         }
 
         internal void OpenFile(string path, string content)
