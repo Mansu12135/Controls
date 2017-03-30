@@ -5,17 +5,17 @@ namespace ApplicationLayer
 {
     public class FileSystemWorker : IDisposable
     {
+        private IFileSystemControl MainCantrol;
         private FileSystemQueue Queue;
         private string CurrentProject;
         private string CurrentFile;
         private string WorkDirectory = @"C:\Users\Никита\Documents\TextRedactor\MyProjects";
-        private IFileSystemControl MainCantrol;
 
         public FileSystemWorker(IFileSystemControl control)
         {
             MainCantrol = control;
             AttachToControl();
-            Queue = new FileSystemQueue();
+            Queue = new FileSystemQueue(control);
         }
 
         public void Dispose()

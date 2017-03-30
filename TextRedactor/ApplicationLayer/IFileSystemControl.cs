@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ApplicationLayer
 {
-    public interface IFileSystemControl
+    public interface IFileSystemControl : IBasicPanel<Item>
     {
         event EventHandler<ProjectArgs> ProjectChanged;
 

@@ -230,10 +230,11 @@ namespace UILayer
             ((Project)propertForm.value).Files = newProject.Files;
         }
 
-        protected override void OnSave(string project)
+        protected override object OnSave(string project)
         {
-            if (!Notes.ContainsKey(project)) { return; }
-            CreateProjectFile(Notes[project], ProjectsPath + "\\" + project + "\\" + project + ".prj");
+            if (!Notes.ContainsKey(project)) { return null; }
+            return Notes[project];
+            //CreateProjectFile(Notes[project], ProjectsPath + "\\" + project + "\\" + project + ".prj");
         }
 
         public void DeleteFile(string project, string filePath)

@@ -151,11 +151,9 @@
     <Compile Include="FormatPanel.xaml.cs">
       <DependentUpon>FormatPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IBasicPanel.cs" />
     <Compile Include="InformationForm.xaml.cs">
       <DependentUpon>InformationForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Item.cs" />
     <Compile Include="MyCommands.cs" />
     <Compile Include="Note.cs" />
     <Compile Include="Note.designer.cs">
@@ -167,7 +165,6 @@
     <Compile Include="Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Project.cs" />
     <Compile Include="ProjectProperties.xaml.cs">
       <DependentUpon>ProjectProperties.xaml</DependentUpon>
     </Compile>

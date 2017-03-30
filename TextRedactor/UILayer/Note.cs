@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Documents;
+using ApplicationLayer;
 
 namespace UILayer
 {

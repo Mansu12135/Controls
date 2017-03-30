@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using ApplicationLayer;
 
 namespace UILayer
 {
@@ -83,12 +84,12 @@ namespace UILayer
             }
         }
 
-        public void Save(string Name)
+        public object Save(string Name)
         {
-            OnSave(Name);
+            return OnSave(Name);
         }
 
-        protected virtual void OnSave(string Name) { }
+        protected virtual object OnSave(string Name) { return null; }
 
         public void RemoveItem(string caption)
         {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace UILayer
+namespace ApplicationLayer
 {
     [Serializable]
     public class Project : Item
@@ -37,10 +37,10 @@ namespace UILayer
 
         public DateTime CreateDate { get; private set; }
 
-        public DateTime PublishingDate { get; internal set; }
+        public DateTime PublishingDate { get; set; }
         public List<LoadedFile> ListFiles {get { return Files; } }
 
-        internal List<LoadedFile> Files = new List<LoadedFile>();
+        public List<LoadedFile> Files = new List<LoadedFile>();
     }
 
     [Serializable]

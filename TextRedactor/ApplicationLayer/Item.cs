@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UILayer
+namespace ApplicationLayer
 {
     [Serializable]
     public abstract class Item

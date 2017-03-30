@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
+using ApplicationLayer;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace UILayer

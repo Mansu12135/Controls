@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
+using ApplicationLayer;
 using Rectangle = System.Drawing.Rectangle;
 
 namespace UILayer
@@ -19,9 +20,10 @@ namespace UILayer
         {
             InitializeComponent();
         }
-        protected override void OnSave(string Name)
+        protected override object OnSave(string Name)
         {
             CloseNotes(Name);
+            return Notes;
         }
         internal void CloseNotes(string path)
         {

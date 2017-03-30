@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -8,12 +9,14 @@ namespace ApplicationLayer
     internal class FileSystemQueue : IDisposable
     {
         private List<FileSystemTask> CallStack;
+        private IFileSystemControl Control;
         private Thread QueueThread;
         private bool Work = true;
 
-        public FileSystemQueue()
+        public FileSystemQueue(IFileSystemControl control)
         {
             CallStack = new List<FileSystemTask>();
+            Control = control;
             QueueThread = new Thread(StartWork);
             QueueThread.Start();
         }
@@ -42,8 +45,8 @@ namespace ApplicationLayer
                 case Happened.Created:
                 {
                     return isFolder
-                        ? TransactionDirectory.CreateDirectory(path, ref message)
-                        : TransactionFile.CreateFile(path, ref message);
+                        ? BrowseSystem.CreateProject(path, Control, ref message)
+                        : BrowseSystem.CreateFile(Path.GetFileNameWithoutExtension(path), Path.GetDirectoryName(path), Control, ref message);
                 }
                 case Happened.Deleted:
                     {
