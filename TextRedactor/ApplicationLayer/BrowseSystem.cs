@@ -39,6 +39,87 @@ namespace ApplicationLayer
             return CreateProjectFile(project, path, ref message);
         }
 
+        public static bool RemoveProject(string path, ref string message)
+        {
+            using (var transaction = new TransactionScope())
+            {
+                if (!TransactionDirectory.RemoveDirectory(path, ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                transaction.Complete();
+            }
+            return true;
+        }
+
+        public static bool RemoveFile(string path, IFileSystemControl control, ref string message)
+        {
+            using (var transaction = new TransactionScope())
+            {
+                if (!TransactionFile.DeleteFile(path, ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                var dir = new DirectoryInfo(path);
+                if (Save(control.Save(dir.Parent.Name), Path.Combine(dir.Parent.FullName, dir.Parent.Name + ProjectExtension), ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                transaction.Complete();
+            }
+            return true;
+        }
+
+        public static bool RenameProject(string path, string newName, IFileSystemControl control, ref string message)
+        {
+            using (var transaction = new TransactionScope())
+            {
+                var dir = new DirectoryInfo(path);
+                if (!TransactionDirectory.MoveDirectory(path,
+                    Path.Combine(dir.Parent != null ? dir.Parent.FullName : "", newName), ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                if (!TransactionFile.DeleteFile(Path.Combine(path, SubFolder, dir.Name + ProjectExtension), ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                if (Save(control.Save(dir.Name), Path.Combine(path, SubFolder, newName + ProjectExtension), ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                transaction.Complete();
+            }
+            return true;
+        }
+
+        public static bool RenameFile(string path, string newName, IFileSystemControl control, ref string message)
+        {
+            using (var transaction = new TransactionScope())
+            {
+                if (!TransactionFile.MoveFile(path,
+                    Path.Combine(Path.GetDirectoryName(path), newName + Path.GetExtension(path)), ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                var dir = new DirectoryInfo(path);
+                if (Save(control.Save(dir.Parent.Name), Path.Combine(dir.Parent.FullName, dir.Parent.Name + ProjectExtension), ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                transaction.Complete();
+            }
+            return true;
+        }
+
         public static bool CreateProject(string path, IFileSystemControl control, ref string message)
         {
             using (var transaction = new TransactionScope())

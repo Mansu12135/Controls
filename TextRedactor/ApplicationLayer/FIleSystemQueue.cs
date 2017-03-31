@@ -31,10 +31,20 @@ namespace ApplicationLayer
             while (Work || CallStack.Any())
             {
                 if (CallStack.Count == 0) { continue; }
-                FileSystemTask task = CallStack[0];
+                FileSystemTask task = CallStack.Find(item => item.Priority == Priority.High);
+                // FileSystemTask task = CallStack.GroupBy(item => item.Priority).First(item => item.Key == Priority.High).ToList().First();
                 string message = "";
                 task.DoFeedBack(DoParseAndDo(task, ref message), message);
-                CallStack.RemoveAt(0);
+                CallStack.Remove(task);
+            }
+        }
+
+        private void DoByPriority()
+        {
+            var list = CallStack.GroupBy(item => item.Priority);
+            for (int i = 0; i < list.Count(); i++)
+            {
+                
             }
         }
 
