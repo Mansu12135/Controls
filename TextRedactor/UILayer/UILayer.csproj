@@ -36,17 +36,16 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="EpubConvertor">
-      <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\EpubConvertor\EpubConvertor\bin\Debug\EpubConvertor.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\..\Загрузка\EpubConvertor.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
-      <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\EpubConvertor\EpubConvertor\bin\Debug\HtmlAgilityPack.dll</HintPath>
+      <HintPath>..\..\..\..\..\Загрузка\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="HtmlToXamlConverter">
       <HintPath>..\Controls\bin\Debug\HtmlToXamlConverter.dll</HintPath>
     </Reference>
     <Reference Include="Ionic.Zip">
-      <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\EpubConvertor\EpubConvertor\bin\Debug\Ionic.Zip.dll</HintPath>
+      <HintPath>..\..\..\..\..\Загрузка\Ionic.Zip.dll</HintPath>
     </Reference>
     <Reference Include="nrtftree-library, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\nrtftree-library.0.4.0\lib\net452\nrtftree-library.dll</HintPath>
@@ -73,6 +72,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="BrowseProject.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CircularProgressBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -135,6 +138,9 @@
     <Compile Include="BasicPanel.cs" />
     <Compile Include="BrowseProject.xaml.cs">
       <DependentUpon>BrowseProject.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CircularProgressBar.xaml.cs">
+      <DependentUpon>CircularProgressBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Command.cs" />
     <Compile Include="CommandCanExecuteArgs.cs" />
