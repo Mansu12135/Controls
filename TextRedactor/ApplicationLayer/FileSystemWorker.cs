@@ -3,19 +3,19 @@ using System.IO;
 
 namespace ApplicationLayer
 {
-    public class FileSystemWorker : IDisposable
+    public class FileSystemWorker<T> : IDisposable where T : Item
     {
-        private IFileSystemControl MainCantrol;
-        private FileSystemQueue Queue;
+        private IBasicPanel<T> MainControl;
+        private FileSystemQueue<T> Queue;
         private string CurrentProject;
         private string CurrentFile;
-        private string WorkDirectory = @"C:\Users\Никита\Documents\TextRedactor\MyProjects";
+        internal string WorkDirectory = @"C:\Users\Kate\Documents\TextRedactor\MyProjects";
 
-        public FileSystemWorker(IFileSystemControl control)
+        public FileSystemWorker(IBasicPanel<T> control)
         {
-            MainCantrol = control;
+            MainControl = control;
             AttachToControl();
-            Queue = new FileSystemQueue(control);
+            Queue = new FileSystemQueue<T>(control);
         }
 
         public void Dispose()
@@ -26,41 +26,36 @@ namespace ApplicationLayer
         private void AttachToControl()
         {
             DettachFromControl();
-            MainCantrol.ProjectChanged += OnProjectDeletedRenamedChanged;
-            MainCantrol.ProjectCreated += OnProjectDeletedRenamedChanged;
-            MainCantrol.ProjectRenamed += OnProjectDeletedRenamedChanged;
-            MainCantrol.ProjectDeleted += OnProjectDeletedRenamedChanged;
-            MainCantrol.FileChanged += OnRenamedChanged;
-            MainCantrol.FileDeleted += OnRenamedChanged;
-            MainCantrol.FileRenamed += OnRenamedChanged;
-            MainCantrol.FileCreated += OnRenamedChanged;
+            MainControl.ProjectChanged += OnProjectDeletedRenamedChanged;
+            MainControl.ProjectCreated += OnProjectDeletedRenamedChanged;
+            MainControl.ProjectRenamed += OnProjectDeletedRenamedChanged;
+            MainControl.ProjectDeleted += OnProjectDeletedRenamedChanged;
+            MainControl.FileChanged += OnRenamedChanged;
+            MainControl.FileDeleted += OnRenamedChanged;
+            MainControl.FileRenamed += OnRenamedChanged;
+            MainControl.FileCreated += OnRenamedChanged;
         }
 
         private void DettachFromControl()
         {
-            MainCantrol.ProjectChanged -= OnProjectDeletedRenamedChanged;
-            MainCantrol.ProjectCreated -= OnProjectDeletedRenamedChanged;
-            MainCantrol.ProjectRenamed -= OnProjectDeletedRenamedChanged;
-            MainCantrol.ProjectDeleted -= OnProjectDeletedRenamedChanged;
-            MainCantrol.FileChanged -= OnRenamedChanged;
-            MainCantrol.FileDeleted -= OnRenamedChanged;
-            MainCantrol.FileRenamed -= OnRenamedChanged;
-            MainCantrol.FileCreated -= OnRenamedChanged;
+            MainControl.ProjectChanged -= OnProjectDeletedRenamedChanged;
+            MainControl.ProjectCreated -= OnProjectDeletedRenamedChanged;
+            MainControl.ProjectRenamed -= OnProjectDeletedRenamedChanged;
+            MainControl.ProjectDeleted -= OnProjectDeletedRenamedChanged;
+            MainControl.FileChanged -= OnRenamedChanged;
+            MainControl.FileDeleted -= OnRenamedChanged;
+            MainControl.FileRenamed -= OnRenamedChanged;
+            MainControl.FileCreated -= OnRenamedChanged;
         }
 
         private void OnRenamedChanged(object sender, FileArgs e)
         {
-            e.Files.ForEach(file => Queue.AddTask(Path.Combine(WorkDirectory, CurrentProject, file), e, Callback));
-        }
-
-        private void Callback(bool b, string message)
-        {
-
+            e.Files.ForEach(file => Queue.AddTask(Path.Combine(WorkDirectory, e.Project), e, e.Callback));
         }
 
         private void OnProjectDeletedRenamedChanged(object sender, ProjectArgs e)
         {
-            Queue.AddTask(Path.Combine(WorkDirectory, e.Project), e, Callback);
+            Queue.AddTask(Path.Combine(WorkDirectory, e.Project), e, e.Callback);
         }
     }
 }

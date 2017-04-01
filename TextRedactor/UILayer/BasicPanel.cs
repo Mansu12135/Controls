@@ -22,6 +22,15 @@ namespace UILayer
 
         internal SuperTextRedactor ParentControl;
 
+        public event EventHandler<ProjectArgs> ProjectChanged;
+        public event EventHandler<FileArgs> FileChanged;
+        public event EventHandler<ProjectArgs> ProjectRenamed;
+        public event EventHandler<FileArgs> FileRenamed;
+        public event EventHandler<ProjectArgs> ProjectCreated;
+        public event EventHandler<FileArgs> FileCreated;
+        public event EventHandler<ProjectArgs> ProjectDeleted;
+        public event EventHandler<FileArgs> FileDeleted;
+
         public Dictionary<string, T> Notes
         {
             get { return ItemsCollection; }
@@ -35,6 +44,37 @@ namespace UILayer
             CloneTextBox = null;
         }
         protected string BindingPath { get; }
+
+        public SaveItemManager<T> SaveItemManager
+        {
+            get
+            {
+                return saveItemManager ?? new SaveItemManager<T>(this);
+            }
+        }
+        private SaveItemManager<T> saveItemManager;
+
+        protected void OnCreateProject(object sender, ProjectArgs e)
+        {
+            ProjectCreated.Invoke(sender, e);
+        }
+
+        protected void OnCreateFiles(object sender, FileArgs e)
+        {
+            FileCreated.Invoke(sender, e);
+        }
+
+        FileSystemWorker<Project> IFileSystemControl.FSWorker
+        {
+            get { return fsWorker ?? new FileSystemWorker<Project>(this as IBasicPanel<Project>); }
+        }
+        private FileSystemWorker<Project> fsWorker;
+
+        protected void OnInitialize()
+        {
+            fsWorker = new FileSystemWorker<Project>(this as IBasicPanel<Project>);
+        }
+
         private void InitializeDynamicControls(TextBox originalControl)
         {
             CloneTextBox = new TextBox();
@@ -84,12 +124,7 @@ namespace UILayer
             }
         }
 
-        public object Save(string Name)
-        {
-            return OnSave(Name);
-        }
-
-        protected virtual object OnSave(string Name) { return null; }
+        protected virtual object OnSave(Action action, string project) { return null; }
 
         public void RemoveItem(string caption)
         {
@@ -165,5 +200,75 @@ namespace UILayer
             if (item == null || Notes.ContainsKey(item.Name)) { return; }
             Notes.Add(item.Name, item);
         }
+
+        public virtual void Callback(bool rezult, string message)
+        {
+
+        }
+
+        object IBasicPanel<T>.Save(string project, Action action)
+        {
+            return OnSave(action, project);
+        }
+
+
+
+        //event EventHandler<ProjectArgs> IFileSystemControl.ProjectChanged
+        //{
+        //    add { ProjectChanged += value; }
+        //    remove { ProjectChanged -= value; }
+        //}
+        //private EventHandler<ProjectArgs> ProjectChanged;
+
+        //public event EventHandler<FileArgs> FileChanged
+        //{
+        //    add { FileChanged += value; }
+        //    remove { FileChanged -= value; }
+        //}
+        //public EventHandler<FileArgs> FileChanged;
+
+        //event EventHandler<ProjectArgs> IFileSystemControl.ProjectDeleted
+        //{
+        //    add { ProjectDeleted += value; }
+        //    remove { ProjectDeleted -= value; }
+        //}
+        //private EventHandler<ProjectArgs> ProjectDeleted;
+
+        //event EventHandler<FileArgs> IFileSystemControl.FileDeleted
+        //{
+        //    add { FileDeleted += value; }
+        //    remove { FileDeleted -= value; }
+        //}
+        //private EventHandler<FileArgs> FileDeleted;
+
+        //event EventHandler<ProjectArgs> IFileSystemControl.ProjectRenamed
+        //{
+        //    add { ProjectRenamed += value; }
+        //    remove { ProjectRenamed -= value; }
+        //}
+        //private EventHandler<ProjectArgs> ProjectRenamed;
+
+        //event EventHandler<FileArgs> IFileSystemControl.FileRenamed
+        //{
+        //    add { FileRenamed += value; }
+        //    remove { FileRenamed -= value; }
+        //}
+        //private EventHandler<FileArgs> FileRenamed;
+
+        //event EventHandler<ProjectArgs> IFileSystemControl.ProjectCreated
+        //{
+        //    add { ProjectCreated += value; }
+        //    remove { ProjectCreated -= value; }
+        //}
+        //private EventHandler<ProjectArgs> ProjectCreated;
+
+        //event EventHandler<FileArgs> IFileSystemControl.FileCreated
+        //{
+        //    add { CreatedFile += value; }
+        //    remove { CreatedFile -= value; }
+        //}
+        //private EventHandler<FileArgs> CreatedFile;
+
+
     }
 }

@@ -6,17 +6,17 @@ using System.Threading;
 
 namespace ApplicationLayer
 {
-    internal class FileSystemQueue : IDisposable
+    internal class FileSystemQueue<T> : IDisposable where T : Item
     {
         private List<FileSystemTask> CallStack;
-        private IFileSystemControl Control;
+        private IBasicPanel<Project> Control;
         private Thread QueueThread;
         private bool Work = true;
 
-        public FileSystemQueue(IFileSystemControl control)
+        public FileSystemQueue(IBasicPanel<T> control)
         {
             CallStack = new List<FileSystemTask>();
-            Control = control;
+            Control = control as IBasicPanel<Project>;
             QueueThread = new Thread(StartWork);
             QueueThread.Start();
         }
@@ -31,7 +31,8 @@ namespace ApplicationLayer
             while (Work || CallStack.Any())
             {
                 if (CallStack.Count == 0) { continue; }
-                FileSystemTask task = CallStack.Find(item => item.Priority == Priority.High);
+                FileSystemTask task = GetTaskByPriority();
+                if(task == null) { continue; }
                 // FileSystemTask task = CallStack.GroupBy(item => item.Priority).First(item => item.Key == Priority.High).ToList().First();
                 string message = "";
                 task.DoFeedBack(DoParseAndDo(task, ref message), message);
@@ -39,30 +40,32 @@ namespace ApplicationLayer
             }
         }
 
-        private void DoByPriority()
+        private FileSystemTask GetTaskByPriority()
         {
-            var list = CallStack.GroupBy(item => item.Priority);
-            for (int i = 0; i < list.Count(); i++)
+            FileSystemTask task;
+            for (int i = 0; i < Enum.GetValues(typeof(Priority)).Length; i++)
             {
-                
+                task = CallStack.Find(item => item.Priority == (Priority)i);
+                if (task != null) { return task; }
             }
+            return null;
         }
 
-        private bool Do(Happened happened, bool isFolder, string path, ref string message)
+        private bool Do(Happened happened, bool isFolder, EventArgs args, ref string message)
         {
             switch (happened)
             {
                 case Happened.Created:
                 {
                     return isFolder
-                        ? BrowseSystem.CreateProject(path, Control, ref message)
-                        : BrowseSystem.CreateFile(Path.GetFileNameWithoutExtension(path), Path.GetDirectoryName(path), Control, ref message);
+                        ? BrowseSystem.CreateProject((ProjectArgs)args, Control, ref message)
+                        : BrowseSystem.CreateFile((FileArgs)args, Control, ref message);
                 }
                 case Happened.Deleted:
                     {
                         return isFolder
-                        ? TransactionDirectory.RemoveDirectory(path, ref message)
-                        : TransactionFile.DeleteFile(path, ref message);
+                        ? TransactionDirectory.RemoveDirectory((ProjectArgs)args, ref message)
+                        : TransactionFile.DeleteFile((FileArgs)args, ref message);
                     }
             }
             return false;
@@ -84,7 +87,7 @@ namespace ApplicationLayer
                 {
                     if (!TransactionDirectory.MoveDirectory(renamedArgs.From, renamedArgs.To, ref message)) { return false; }
                 }
-                return Do(args.Happened, true, task.Path, ref message);
+                return Do(args.Happened, true, args, ref message);
             }
             else if (task.IsFolder == false)
             {
@@ -100,10 +103,7 @@ namespace ApplicationLayer
                 {
                     if (!TransactionFile.MoveFile(renamedArgs.From, renamedArgs.To, ref message)) { return false; }
                 }
-                foreach (string file in args.Files)
-                {
-                    resposne |= Do(args.Happened, true, file, ref message);
-                }
+                    resposne = Do(args.Happened, false, args, ref message);
                 return resposne;
             }
             message = "Invalid parameter";

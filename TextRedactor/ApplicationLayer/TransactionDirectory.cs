@@ -19,6 +19,9 @@ namespace ApplicationLayer
            [In] SafeTransactionHandle hTransaction
        );
 
+        [DllImport("Kernel32.Dll", EntryPoint = "GetLastError", CharSet = CharSet.Unicode, SetLastError = true)]
+        protected static extern uint GetLastError();
+
         [DllImport("Kernel32.Dll", EntryPoint = "RemoveDirectoryTransacted", CharSet = CharSet.Unicode, SetLastError = true)]
         protected static extern bool RemoveDirectoryTransacted(
           [In] String lpPathName,
@@ -81,14 +84,34 @@ namespace ApplicationLayer
                     Transaction.Current.Rollback();
                     return false;
                 }
-                if (!RemoveDirectory(path, ref message))
-                {
-                    Transaction.Current.Rollback();
-                    return false;
-                }
+                //if (!RemoveDirectory(path, ref message))
+                //{
+                //    Transaction.Current.Rollback();
+                //    return false;
+                //}
                 transaction.Complete();
             }
             return true;
+        }
+
+        private static bool CreateDir(string path, ref string message)
+        {
+            bool response = false;
+            SafeTransactionHandle txHandle = null;
+            try
+            {
+                IKernelTransaction kernelTx =
+                   (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
+                kernelTx.GetHandle(out txHandle);
+                response = CreateDirectoryTransacted(IntPtr.Zero, path, IntPtr.Zero, txHandle);
+            }
+            catch (Exception ex)
+            {
+                message = ex.ToString();
+                response = false;
+                Transaction.Current.Rollback();
+            }
+            return response;
         }
 
         public static bool CreateDirectory(string path, ref string message)
@@ -99,54 +122,42 @@ namespace ApplicationLayer
                 return false;
             }
             bool response = false;
+            if (Transaction.Current != null) { return CreateDir(path, ref message); }
             using (var transaction = new TransactionScope())
             {
-                SafeTransactionHandle txHandle = null;
-                try
-                {
-                    IKernelTransaction kernelTx =
-                       (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
-                    kernelTx.GetHandle(out txHandle);
-                    response = CreateDirectoryTransacted(IntPtr.Zero, path, IntPtr.Zero, txHandle);
-                    transaction.Complete();
-                }
-                catch (Exception ex)
-                {
-                    message = ex.ToString();
-                    response = false;
-                    Transaction.Current.Rollback();
-                }
+                response = CreateDir(path, ref message);
+                transaction.Complete();
             }
             return response;
         }
 
-        public static bool RemoveDirectory(string path, ref string message)
+        public static bool RemoveDirectory(ProjectArgs args, ref string message)
         {
-            if (!Directory.Exists(path))
-            {
-                message = "Wrong path or directory not exists";
-                return false;
-            }
-            bool response = false;
-            using (var transaction = new TransactionScope())
-            {
-                SafeTransactionHandle txHandle = null;
-                try
-                {
-                    IKernelTransaction kernelTx =
-                      (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
-                    kernelTx.GetHandle(out txHandle);
-                    response = RemoveDirectoryTransacted(path, txHandle);
-                    transaction.Complete();
-                }
-                catch (Exception ex)
-                {
-                    message = ex.ToString();
-                    response = false;
-                    Transaction.Current.Rollback();
-                }
-            }
-            return response;
+            //if (!Directory.Exists(args))
+            //{
+            //    message = "Wrong path or directory not exists";
+            //    return false;
+            //}
+            //bool response = false;
+            //using (var transaction = new TransactionScope())
+            //{
+            //    SafeTransactionHandle txHandle = null;
+            //    try
+            //    {
+            //        IKernelTransaction kernelTx =
+            //          (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
+            //        kernelTx.GetHandle(out txHandle);
+            //        response = RemoveDirectoryTransacted(path, txHandle);
+            //        transaction.Complete();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        message = ex.ToString();
+            //        response = false;
+            //        Transaction.Current.Rollback();
+            //    }
+            //}
+            return true;
         }
 
         public static bool DirectoryIsEmpty(string path)

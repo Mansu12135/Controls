@@ -44,7 +44,7 @@ namespace UILayer
             }
 
         }
-        public IBasicPanel<Item> CalledControl;
+        public IBasicPanel<Project> CalledControl;
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             ApplyTask();
@@ -60,7 +60,7 @@ namespace UILayer
             Tasks.Clear();
             if (CalledControl != null && value != null)
             {
-                CalledControl.Save(value.Name);
+               // CalledControl.Save();
             }
         }
 

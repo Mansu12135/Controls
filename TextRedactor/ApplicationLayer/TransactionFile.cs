@@ -156,8 +156,9 @@ namespace ApplicationLayer
             }
         }
 
-        public static bool DeleteFile(string path, ref string message)
+        public static bool DeleteFile(FileArgs args, ref string message)
         {
+            string path = "";
             if (!File.Exists(path))
             {
                 message = "Wrong path or file exists";
@@ -190,7 +191,7 @@ namespace ApplicationLayer
                 }
                 return response;
             }
-        }
+        }//????????
 
         public static bool MoveFile(string path, string pathCopy, ref string message)
         {

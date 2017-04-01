@@ -65,6 +65,7 @@
     <Compile Include="PercentageConverter.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="RombConverter.cs" />
+    <Compile Include="SaveItemManager.cs" />
     <Compile Include="SaveManager.cs" />
     <Compile Include="TextRangeList.cs" />
     <Compile Include="TransactionDirectory.cs" />

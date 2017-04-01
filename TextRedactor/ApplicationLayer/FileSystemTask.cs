@@ -18,7 +18,6 @@ namespace ApplicationLayer
 
         internal Priority Priority { get; private set; }
 
-
         public FileSystemTask(string path, EventArgs args, Action<bool, string> callBack, Thread currentThread, Priority priority = Priority.Normal)
         {
             Path = path;
@@ -57,8 +56,8 @@ namespace ApplicationLayer
 
     public enum Priority
     {
-        Normal,
         High,
+        Normal,
         Low
     }
 }

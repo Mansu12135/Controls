@@ -1,7 +1,14 @@
-﻿namespace ApplicationLayer
+﻿using System;
+using System.Collections.Generic;
+
+namespace ApplicationLayer
 {
-    public interface IBasicPanel<out T> where T : Item
+    public interface IBasicPanel<T> : IFileSystemControl where T : Item
     {
-        object Save(string Name);
+        SaveItemManager<T> SaveItemManager { get; }
+
+        Dictionary<string, T> Notes { get; }
+
+        object Save(string project, Action action);
     }
 }

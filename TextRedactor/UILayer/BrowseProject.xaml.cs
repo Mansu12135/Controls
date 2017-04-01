@@ -18,7 +18,7 @@ namespace UILayer
     /// <summary>
     /// Логика взаимодействия для BrowseProject.xaml
     /// </summary>
-    public partial class BrowseProject : BasicPanel<Project>, IFileSystemControl, IDisposable
+    public partial class BrowseProject : BasicPanel<Project>, IDisposable
     {
         internal string LoadedFile { get; private set; }
         public Project CurentProject;
@@ -28,8 +28,8 @@ namespace UILayer
 
         public BrowseProject() : base()
         {
-            new FileSystemWorker(this);
             InitializeComponent();
+            OnInitialize();
         }
 
         public void Dispose()
@@ -133,8 +133,10 @@ namespace UILayer
         private void buttonAddFile_MouseDown(object sender, MouseButtonEventArgs e)
         {
             string projName = ((TextBlock)sender).Tag.ToString();
-            AddNewFileToProject(projName, GenerateName("Chapter", ProjectsPath + "\\" + projName + "\\Files", false));
-            MainProjectList.Items.Refresh();
+            string path = ProjectsPath + "\\" + projName + "\\Files";
+            OnCreateFiles(sender, new FileArgs(new List<string>() { GenerateName("Chapter", ProjectsPath + "\\" + projName + "\\Files", false) }, projName, Happened.Created, Callback));
+            //AddNewFileToProject(projName, GenerateName("Chapter", ProjectsPath + "\\" + projName + "\\Files", false));
+            // MainProjectList.Items.Refresh();
         }
 
         private void CreateProjectFile(Project project, string path)
@@ -230,9 +232,10 @@ namespace UILayer
             ((Project)propertForm.value).Files = newProject.Files;
         }
 
-        protected override object OnSave(string project)
+        protected override object OnSave(Action action, string project)
         {
-            if (!Notes.ContainsKey(project)) { return null; }
+            action.Invoke();
+            if (!Notes.ContainsKey(project)) { Notes.Add(project, new Project(project)); }
             return Notes[project];
             //CreateProjectFile(Notes[project], ProjectsPath + "\\" + project + "\\" + project + ".prj");
         }
@@ -274,7 +277,7 @@ namespace UILayer
                 if (LoadedFile == ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(file.Name) + ".not") { LoadedFile = ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(newFile) + ".not"; }
             }
             Notes[project].Files[index] = new LoadedFile(System.IO.Path.GetDirectoryName(file.Path) + "\\" + newFile, ProjectsPath + "\\" + project);
-            OnSave(project);
+            OnSave(()=> { },project);
             ((ISettings)ParentControl.Parent).SaveSettings();
         }
 
@@ -287,7 +290,8 @@ namespace UILayer
 
         private void ButAddProject_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            ProjectCreated.Invoke(sender, new ProjectArgs(GenerateName("NewProject", ProjectsPath), Happened.Created));
+            OnCreateProject(sender, new ProjectArgs(GenerateName("NewProject", ProjectsPath), Happened.Created, Callback));
+            //ProjectCreated.Invoke(sender, new ProjectArgs(GenerateName("NewProject", ProjectsPath), Happened.Created, Callback));
             //CreateProject();
         }
 
@@ -720,60 +724,9 @@ namespace UILayer
             EndChangingDynamicItem();
         }
 
-        event EventHandler<ProjectArgs> IFileSystemControl.ProjectChanged
+        public override void Callback(bool rezult, string message)
         {
-            add { ProjectChanged += value; }
-            remove { ProjectChanged -= value; }
+            MainProjectList.Items.Refresh();
         }
-        private EventHandler<ProjectArgs> ProjectChanged;
-
-        event EventHandler<FileArgs> IFileSystemControl.FileChanged
-        {
-            add { FileChanged += value; }
-            remove { FileChanged -= value; }
-        }
-        private EventHandler<FileArgs> FileChanged;
-
-        event EventHandler<ProjectArgs> IFileSystemControl.ProjectDeleted
-        {
-            add { ProjectDeleted += value; }
-            remove { ProjectDeleted -= value; }
-        }
-        private EventHandler<ProjectArgs> ProjectDeleted;
-
-        event EventHandler<FileArgs> IFileSystemControl.FileDeleted
-        {
-            add { FileDeleted += value; }
-            remove { FileDeleted -= value; }
-        }
-        private EventHandler<FileArgs> FileDeleted;
-
-        event EventHandler<ProjectArgs> IFileSystemControl.ProjectRenamed
-        {
-            add { ProjectRenamed += value; }
-            remove { ProjectRenamed -= value; }
-        }
-        private EventHandler<ProjectArgs> ProjectRenamed;
-
-        event EventHandler<FileArgs> IFileSystemControl.FileRenamed
-        {
-            add { FileRenamed += value; }
-            remove { FileRenamed -= value; }
-        }
-        private EventHandler<FileArgs> FileRenamed;
-
-        event EventHandler<ProjectArgs> IFileSystemControl.ProjectCreated
-        {
-            add { ProjectCreated += value; }
-            remove { ProjectCreated -= value; }
-        }
-        private EventHandler<ProjectArgs> ProjectCreated;
-
-        event EventHandler<FileArgs> IFileSystemControl.FileCreated
-        {
-            add { CreatedFile += value; }
-            remove { CreatedFile -= value; }
-        }
-        private EventHandler<FileArgs> CreatedFile;
     }
 }

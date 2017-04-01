@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Shapes;
 using ApplicationLayer;
 using Rectangle = System.Drawing.Rectangle;
+using System;
 
 namespace UILayer
 {
@@ -20,7 +21,7 @@ namespace UILayer
         {
             InitializeComponent();
         }
-        protected override object OnSave(string Name)
+        protected override object OnSave(Action action, string Name)
         {
             CloseNotes(Name);
             return Notes;

@@ -34,9 +34,7 @@ namespace ApplicationLayer
             set { defaultAuthor = value; }
         }
         private string defaultAuthor = Environment.UserName;
-
         public DateTime CreateDate { get; private set; }
-
         public DateTime PublishingDate { get; set; }
         public List<LoadedFile> ListFiles {get { return Files; } }
 
@@ -54,7 +52,7 @@ namespace ApplicationLayer
         public LoadedFile(string path, string projectPath, double isOpen =0)
         {
             if (!File.Exists(path)) { throw new Exception("Wrong path or bad file."); }
-            Path = projectPath+"\\Files\\" + System.IO.Path.GetFileName(path);
+            Path = projectPath + "\\Files\\" + System.IO.Path.GetFileName(path);
             Name = System.IO.Path.GetFileNameWithoutExtension(path);
             IsOpen = isOpen;
         }

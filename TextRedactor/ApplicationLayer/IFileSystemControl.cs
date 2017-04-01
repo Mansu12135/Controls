@@ -3,8 +3,12 @@ using System.Collections.Generic;
 
 namespace ApplicationLayer
 {
-    public interface IFileSystemControl : IBasicPanel<Item>
+    public interface IFileSystemControl
     {
+        FileSystemWorker<Project> FSWorker { get; }
+
+        void Callback(bool rezult, string message);
+
         event EventHandler<ProjectArgs> ProjectChanged;
 
         event EventHandler<FileArgs> FileChanged;
@@ -26,10 +30,11 @@ namespace ApplicationLayer
     {
         internal RenamedArgs RenamedArgs;
 
-        public ProjectArgs(string project, Happened happened)
+        public ProjectArgs(string project, Happened happened, Action<bool, string> callback)
         {
             Project = project;
             Happened = happened;
+            Callback = callback;
         }
 
         public ProjectArgs(RenamedArgs args)
@@ -40,16 +45,21 @@ namespace ApplicationLayer
 
         public string Project { get; private set; }
 
+        public Action<bool, string> Callback { get; private set; }
+
         public Happened Happened { get; private set; }
     }
 
     public class RenamedArgs : EventArgs
     {
-        protected RenamedArgs(string from, string to)
+        protected RenamedArgs(string from, string to, Action<bool, string> callback)
         {
             From = from;
             To = to;
+            Callback = callback;
         }
+
+        public Action<bool, string> Callback { get; private set; }
 
         public Happened Happened { get { return Happened.Changed; } }
 
@@ -61,14 +71,22 @@ namespace ApplicationLayer
     public class FileArgs : EventArgs
     {
         internal RenamedArgs RenamedArgs;
-        public FileArgs(List<string> files, Happened happened)
+
+        internal Action<bool, string> Callback;
+
+        internal string Project;
+
+        public FileArgs(List<string> files, string project, Happened happened, Action<bool, string> callback)
         {
             Files = files;
+            Project = project;
             Happened = happened;
+            Callback = callback;
         }
 
-        public FileArgs(RenamedArgs args)
+        public FileArgs(string project, RenamedArgs args)
         {
+            Project = project;
             Happened = args.Happened;
             RenamedArgs = args;
         }

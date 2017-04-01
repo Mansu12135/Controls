@@ -1,0 +1,4 @@
+D:\textEditor\Repository\Controls\TextRedactor\ApplicationLayer\bin\Release\ApplicationLayer.dll
+D:\textEditor\Repository\Controls\TextRedactor\ApplicationLayer\bin\Release\ApplicationLayer.pdb
+D:\textEditor\Repository\Controls\TextRedactor\ApplicationLayer\obj\Release\ApplicationLayer.dll
+D:\textEditor\Repository\Controls\TextRedactor\ApplicationLayer\obj\Release\ApplicationLayer.pdb

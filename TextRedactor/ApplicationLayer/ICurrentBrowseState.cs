@@ -8,6 +8,6 @@
 
         string WorkDirectory { get;}
 
-        FileSystemQueue Queue { get; }
+      //  FileSystemQueue Queue { get; }
     }
 }
