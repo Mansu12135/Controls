@@ -69,9 +69,9 @@ namespace ApplicationLayer
             return true;
         }
 
-        public static bool MoveDirectory(string path, string pathTo, ref string message)
+        public static bool MoveDirectory(string path, string pathTo, ProjectArgs args, ref string message)
         {
-            if (!Directory.Exists(path) || !Directory.Exists(pathTo))
+            if (!Directory.Exists(path) || Directory.Exists(pathTo))
             {
                 message = "Wrong path or folders are not exists";
                 return false;
@@ -84,11 +84,11 @@ namespace ApplicationLayer
                     Transaction.Current.Rollback();
                     return false;
                 }
-                //if (!RemoveDirectory(path, ref message))
-                //{
-                //    Transaction.Current.Rollback();
-                //    return false;
-                //}
+                if (!RemoveDirectory(args, ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
                 transaction.Complete();
             }
             return true;

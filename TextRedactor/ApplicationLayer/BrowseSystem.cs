@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Transactions;
@@ -13,8 +14,6 @@ namespace ApplicationLayer
 
         private static bool CreateProjectFile(object project, string path, ref string message)
         {
-           // using (var transaction = new TransactionScope())
-            //{
                 try
                 {
                     using (FileStream fs = File.Create(path))
@@ -22,7 +21,6 @@ namespace ApplicationLayer
                         BinaryFormatter write = new BinaryFormatter();
                         write.Serialize(fs, project);
                     }
-                   // transaction.Complete();
                 }
                 catch (Exception ex)
                 {
@@ -30,7 +28,6 @@ namespace ApplicationLayer
                     return false;
                 }
                 return true;
-            //}
         }
 
         private static bool Save(object project, string path, ref string message)
@@ -72,31 +69,31 @@ namespace ApplicationLayer
         //    return true;
         //}
 
-        //public static bool RenameProject(string path, string newName, IFileSystemControl control, ref string message)
-        //{
-        //    using (var transaction = new TransactionScope())
-        //    {
-        //        var dir = new DirectoryInfo(path);
-        //        if (!TransactionDirectory.MoveDirectory(path,
-        //            Path.Combine(dir.Parent != null ? dir.Parent.FullName : "", newName), ref message))
-        //        {
-        //            Transaction.Current.Rollback();
-        //            return false;
-        //        }
-        //        if (!TransactionFile.DeleteFile(Path.Combine(path, SubFolder, dir.Name + ProjectExtension), ref message))
-        //        {
-        //            Transaction.Current.Rollback();
-        //            return false;
-        //        }
-        //        if (Save(control.Save(dir.Name), Path.Combine(path, SubFolder, newName + ProjectExtension), ref message))
-        //        {
-        //            Transaction.Current.Rollback();
-        //            return false;
-        //        }
-        //        transaction.Complete();
-        //    }
-        //    return true;
-        //}
+        public static bool RenameProject(ProjectArgs args, IBasicPanel<Project> control, ref string message)
+        {
+            using (var transaction = new TransactionScope())
+            {
+                string path = Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.From);
+                if (!TransactionDirectory.MoveDirectory(path,
+                    Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To), args, ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                if (!TransactionFile.DeleteFile(new FileArgs(new List<string>() { Path.Combine(path, SubFolder, args.RenamedArgs.From + ProjectExtension) }, args.RenamedArgs.From, Happened.Deleted, (b, s) => { }), ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                if (Save(control.Save(args.Project, control.SaveItemManager.DoSave(args)), Path.Combine(path, SubFolder, args.RenamedArgs.To + ProjectExtension), ref message))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                transaction.Complete();
+            }
+            return true;
+        }
 
         //public static bool RenameFile(string path, string newName, IFileSystemControl control, ref string message)
         //{

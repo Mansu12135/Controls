@@ -59,6 +59,11 @@ namespace UILayer
             ProjectCreated.Invoke(sender, e);
         }
 
+        protected void OnRenamedProject(object sender, ProjectArgs e)
+        {
+            ProjectChanged.Invoke(sender, e);
+        }
+
         protected void OnCreateFiles(object sender, FileArgs e)
         {
             FileCreated.Invoke(sender, e);

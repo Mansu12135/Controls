@@ -203,33 +203,34 @@ namespace UILayer
 
         public void RenameProject(string project, string newName)
         {
-            if (!Notes.ContainsKey(project)) { return; }
-            if (System.IO.Directory.Exists(ProjectsPath + "\\" + newName))
-            {
-                MessageBox.Show("Project with the same name already exists", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            Directory.Move(ProjectsPath + "\\" + project, ProjectsPath + "\\" + newName);
-            var newProject = new Project(newName, Notes[project].CreateDate);
-            foreach (var file in Notes[project].ListFiles)
-            {
-                newProject.Files.Add(new LoadedFile(ProjectsPath + "\\" + newName + "\\Files\\" + System.IO.Path.GetFileName(file.Path), ProjectsPath + "\\" + newName));
-            }
-            newProject.Author = Notes[project].Author;
-            newProject.PublishingDate = Notes[project].PublishingDate;
-            Notes.Remove(project);
-            Notes.Add(newName, newProject);
-            File.Delete(ProjectsPath + "\\" + newName + "\\" + project + ".prj");
-            CreateProjectFile(Notes[newName], ProjectsPath + "\\" + newName + "\\" + newName + ".prj");
-            if (!String.IsNullOrEmpty(LoadedFile))
-            {
-                string lastFile = System.IO.Path.GetFileName(LoadedFile);
-                LoadedFile = ProjectsPath + "\\" + newName + "\\Files\\" + lastFile;
-            }
-            ((ISettings)ParentControl.Parent).SaveSettings();
-            if (propertForm == null) { return; }
-            propertForm.value.Name = newName;
-            ((Project)propertForm.value).Files = newProject.Files;
+            OnRenamedProject(new object(), new ProjectArgs(new RenamedArgs(project, newName, Callback)));
+            //if (!Notes.ContainsKey(project)) { return; }
+            //if (System.IO.Directory.Exists(ProjectsPath + "\\" + newName))
+            //{
+            //    MessageBox.Show("Project with the same name already exists", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    return;
+            //}
+            //Directory.Move(ProjectsPath + "\\" + project, ProjectsPath + "\\" + newName);
+            //var newProject = new Project(newName, Notes[project].CreateDate);
+            //foreach (var file in Notes[project].ListFiles)
+            //{
+            //    newProject.Files.Add(new LoadedFile(ProjectsPath + "\\" + newName + "\\Files\\" + System.IO.Path.GetFileName(file.Path), ProjectsPath + "\\" + newName));
+            //}
+            //newProject.Author = Notes[project].Author;
+            //newProject.PublishingDate = Notes[project].PublishingDate;
+            //Notes.Remove(project);
+            //Notes.Add(newName, newProject);
+            //File.Delete(ProjectsPath + "\\" + newName + "\\" + project + ".prj");
+            //CreateProjectFile(Notes[newName], ProjectsPath + "\\" + newName + "\\" + newName + ".prj");
+            //if (!String.IsNullOrEmpty(LoadedFile))
+            //{
+            //    string lastFile = System.IO.Path.GetFileName(LoadedFile);
+            //    LoadedFile = ProjectsPath + "\\" + newName + "\\Files\\" + lastFile;
+            //}
+            //((ISettings)ParentControl.Parent).SaveSettings();
+            //if (propertForm == null) { return; }
+            //propertForm.value.Name = newName;
+            //((Project)propertForm.value).Files = newProject.Files;
         }
 
         protected override object OnSave(Action action, string project)
@@ -290,9 +291,8 @@ namespace UILayer
 
         private void ButAddProject_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            OnCreateProject(sender, new ProjectArgs(GenerateName("NewProject", ProjectsPath), Happened.Created, Callback));
-            //ProjectCreated.Invoke(sender, new ProjectArgs(GenerateName("NewProject", ProjectsPath), Happened.Created, Callback));
-            //CreateProject();
+           // OnCreateProject(sender, new ProjectArgs(GenerateName("NewProject", ProjectsPath), Happened.Created, Callback));
+            RenameProject("NewProject", "Test1");
         }
 
         internal void OpenFile(string path, string content)

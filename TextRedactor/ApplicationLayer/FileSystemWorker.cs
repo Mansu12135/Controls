@@ -9,7 +9,7 @@ namespace ApplicationLayer
         private FileSystemQueue<T> Queue;
         private string CurrentProject;
         private string CurrentFile;
-        internal string WorkDirectory = @"C:\Users\Kate\Documents\TextRedactor\MyProjects";
+        internal string WorkDirectory = @"C:\Users\Никита\Documents\TextRedactor\MyProjects";
 
         public FileSystemWorker(IBasicPanel<T> control)
         {

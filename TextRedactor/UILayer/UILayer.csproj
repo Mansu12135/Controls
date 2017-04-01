@@ -36,7 +36,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="EpubConvertor">
-      <HintPath>..\..\..\..\..\Загрузка\EpubConvertor.dll</HintPath>
+      <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\EpubConvertor\EpubConvertor\bin\Debug\EpubConvertor.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\..\..\..\..\Загрузка\HtmlAgilityPack.dll</HintPath>

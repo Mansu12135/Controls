@@ -33,7 +33,6 @@ namespace ApplicationLayer
                 if (CallStack.Count == 0) { continue; }
                 FileSystemTask task = GetTaskByPriority();
                 if(task == null) { continue; }
-                // FileSystemTask task = CallStack.GroupBy(item => item.Priority).First(item => item.Key == Priority.High).ToList().First();
                 string message = "";
                 task.DoFeedBack(DoParseAndDo(task, ref message), message);
                 CallStack.Remove(task);
@@ -85,7 +84,7 @@ namespace ApplicationLayer
                 RenamedArgs renamedArgs = args.RenamedArgs;
                 if (renamedArgs != null)
                 {
-                    if (!TransactionDirectory.MoveDirectory(renamedArgs.From, renamedArgs.To, ref message)) { return false; }
+                    if (!BrowseSystem.RenameProject(args, Control, ref message)) { return false; }
                 }
                 return Do(args.Happened, true, args, ref message);
             }

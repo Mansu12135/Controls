@@ -41,6 +41,7 @@ namespace ApplicationLayer
         {
             Happened = args.Happened;
             RenamedArgs = args;
+            Project = args.From;
         }
 
         public string Project { get; private set; }
@@ -52,7 +53,7 @@ namespace ApplicationLayer
 
     public class RenamedArgs : EventArgs
     {
-        protected RenamedArgs(string from, string to, Action<bool, string> callback)
+        public RenamedArgs(string from, string to, Action<bool, string> callback)
         {
             From = from;
             To = to;
