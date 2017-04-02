@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ApplicationLayer
 {
@@ -47,8 +49,16 @@ namespace ApplicationLayer
                 {
                     if (projectArgs.RenamedArgs != null)
                     {
+                        var oldProject = typeControl.Notes[projectArgs.RenamedArgs.From];
+                        var newProject = new Project(projectArgs.RenamedArgs.To, oldProject.CreateDate)
+                        {
+                            Author = oldProject.Author,
+                            Files = new List<LoadedFile>(),
+                            PublishingDate = oldProject.PublishingDate
+                        };
+                        oldProject.ListFiles.ForEach(item => newProject.Files.Add(item));
                         typeControl.Notes.Remove(projectArgs.RenamedArgs.From);
-                        typeControl.Notes.Add(projectArgs.RenamedArgs.To, new Project(projectArgs.RenamedArgs.To));
+                        typeControl.Notes.Add(projectArgs.RenamedArgs.To, newProject);
                         return;
                     }
                     if (projectArgs.Happened == Happened.Created)

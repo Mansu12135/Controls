@@ -291,8 +291,7 @@ namespace UILayer
 
         private void ButAddProject_MouseDown(object sender, MouseButtonEventArgs e)
         {
-           // OnCreateProject(sender, new ProjectArgs(GenerateName("NewProject", ProjectsPath), Happened.Created, Callback));
-            RenameProject("NewProject", "Test1");
+            OnCreateProject(sender, new ProjectArgs(GenerateName("NewProject", ProjectsPath), Happened.Created, Callback));
         }
 
         internal void OpenFile(string path, string content)

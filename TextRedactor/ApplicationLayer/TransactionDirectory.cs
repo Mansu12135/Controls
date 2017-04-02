@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Transactions;
+using ChinhDo.Transactions;
 using Microsoft.Win32.SafeHandles;
 
 namespace ApplicationLayer
@@ -37,15 +38,16 @@ namespace ApplicationLayer
 
         private static void CopyDirectories(string path, string pathTo, ref string message)
         {
-            pathTo = Path.Combine(pathTo, Path.GetDirectoryName(path));
-            if (CreateDirectory(pathTo, ref message)) { return; }
+            //pathTo = Path.Combine(pathTo, Path.GetDirectoryName(path));
+            if (!CreateDirectory(pathTo, ref message)) { return; }
             foreach (var file in Directory.GetFiles(path))
             {
-                if (!TransactionFile.MoveFile(Path.Combine(path, file), Path.Combine(pathTo, file), ref message)) { return; }
+                if (!TransactionFile.MoveFile(Path.Combine(path, file), Path.Combine(pathTo, Path.GetFileName(file)), ref message)) { return; }
             }
             foreach (var directory in Directory.GetDirectories(path))
             {
-                CopyDirectories(Path.Combine(path, directory), pathTo, ref message);
+                string name = new DirectoryInfo(directory).Name;
+                CopyDirectories(Path.Combine(path, name), Path.Combine(pathTo, name), ref message);
             }
         }
 
@@ -84,14 +86,9 @@ namespace ApplicationLayer
                     Transaction.Current.Rollback();
                     return false;
                 }
-                if (!RemoveDirectory(args, ref message))
-                {
-                    Transaction.Current.Rollback();
-                    return false;
-                }
                 transaction.Complete();
             }
-            return true;
+            return RemoveDirectory(path, ref message);
         }
 
         private static bool CreateDir(string path, ref string message)
@@ -131,33 +128,31 @@ namespace ApplicationLayer
             return response;
         }
 
-        public static bool RemoveDirectory(ProjectArgs args, ref string message)
+        public static bool RemoveDirectory(string path, ref string message)
         {
-            //if (!Directory.Exists(args))
-            //{
-            //    message = "Wrong path or directory not exists";
-            //    return false;
-            //}
-            //bool response = false;
-            //using (var transaction = new TransactionScope())
-            //{
-            //    SafeTransactionHandle txHandle = null;
-            //    try
-            //    {
-            //        IKernelTransaction kernelTx =
-            //          (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
-            //        kernelTx.GetHandle(out txHandle);
-            //        response = RemoveDirectoryTransacted(path, txHandle);
-            //        transaction.Complete();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        message = ex.ToString();
-            //        response = false;
-            //        Transaction.Current.Rollback();
-            //    }
-            //}
-            return true;
+            if (!Directory.Exists(path))
+            {
+                message = "Wrong path or directory not exists";
+                return false;
+            }
+            bool response = false;
+            using (var transaction = new TransactionScope())
+            {
+                SafeTransactionHandle txHandle = null;
+                try
+                {
+                   new TxFileManager().DeleteDirectory(path);
+                   transaction.Complete();
+                    response = true;
+                }
+                catch (Exception ex)
+                {
+                    message = ex.ToString();
+                    response = false;
+                    Transaction.Current.Rollback();
+                }
+            }
+            return response;
         }
 
         public static bool DirectoryIsEmpty(string path)

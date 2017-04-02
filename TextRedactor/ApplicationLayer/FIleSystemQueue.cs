@@ -63,8 +63,8 @@ namespace ApplicationLayer
                 case Happened.Deleted:
                     {
                         return isFolder
-                        ? TransactionDirectory.RemoveDirectory((ProjectArgs)args, ref message)
-                        : TransactionFile.DeleteFile((FileArgs)args, ref message);
+                        ? TransactionDirectory.RemoveDirectory(Path.Combine(Control.FSWorker.WorkDirectory, ((ProjectArgs)args).Project), ref message)
+                        : TransactionFile.DeleteFiles((FileArgs)args, ref message);
                     }
             }
             return false;
@@ -84,7 +84,7 @@ namespace ApplicationLayer
                 RenamedArgs renamedArgs = args.RenamedArgs;
                 if (renamedArgs != null)
                 {
-                    if (!BrowseSystem.RenameProject(args, Control, ref message)) { return false; }
+                    return BrowseSystem.RenameProject(args, Control, ref message);
                 }
                 return Do(args.Happened, true, args, ref message);
             }

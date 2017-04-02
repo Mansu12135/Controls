@@ -42,6 +42,7 @@ namespace ApplicationLayer
             Happened = args.Happened;
             RenamedArgs = args;
             Project = args.From;
+            Callback = args.Callback;
         }
 
         public string Project { get; private set; }

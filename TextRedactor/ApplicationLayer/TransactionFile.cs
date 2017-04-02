@@ -156,37 +156,43 @@ namespace ApplicationLayer
             }
         }
 
-        public static bool DeleteFile(FileArgs args, ref string message)
+        public static bool DeleteFiles(FileArgs args, ref string message)
         {
-            string path = "";
-            if (!File.Exists(path))
-            {
-                message = "Wrong path or file exists";
-                return false;
-            }
+           
             bool response = true;
             using (var transaction = new TransactionScope())
             {
-                SafeTransactionHandle txHandle = null;
-                try
+                foreach (var file in args.Files)
                 {
-                    IKernelTransaction kernelTx =
-                        (IKernelTransaction) TransactionInterop.GetDtcTransaction(Transaction.Current);
-                    kernelTx.GetHandle(out txHandle);
-                    response = DeleteFileTransacted(path, txHandle);
-                    transaction.Complete();
-                }
-                catch (Exception ex)
-                {
-                    response = false;
-                    message = ex.Message;
-                    Transaction.Current.Rollback();
-                }
-                finally
-                {
-                    if (txHandle != null && !txHandle.IsInvalid)
+
+                    string path = file;
+                    if (!File.Exists(path))
                     {
-                        txHandle.Dispose();
+                        message = "Wrong path or file exists";
+                        Transaction.Current.Rollback();
+                        return false;
+                    }
+                    SafeTransactionHandle txHandle = null;
+                    try
+                    {
+                        IKernelTransaction kernelTx =
+                            (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
+                        kernelTx.GetHandle(out txHandle);
+                        response = response && DeleteFileTransacted(path, txHandle);
+                        transaction.Complete();
+                    }
+                    catch (Exception ex)
+                    {
+                        response = false;
+                        message = ex.Message;
+                        Transaction.Current.Rollback();
+                    }
+                    finally
+                    {
+                        if (txHandle != null && !txHandle.IsInvalid)
+                        {
+                            txHandle.Dispose();
+                        }
                     }
                 }
                 return response;

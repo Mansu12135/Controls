@@ -53,7 +53,7 @@ namespace ApplicationLayer
         //{
         //    using (var transaction = new TransactionScope())
         //    {
-        //        if (!TransactionFile.DeleteFile(path, ref message))
+        //        if (!TransactionFile.DeleteFiles(path, ref message))
         //        {
         //            Transaction.Current.Rollback();
         //            return false;
@@ -71,28 +71,20 @@ namespace ApplicationLayer
 
         public static bool RenameProject(ProjectArgs args, IBasicPanel<Project> control, ref string message)
         {
-            using (var transaction = new TransactionScope())
-            {
-                string path = Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.From);
+            string path = Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.From);
                 if (!TransactionDirectory.MoveDirectory(path,
                     Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To), args, ref message))
                 {
                     Transaction.Current.Rollback();
                     return false;
                 }
-                if (!TransactionFile.DeleteFile(new FileArgs(new List<string>() { Path.Combine(path, SubFolder, args.RenamedArgs.From + ProjectExtension) }, args.RenamedArgs.From, Happened.Deleted, (b, s) => { }), ref message))
+            if (!TransactionFile.DeleteFiles(new FileArgs(new List<string>() { Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To, args.RenamedArgs.From + ProjectExtension) }, args.RenamedArgs.From, Happened.Deleted, (b, s) => { }), ref message))
                 {
                     Transaction.Current.Rollback();
                     return false;
                 }
-                if (Save(control.Save(args.Project, control.SaveItemManager.DoSave(args)), Path.Combine(path, SubFolder, args.RenamedArgs.To + ProjectExtension), ref message))
-                {
-                    Transaction.Current.Rollback();
-                    return false;
-                }
-                transaction.Complete();
-            }
-            return true;
+            return Save(control.Save(args.RenamedArgs.To, control.SaveItemManager.DoSave(args)),
+                Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To, args.RenamedArgs.To + ProjectExtension), ref message);
         }
 
         //public static bool RenameFile(string path, string newName, IFileSystemControl control, ref string message)
