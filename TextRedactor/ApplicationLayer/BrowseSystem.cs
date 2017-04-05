@@ -35,19 +35,10 @@ namespace ApplicationLayer
             return CreateProjectFile(project, path, ref message);
         }
 
-        //public static bool RemoveProject(string path, ref string message)
-        //{
-        //    using (var transaction = new TransactionScope())
-        //    {
-        //        if (!TransactionDirectory.RemoveDirectory(path, ref message))
-        //        {
-        //            Transaction.Current.Rollback();
-        //            return false;
-        //        }
-        //        transaction.Complete();
-        //    }
-        //    return true;
-        //}
+        public static bool RemoveProject(string path, ref string message)
+        {
+            return TransactionDirectory.RemoveDirectory(path);
+        }
 
         //public static bool RemoveFile(string path, IBasicPanel<Project> control, ref string message)
         //{
@@ -72,19 +63,46 @@ namespace ApplicationLayer
         public static bool RenameProject(ProjectArgs args, IBasicPanel<Project> control, ref string message)
         {
             string path = Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.From);
+            ComplexTransaction transaction = new ComplexTransaction();
+            transaction.AddOperation(() =>
+            {
                 if (!TransactionDirectory.MoveDirectory(path,
-                    Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To), args, ref message))
+Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To)))
                 {
                     Transaction.Current.Rollback();
-                    return false;
                 }
-            if (!TransactionFile.DeleteFiles(new FileArgs(new List<string>() { Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To, args.RenamedArgs.From + ProjectExtension) }, args.RenamedArgs.From, Happened.Deleted, (b, s) => { }), ref message))
+            }, () =>
+            {
+                if (!TransactionDirectory.MoveDirectory(
+   Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To), path))
                 {
                     Transaction.Current.Rollback();
-                    return false;
                 }
+
+            });
+            transaction.AddOperation(() =>
+            {
+                TransactionDirectory.RemoveDirectory(path);
+            }, () => { });
+            transaction.AddOperation(() =>
+            {
+                TransactionFile.DeleteFiles(
+                    new FileArgs(
+                        new List<string>()
+                        {
+                            Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To,
+                                args.RenamedArgs.From + ProjectExtension)
+                        }, args.RenamedArgs.From, Happened.Deleted,
+                        (b, s) => { }));
+            }, () =>
+            {
+                
+
+            });
+            transaction.DoOperation();
             return Save(control.Save(args.RenamedArgs.To, control.SaveItemManager.DoSave(args)),
-                Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To, args.RenamedArgs.To + ProjectExtension), ref message);
+                    Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To,
+                        args.RenamedArgs.To + ProjectExtension), ref message);
         }
 
         //public static bool RenameFile(string path, string newName, IFileSystemControl control, ref string message)

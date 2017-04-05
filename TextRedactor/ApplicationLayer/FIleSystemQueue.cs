@@ -63,8 +63,8 @@ namespace ApplicationLayer
                 case Happened.Deleted:
                     {
                         return isFolder
-                        ? TransactionDirectory.RemoveDirectory(Path.Combine(Control.FSWorker.WorkDirectory, ((ProjectArgs)args).Project), ref message)
-                        : TransactionFile.DeleteFiles((FileArgs)args, ref message);
+                        ? TransactionDirectory.RemoveDirectory(Path.Combine(Control.FSWorker.WorkDirectory, ((ProjectArgs)args).Project))
+                        : TransactionFile.DeleteFiles((FileArgs)args);
                     }
             }
             return false;

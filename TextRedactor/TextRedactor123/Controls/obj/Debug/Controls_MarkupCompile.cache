@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\Kate\Documents\BookRedactor\TextRedactor\TextRedactor\Controls\obj\Debug\
+C:\Users\Никита\Source\Repos\Controls\TextRedactor\TextRedactor123\Controls\obj\Debug\
 Controls
 none
 false
@@ -13,8 +13,8 @@ DEBUG;TRACE
 5-2090451829
 
 8-625477220
-18-551206140
+181199657685
 FormatPanel.xaml;Note.xaml;NotesBrowser.xaml;SuperRichTextBox.xaml;SuperTextRedactor.xaml;
 
-False
+True
 

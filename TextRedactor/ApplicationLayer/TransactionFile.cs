@@ -65,14 +65,15 @@ namespace ApplicationLayer
                 message = "Wrong path or file exists";
                 return null;
             }
-            using (var transaction = new TransactionScope())
+            bool isParentTransaction = Transaction.Current == null;
+            using (var transaction = isParentTransaction ? new TransactionScope() : new TransactionScope(Transaction.Current))
             {
                 SafeTransactionHandle txHandle = null;
                 SafeFileHandle fileHandle = null;
                 try
                 {
                     IKernelTransaction kernelTx =
-                        (IKernelTransaction) TransactionInterop.GetDtcTransaction(Transaction.Current);
+                        (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
                     kernelTx.GetHandle(out txHandle);
 
                     fileHandle
@@ -90,7 +91,10 @@ namespace ApplicationLayer
 
                     if (fileHandle.IsInvalid)
                         throw new Win32Exception(Marshal.GetLastWin32Error());
-                    transaction.Complete();
+                    if (!isParentTransaction)
+                    {
+                        transaction.Complete();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -127,7 +131,8 @@ namespace ApplicationLayer
                 return false;
             }
             bool response = true;
-            using (var transaction = new TransactionScope())
+            bool isParentTransaction = Transaction.Current == null;
+            using (var transaction = isParentTransaction ? new TransactionScope() : new TransactionScope(Transaction.Current))
             {
                 SafeTransactionHandle txHandle = null;
                 try
@@ -137,7 +142,10 @@ namespace ApplicationLayer
                     kernelTx.GetHandle(out txHandle);
                     response = CopyFileTransacted(path, pathCopy, IntPtr.Zero, IntPtr.Zero, false,
                         SafeTransactionHandle.Copy.COPY_FILE_FAIL_IF_EXISTS, txHandle);
-                    transaction.Complete();
+                    if (!isParentTransaction)
+                    {
+                        transaction.Complete();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -156,48 +164,49 @@ namespace ApplicationLayer
             }
         }
 
-        public static bool DeleteFiles(FileArgs args, ref string message)
+        public static bool DeleteFiles(FileArgs args)
         {
-           
             bool response = true;
-            using (var transaction = new TransactionScope())
+            string message = String.Empty;
+            foreach (var file in args.Files)
             {
-                foreach (var file in args.Files)
-                {
 
-                    string path = file;
-                    if (!File.Exists(path))
+                string path = file;
+                if (!File.Exists(path))
+                {
+                    message = "Wrong path or file exists";
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                SafeTransactionHandle txHandle = null;
+                try
+                {
+                    IKernelTransaction kernelTx =
+                        (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
+                    kernelTx.GetHandle(out txHandle);
+                    response = response && DeleteFileTransacted(path, txHandle);
+                    if (!response)
                     {
-                        message = "Wrong path or file exists";
                         Transaction.Current.Rollback();
                         return false;
                     }
-                    SafeTransactionHandle txHandle = null;
-                    try
+                }
+                catch (Exception ex)
+                {
+                    response = false;
+                    message = ex.Message;
+                    Transaction.Current.Rollback();
+                }
+                finally
+                {
+                    if (txHandle != null && !txHandle.IsInvalid)
                     {
-                        IKernelTransaction kernelTx =
-                            (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
-                        kernelTx.GetHandle(out txHandle);
-                        response = response && DeleteFileTransacted(path, txHandle);
-                        transaction.Complete();
-                    }
-                    catch (Exception ex)
-                    {
-                        response = false;
-                        message = ex.Message;
-                        Transaction.Current.Rollback();
-                    }
-                    finally
-                    {
-                        if (txHandle != null && !txHandle.IsInvalid)
-                        {
-                            txHandle.Dispose();
-                        }
+                        txHandle.Dispose();
                     }
                 }
-                return response;
             }
-        }//????????
+            return true;
+        }
 
         public static bool MoveFile(string path, string pathCopy, ref string message)
         {
@@ -207,7 +216,8 @@ namespace ApplicationLayer
                 return false;
             }
             bool response = true;
-            using (var transaction = new TransactionScope())
+            bool isParentTransaction = Transaction.Current == null;
+            using (var transaction = isParentTransaction ? new TransactionScope() : new TransactionScope(Transaction.Current))
             {
                 SafeTransactionHandle txHandle = null;
                 try
@@ -216,7 +226,10 @@ namespace ApplicationLayer
                        (IKernelTransaction)TransactionInterop.GetDtcTransaction(Transaction.Current);
                     kernelTx.GetHandle(out txHandle);
                     response = MoveFileTransacted(path, pathCopy, IntPtr.Zero, IntPtr.Zero, SafeTransactionHandle.Move.MOVEFILE_COPY_ALLOWED, txHandle);
-                    transaction.Complete();
+                    if (!isParentTransaction)
+                    {
+                        transaction.Complete();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -243,8 +256,9 @@ namespace ApplicationLayer
                 return false;
             }
             bool response = true;
+            bool isParentTransaction = Transaction.Current == null;
             SafeTransactionHandle handle = null;
-            using (var transaction = new TransactionScope())
+            using (var transaction = isParentTransaction ? new TransactionScope() : new TransactionScope(Transaction.Current))
             {
                 try
                 {
@@ -258,7 +272,10 @@ namespace ApplicationLayer
                     {
                         stream.Write(data, 0, data.Length);
                     }
-                    transaction.Complete();
+                    if (!isParentTransaction)
+                    {
+                        transaction.Complete();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -311,7 +328,7 @@ namespace ApplicationLayer
 
             public enum FileAccess
             {
-                GENERIC_READ = unchecked((int) 0x80000000),
+                GENERIC_READ = unchecked((int)0x80000000),
                 GENERIC_WRITE = 0x40000000
             }
 

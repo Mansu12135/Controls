@@ -4,7 +4,7 @@
 library
 C#
 .cs
-D:\textEditor\Repository\Controls\TextRedactor\UILayer\obj\Release\
+C:\Users\Никита\Source\Repos\Controls\TextRedactor\UILayer\obj\Release\
 UILayer
 none
 false
@@ -13,7 +13,7 @@ TRACE
 15-1765629667
 
 31-2049558077
-221533961881
+202134377909
 BrowseProject.xaml;CircularProgressBar.xaml;DictionaryPanel.xaml;ExportPanel.xaml;FilesBrowser.xaml;FormatPanel.xaml;InformationForm.xaml;NotesBrowser.xaml;Options.xaml;ProjectProperties.xaml;PropertiesForm.xaml;SearchPanel.xaml;StyleDictionary.xaml;SuperRichTextBox.xaml;SuperTextRedactor.xaml;
 
 True

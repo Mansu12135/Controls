@@ -53,6 +53,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComplexTransaction.cs" />
     <Compile Include="DictionaryManager.cs" />
     <Compile Include="DictionaryStructures.cs" />
     <Compile Include="BrowseSystem.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="IFileSystemControl.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="TransactedOperation.cs" />
     <Compile Include="PercentageConverter.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="RombConverter.cs" />

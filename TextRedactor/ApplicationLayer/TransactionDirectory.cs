@@ -58,7 +58,8 @@ namespace ApplicationLayer
                 message = "Wrong path or folders are not exists";
                 return false;
             }
-            using (var transaction = new TransactionScope())
+            bool isParentTransaction = Transaction.Current == null;
+            using (var transaction = isParentTransaction ? new TransactionScope() : new TransactionScope(Transaction.Current))
             {
                 CopyDirectories(path, pathTo, ref message);
                 if (!string.IsNullOrEmpty(message))
@@ -66,29 +67,30 @@ namespace ApplicationLayer
                     Transaction.Current.Rollback();
                     return false;
                 }
-                transaction.Complete();
+                if (!isParentTransaction)
+                {
+                    transaction.Complete();
+                }
             }
             return true;
         }
 
-        public static bool MoveDirectory(string path, string pathTo, ProjectArgs args, ref string message)
+        public static bool MoveDirectory(string path, string pathTo)
         {
+            bool response = true;
+            string message = String.Empty;
             if (!Directory.Exists(path) || Directory.Exists(pathTo))
             {
                 message = "Wrong path or folders are not exists";
                 return false;
             }
-            using (var transaction = new TransactionScope())
-            {
                 CopyDirectories(path, pathTo, ref message);
                 if (!string.IsNullOrEmpty(message))
                 {
                     Transaction.Current.Rollback();
                     return false;
                 }
-                transaction.Complete();
-            }
-            return RemoveDirectory(path, ref message);
+            return response;
         }
 
         private static bool CreateDir(string path, ref string message)
@@ -119,40 +121,40 @@ namespace ApplicationLayer
                 return false;
             }
             bool response = false;
-            if (Transaction.Current != null) { return CreateDir(path, ref message); }
-            using (var transaction = new TransactionScope())
+            bool isParentTransaction = Transaction.Current == null;
+            //  if (Transaction.Current != null) { return CreateDir(path, ref message); }
+            using (var transaction = isParentTransaction ? new TransactionScope() : new TransactionScope(Transaction.Current))
             {
                 response = CreateDir(path, ref message);
-                transaction.Complete();
+                if (!isParentTransaction)
+                {
+                    transaction.Complete();
+                }
             }
             return response;
         }
 
-        public static bool RemoveDirectory(string path, ref string message)
+
+        public static bool RemoveDirectory(string path)
         {
+            string message = string.Empty;
             if (!Directory.Exists(path))
             {
                 message = "Wrong path or directory not exists";
                 return false;
             }
-            bool response = false;
-            using (var transaction = new TransactionScope())
+            SafeTransactionHandle txHandle = null;
+            try
             {
-                SafeTransactionHandle txHandle = null;
-                try
-                {
-                   new TxFileManager().DeleteDirectory(path);
-                   transaction.Complete();
-                    response = true;
-                }
-                catch (Exception ex)
-                {
-                    message = ex.ToString();
-                    response = false;
-                    Transaction.Current.Rollback();
-                }
+                new TxFileManager().DeleteDirectory(path);
             }
-            return response;
+            catch (Exception ex)
+            {
+                message = ex.ToString();
+                Transaction.Current.Rollback();
+                return false;
+            }
+            return true;
         }
 
         public static bool DirectoryIsEmpty(string path)
