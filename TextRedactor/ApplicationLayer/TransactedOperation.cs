@@ -22,6 +22,7 @@ namespace ApplicationLayer
 
         private void AttachEventHandler()
         {
+            DettachEventHandler();
             Transaction.Current.TransactionCompleted += Handler;
         }
 

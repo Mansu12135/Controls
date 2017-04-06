@@ -51,48 +51,6 @@ namespace ApplicationLayer
             }
         }
 
-        public static bool CopyDirectory(string path, string pathTo, ref string message)
-        {
-            if (!Directory.Exists(path) || !Directory.Exists(pathTo))
-            {
-                message = "Wrong path or folders are not exists";
-                return false;
-            }
-            bool isParentTransaction = Transaction.Current == null;
-            using (var transaction = isParentTransaction ? new TransactionScope() : new TransactionScope(Transaction.Current))
-            {
-                CopyDirectories(path, pathTo, ref message);
-                if (!string.IsNullOrEmpty(message))
-                {
-                    Transaction.Current.Rollback();
-                    return false;
-                }
-                if (!isParentTransaction)
-                {
-                    transaction.Complete();
-                }
-            }
-            return true;
-        }
-
-        public static bool MoveDirectory(string path, string pathTo)
-        {
-            bool response = true;
-            string message = String.Empty;
-            if (!Directory.Exists(path) || Directory.Exists(pathTo))
-            {
-                message = "Wrong path or folders are not exists";
-                return false;
-            }
-                CopyDirectories(path, pathTo, ref message);
-                if (!string.IsNullOrEmpty(message))
-                {
-                    Transaction.Current.Rollback();
-                    return false;
-                }
-            return response;
-        }
-
         private static bool CreateDir(string path, ref string message)
         {
             bool response = false;
@@ -113,48 +71,103 @@ namespace ApplicationLayer
             return response;
         }
 
-        public static bool CreateDirectory(string path, ref string message)
+        public static bool CopyDirectory(string path, string pathTo)
         {
-            if (Directory.Exists(path))
+            string message = string.Empty;
+            return TransactionActionHelper.DoActionWithCheckOnTransaction((ref string s) =>
             {
-                message = "Wrong path or directory exists";
-                return false;
-            }
-            bool response = false;
-            bool isParentTransaction = Transaction.Current == null;
-            //  if (Transaction.Current != null) { return CreateDir(path, ref message); }
-            using (var transaction = isParentTransaction ? new TransactionScope() : new TransactionScope(Transaction.Current))
-            {
-                response = CreateDir(path, ref message);
-                if (!isParentTransaction)
+                if (!TransactionActionHelper.CheckConditions((ref string mes) =>
                 {
-                    transaction.Complete();
+                    if (!Directory.Exists(path) || Directory.Exists(pathTo))
+                    {
+                        mes = "Wrong path or folders are not exists";
+                        return false;
+                    }
+                    return true;
+                }, ref s))
+                {
+                    return false;
                 }
-            }
-            return response;
+                CopyDirectories(path, pathTo, ref s);
+                if (string.IsNullOrEmpty(s))
+                {
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                return true;
+            }, ref message);
         }
 
+        //public static bool MoveDirectory(string path, string pathTo)
+        //{
+        //    bool response = true;
+        //    string message = String.Empty;
+        //    if (!Directory.Exists(path) || Directory.Exists(pathTo))
+        //    {
+        //        message = "Wrong path or folders are not exists";
+        //        return false;
+        //    }
+        //        CopyDirectories(path, pathTo, ref message);
+        //        if (!string.IsNullOrEmpty(message))
+        //        {
+        //            Transaction.Current.Rollback();
+        //            return false;
+        //        }
+        //    return response;
+        //}
+
+        public static bool CreateDirectory(string path, ref string message)
+        {
+            return TransactionActionHelper.DoActionWithCheckOnTransaction((ref string s) =>
+            {
+                if (!TransactionActionHelper.CheckConditions((ref string mes) =>
+                {
+                    if (Directory.Exists(path))
+                    {
+                        mes = "Wrong path or directory exists";
+                        Transaction.Current.Rollback();
+                        return false;
+                    }
+                    return true;
+                }, ref s))
+                {
+                    return false;
+                }
+                return CreateDir(path, ref s);
+            }, ref message);
+        }
 
         public static bool RemoveDirectory(string path)
         {
             string message = string.Empty;
-            if (!Directory.Exists(path))
+            return TransactionActionHelper.DoActionWithCheckOnTransaction((ref string s) =>
             {
-                message = "Wrong path or directory not exists";
-                return false;
-            }
-            SafeTransactionHandle txHandle = null;
-            try
-            {
-                new TxFileManager().DeleteDirectory(path);
-            }
-            catch (Exception ex)
-            {
-                message = ex.ToString();
-                Transaction.Current.Rollback();
-                return false;
-            }
-            return true;
+                if (!TransactionActionHelper.CheckConditions((ref string mes) =>
+                {
+                    if (!Directory.Exists(path))
+                    {
+                        Transaction.Current.Rollback();
+                        message = "Wrong path or directory not exists";
+                        return false;
+                    }
+                    return true;
+                }, ref s))
+                {
+                    return false;
+                }
+                SafeTransactionHandle txHandle = null;
+                try
+                {
+                    new TxFileManager().DeleteDirectory(path);
+                }
+                catch (Exception ex)
+                {
+                    message = ex.ToString();
+                    Transaction.Current.Rollback();
+                    return false;
+                }
+                return true;
+            }, ref message);
         }
 
         public static bool DirectoryIsEmpty(string path)
@@ -162,7 +175,7 @@ namespace ApplicationLayer
             return PathIsDirectoryEmpty(path);
         }
 
-        public sealed class SafeTransactionHandle : SafeHandleZeroOrMinusOneIsInvalid
+        protected sealed class SafeTransactionHandle : SafeHandleZeroOrMinusOneIsInvalid
         {
             [DllImport("Kernel32.dll", SetLastError = true)]
             private static extern bool CloseHandle(IntPtr handle);

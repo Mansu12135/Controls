@@ -66,6 +66,8 @@
     <Compile Include="IFileSystemControl.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="RemovedOperation.cs" />
+    <Compile Include="RemoveSnapshotManager.cs" />
     <Compile Include="TransactedOperation.cs" />
     <Compile Include="PercentageConverter.cs" />
     <Compile Include="Project.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="SaveItemManager.cs" />
     <Compile Include="SaveManager.cs" />
     <Compile Include="TextRangeList.cs" />
+    <Compile Include="TransactionActionHelper.cs" />
     <Compile Include="TransactionDirectory.cs" />
     <Compile Include="TransactionFile.cs" />
   </ItemGroup>
