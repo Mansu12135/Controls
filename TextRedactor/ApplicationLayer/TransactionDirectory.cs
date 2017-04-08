@@ -89,7 +89,7 @@ namespace ApplicationLayer
                     return false;
                 }
                 CopyDirectories(path, pathTo, ref s);
-                if (string.IsNullOrEmpty(s))
+                if (!string.IsNullOrEmpty(s))
                 {
                     Transaction.Current.Rollback();
                     return false;
