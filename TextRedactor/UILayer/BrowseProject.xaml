@@ -73,6 +73,10 @@
                                                                         <Label x:Name="buttonOpenFile" Tag="{Binding Path}" PreviewMouseDoubleClick="buttonOpenFile_PreviewMouseDoubleClick" MouseDown="buttonOpenFile_MouseDown" Cursor="Hand" Height="Auto" HorizontalAlignment="Stretch" Padding="0" >
                                                                             <TextBox x:Name="TextNameFile" BorderThickness="0"   Text="{Binding  Name}"  Tag="{Binding Path}" IsEnabled="False" ></TextBox>
                                                                         </Label>
+                                                                        <Border BorderThickness="0" Name="Edit"  Width="15"  Height="15"  HorizontalAlignment="Right" Margin="3,0,0,0">
+                                                                            <Image  Name="EditFileName" Source="Resources/edit.png" Tag="{Binding Path}" MouseUp="EditFileName_OnMouseUp" Cursor="Hand" >
+                                                                            </Image>
+                                                                        </Border>
                                                                         <!--Width="{Binding Path=ActualWidth, ElementName=stackPanel, Converter={converters:PercentageConverter}, ConverterParameter='20'}"-->
                                                                     </DockPanel>
                                                                 </Border>
