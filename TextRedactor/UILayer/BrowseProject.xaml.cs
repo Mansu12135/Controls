@@ -727,10 +727,5 @@ namespace UILayer
         {
             MainProjectList.Items.Refresh();
         }
-
-        private void EditFileName_OnMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

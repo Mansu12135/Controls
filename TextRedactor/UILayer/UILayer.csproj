@@ -36,16 +36,16 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="EpubConvertor">
-      <HintPath>..\TextRedactor\bin\Debug\EpubConvertor.dll</HintPath>
+      <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\EpubConvertor\EpubConvertor\bin\Debug\EpubConvertor.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
-      <HintPath>..\TextRedactor\bin\Debug\HtmlAgilityPack.dll</HintPath>
+      <HintPath>..\..\..\..\..\Загрузка\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="HtmlToXamlConverter">
       <HintPath>..\Controls\bin\Debug\HtmlToXamlConverter.dll</HintPath>
     </Reference>
     <Reference Include="Ionic.Zip">
-      <HintPath>..\TextRedactor\bin\Debug\Ionic.Zip.dll</HintPath>
+      <HintPath>..\..\..\..\..\Загрузка\Ionic.Zip.dll</HintPath>
     </Reference>
     <Reference Include="nrtftree-library, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\nrtftree-library.0.4.0\lib\net452\nrtftree-library.dll</HintPath>
