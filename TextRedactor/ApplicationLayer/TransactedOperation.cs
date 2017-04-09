@@ -31,29 +31,39 @@ namespace ApplicationLayer
             Transaction.Current.TransactionCompleted -= Handler;
         }
 
-        public void DoActionTransacted()
+        public bool DoActionTransacted()
         {
-            using (var transaction = new TransactionScope())
+            bool isSuccess = false;
+            TransactionScope transaction = null;
+            try
             {
+                transaction = new TransactionScope();
                 Inforamtion = Transaction.Current.TransactionInformation;
                 AttachEventHandler();
-                try
-                {
-                    MainAction.Invoke();
-                }
-                catch (Exception e)
-                {
-                    Transaction.Current.Rollback();
-                }
-                transaction.Complete();
+                MainAction.Invoke();
             }
-        }
+            catch (Exception e)
+            {
+                Transaction.Current.Rollback();
+            }
+            finally
+            {
+                if (Transaction.Current != null &&
+                    Transaction.Current.TransactionInformation.Status != TransactionStatus.Aborted)
+                {
+                    transaction.Complete();
+                    transaction.Dispose();
+                    transaction = null;
+                    isSuccess = true;
+                }
+            }
+            return isSuccess;
+    }
 
         public void DoRollBack()
         {
             using (var transaction = new TransactionScope())
             {
-                AttachEventHandler();
                 try
                 {
                     RollBackAction.Invoke();

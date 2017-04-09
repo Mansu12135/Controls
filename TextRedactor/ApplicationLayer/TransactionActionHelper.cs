@@ -24,14 +24,13 @@ namespace ApplicationLayer
 
         public static bool CheckConditions(CheckExpression checkExpression, ref string message)
         {
-            bool needsTransaction = Transaction.Current == null;
             if (!checkExpression.Invoke(ref message))
             {
-                if (!needsTransaction)
+                if (Transaction.Current != null)
                 {
                     Transaction.Current.Rollback();
-                    return false;
                 }
+                return false;
             }
             return true;
         }

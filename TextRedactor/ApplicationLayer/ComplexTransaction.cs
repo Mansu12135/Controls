@@ -7,6 +7,7 @@ namespace ApplicationLayer
     internal class ComplexTransaction
     {
         private List<TransactedOperation> Operations = new List<TransactedOperation>();
+        private object Locker = new object();
 
         public void AddOperation(Action mainAction, Action rollback)
         {
@@ -22,6 +23,8 @@ namespace ApplicationLayer
         {
             if (transactionEventArgs.Transaction.TransactionInformation.Status == TransactionStatus.Aborted)
             {
+                Transaction.Current.Dispose();
+                Transaction.Current = null;
                 int index = Operations.FindIndex(
                     operation => operation.Inforamtion == transactionEventArgs.Transaction.TransactionInformation);
                 for (int i = 0; i < index; i++)
@@ -33,8 +36,16 @@ namespace ApplicationLayer
 
         public void DoOperation()
         {
-            Operations.ForEach(operation => operation.DoActionTransacted());
-
+            foreach (TransactedOperation operation in Operations)
+            {
+                lock (Locker)
+                {
+                    if (!operation.DoActionTransacted())
+                    {
+                        break;
+                    }
+                }
+            }
         }
     }
 }

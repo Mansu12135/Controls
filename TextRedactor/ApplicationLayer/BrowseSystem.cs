@@ -126,7 +126,10 @@ namespace ApplicationLayer
             string path = Path.Combine(control.FSWorker.WorkDirectory, args.Project, BrowseSystem.SubFolder);
             foreach (string file in args.Files)
             {
-                TransactionFile.CreateFile(Path.Combine(path, file + Extension), ref message);
+                if (!TransactionFile.CreateFile(Path.Combine(path, file + Extension), ref message))
+                {
+                    return false;
+                }
             }
             return Save(control.Save(args.Project, control.SaveItemManager.DoSave(args)),
                 Path.Combine(control.FSWorker.WorkDirectory, args.Project, args.Project + ProjectExtension), ref message);
