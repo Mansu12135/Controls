@@ -24,6 +24,8 @@ namespace ApplicationLayer
         event EventHandler<ProjectArgs> ProjectDeleted;
 
         event EventHandler<FileArgs> FileDeleted;
+
+        string CurrentProjectsPath { get; }
     }
 
     public class ProjectArgs : EventArgs

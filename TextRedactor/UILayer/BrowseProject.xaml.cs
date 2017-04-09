@@ -59,7 +59,7 @@ namespace UILayer
             }
         }
 
-        public string ProjectsPath
+        public override string ProjectsPath
         {
             get { return vProjectPath; }
             set

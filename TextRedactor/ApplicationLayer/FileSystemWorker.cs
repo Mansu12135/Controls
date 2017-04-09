@@ -9,7 +9,11 @@ namespace ApplicationLayer
         private FileSystemQueue<T> Queue;
         private string CurrentProject;
         private string CurrentFile;
-        internal string WorkDirectory = @"C:\Users\Никита\Documents\TextRedactor\MyProjects";
+
+        internal string WorkDirectory
+        {
+            get { return MainControl.CurrentProjectsPath; }
+        }
 
         public FileSystemWorker(IBasicPanel<T> control)
         {

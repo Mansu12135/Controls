@@ -6,6 +6,11 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using ApplicationLayer;
+using Binding = System.Windows.Data.Binding;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using TextBox = System.Windows.Controls.TextBox;
+using ToolTip = System.Windows.Controls.ToolTip;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace UILayer
 {
@@ -127,6 +132,12 @@ namespace UILayer
             {
                 EndChangingDynamicItem();
             }
+        }
+
+        public virtual string ProjectsPath { get; set; }
+
+        string IFileSystemControl.CurrentProjectsPath {
+            get { return ProjectsPath; }
         }
 
         protected virtual object OnSave(Action action, string project) { return null; }
