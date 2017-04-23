@@ -55,7 +55,7 @@
                                     <StackPanel x:Name="stackPanel">
                                         <StackPanel  Orientation="Horizontal">
                                             <Label PreviewMouseDoubleClick="ProjectName_MouseDoubleClick" Padding="0">
-                                                <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" KeyDown="TextNameFile_OnKeyDown" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}" Width="{Binding Path=ActualWidth, ElementName=stackPanel, Converter={converters:PercentageConverter}, ConverterParameter='20'}"/>
+                                                <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" KeyDown="TextNameFile_OnKeyDown" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}"/>
                                             </Label>
                                             <Border x:Name="Propert" Visibility="Hidden" Width="16" Height="16" HorizontalAlignment="Right" Cursor="Hand">
                                                 <Image Source="Resources/set.png" MouseUp="Propert_Click" Tag="{Binding Key}"></Image>
@@ -70,11 +70,11 @@
                                                                 <Border Name="HighlightBorder2" Padding="0" BorderBrush="Transparent" BorderThickness="0">
                                                                     <DockPanel Cursor="Hand" HorizontalAlignment="Stretch">
                                                                         <Image Name="Romb" Source="Resources/romb.png" Margin="0,1" Height="{Binding IsOpen, Mode=OneWay}" Width="{Binding IsOpen,Mode=OneWay}" ></Image>
-                                                                        <Label x:Name="buttonOpenFile" Tag="{Binding Path}" PreviewMouseDoubleClick="buttonOpenFile_PreviewMouseDoubleClick" MouseDown="buttonOpenFile_MouseDown" Cursor="Hand" Height="Auto" HorizontalAlignment="Stretch" Padding="0" >
+                                                                        <Label x:Name="buttonOpenFile" Tag="{Binding Path}" MouseDown="buttonOpenFile_MouseDown" Cursor="Hand" Height="Auto" HorizontalAlignment="Stretch" Padding="0" >
                                                                             <TextBox x:Name="TextNameFile" BorderThickness="0"   Text="{Binding  Name}"  Tag="{Binding Path}" IsEnabled="False" ></TextBox>
                                                                         </Label>
-                                                                        <Border BorderThickness="0" Name="Edit"  Width="15"  Height="15"  HorizontalAlignment="Right" Margin="3,0,0,0">
-                                                                            <Image  Name="EditFileName" Source="Resources/edit.png" Tag="{Binding Path}" MouseUp="EditFileName_OnMouseUp" Cursor="Hand" >
+                                                                        <Border BorderThickness="0" Name="Edit"  Width="15"  Height="15"  HorizontalAlignment="Right" Margin="3,0,0,0" MouseUp="EditFileName_OnMouseUp">
+                                                                            <Image  Name="EditFileName" Source="Resources/edit.png" Tag="{Binding Path}"  Cursor="Hand" >
                                                                             </Image>
                                                                         </Border>
                                                                         <!--Width="{Binding Path=ActualWidth, ElementName=stackPanel, Converter={converters:PercentageConverter}, ConverterParameter='20'}"-->

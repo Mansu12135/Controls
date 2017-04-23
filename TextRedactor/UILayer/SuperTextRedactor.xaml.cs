@@ -385,7 +385,7 @@ namespace UILayer
             string name = NotesBrowser.GenerateName("Note");
             //   range.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
 
-            AddFlag(range, name);
+          //  AddFlag(range, name);
             AddNote(range, name);
             NotesBrowser.MainControl.Items.Refresh();
         }

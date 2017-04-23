@@ -319,6 +319,7 @@ namespace UILayer
                     string folder = Path.GetDirectoryName(path);
                     OnFileOpen(folder + "\\", content);
                     LoadedFile = folder + "\\" + content + ".not";
+                    CurentFile = path;
                 }
             }
             catch (Exception ex)
@@ -341,6 +342,8 @@ namespace UILayer
                 ParentControl.Format.IsEnabled = true;
             }
             var textBlock = (System.Windows.Controls.Label)sender;
+            if (textBlock == null) return;
+            if (textBlock.Tag == null) return;
             if (CurentFile == textBlock.Tag.ToString()) { return; }
             OpenFile(textBlock.Tag.ToString(), Path.GetFileNameWithoutExtension(textBlock.Tag.ToString()));
             if (!string.IsNullOrEmpty(LoadedFile))
@@ -730,7 +733,19 @@ namespace UILayer
 
         private void EditFileName_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            throw new NotImplementedException();
+            var text = sender as Border;
+            if (text == null) return;
+            var panel = text.Parent as Panel;
+            if (panel == null) return;
+            var lab = panel.Children[1] as Label;
+            if (lab == null) return;
+            var textbox = lab.Content as TextBox;
+            if (textbox != null)
+            {
+                BeginChangingDynamicItem(textbox);
+                ChangedFileName = true;
+                IsChangeFileName = true;
+            }
         }
     }
 }

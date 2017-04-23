@@ -33,13 +33,14 @@
                 </FlowDocument>
             </controls:BaseRichTextBox>
         </ScrollViewer>
-        <controls:CircularProgressBar
-            x:Name="ProgBar" x:FieldModifier="public"
-           
-            Grid.Row="1" Grid.Column="0" Width="15" Height="15" HorizontalAlignment="Left" Margin="30,0,0,0" />
-        <Border BorderThickness="1" Margin="0" Grid.Row="1" VerticalAlignment="Bottom">
-            <Label x:Name="StateLabel" x:FieldModifier="public"  Content="l" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Padding="2" BorderBrush="#FFE21616"></Label>
-        </Border>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Margin="30,0,0,0" >
+            <controls:CircularProgressBar
+            x:Name="ProgBar" x:FieldModifier="public"  Width="15" Height="15" />
+            <Border BorderThickness="1" Margin="0" VerticalAlignment="Bottom">
+                <Label x:Name="StateLabel" x:FieldModifier="public"  Content="l" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Padding="2" BorderBrush="#FFE21616"></Label>
+            </Border>
+        </StackPanel>
+       
 
     </Grid>
 </UserControl>
