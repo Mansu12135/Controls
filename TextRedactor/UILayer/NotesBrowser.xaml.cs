@@ -2,12 +2,16 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
 using ApplicationLayer;
 using Rectangle = System.Drawing.Rectangle;
 using System;
+using System.Windows.Documents;
+using System.Windows.Media.Imaging;
+using System.Drawing;
 
 namespace UILayer
 {
@@ -77,18 +81,75 @@ namespace UILayer
             }
             MainControl.Items.Refresh();
         }
-        public Image NotePicture { get; set; }
+        public byte[] getJPGFromImageControl(System.Windows.Media.ImageSource imageC)
+        {
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            byte[] bytes = null;
+            var bitmapSource = imageC as BitmapSource;
+
+            if (bitmapSource != null)
+            {
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+
+                using (var stream = new MemoryStream())
+                {
+                    encoder.Save(stream);
+                    bytes = stream.ToArray();
+                }
+            }
+
+            return bytes;
+        }
+        public byte[] getJPGFromImageControl(Bitmap tempImage)
+        {
+            byte[] flag;
+            BitmapSource ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+            tempImage.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            using (MemoryStream stream = new MemoryStream())
+            {
+                encoder.Frames.Add(BitmapFrame.Create(ScreenCapture));
+                encoder.Save(stream);
+                flag = stream.ToArray();
+                stream.Close();
+            }
+            return flag;
+        }
+        public System.Windows.Controls.Image NotePicture { get; set; }
         private void DelNote_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var im = sender as System.Windows.Controls.Image;
-            if (im != null)
+            if (im == null) return;
+            var key = im.Tag.ToString();
+            if (key == null) return;
+            byte[] flag = getJPGFromImageControl(Properties.Resources.noteFlag);
+            Notes[key].Range.ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
+            for (TextPointer position = Notes[key].Range.Start; position != null && position.CompareTo(Notes[key].Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
             {
-                Notes.Remove(im.Tag.ToString());
-                //  ParentControl.BrowseProject.UpdateNoteAfterOpening();
-                //   ParentControl.BrowseProject.DelFlag();
-                // ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
-                //  MainControl.Items.Refresh();
+                InlineUIContainer element = position.Parent as InlineUIContainer;
+                if (element != null && element.Child is System.Windows.Controls.Image)
+                {
+                    var image = element.Child as System.Windows.Controls.Image;
+                    if (image == null) continue;
+                    var imageSourse = image.Source as System.Windows.Media.ImageSource;
+                    if (imageSourse == null) continue;
+                    byte[] byt = getJPGFromImageControl(imageSourse);
+                    //сравнивает картинки
+                    if (byt.Length == flag.Length)
+                    {
+                        bool isflag = true;
+                        for (int t = 0; t < byt.Length; t++)
+                        {
+                            if (byt[t] != flag[t]) { isflag = false; break; }
+                        }
+                        if (!isflag) continue;
+                        element.SiblingInlines.Remove(element);
+                        //new TextRange(element.ContentStart, element.ContentEnd).Text = string.Empty;
+                    }
+                }
             }
+            Notes.Remove(im.Tag.ToString());
+            MainControl.Items.Refresh();
         }
 
         protected override void AddDynamicControls()
@@ -179,6 +240,13 @@ namespace UILayer
                     ParentControl.TextBox.MainControl.CaretPosition = par.Value.Range.Start;// ParentControl.TextBox.MainControl.GetTextPointAt(ParentControl.TextBox.MainControl.Document.ContentStart, par.Value.OffsetStart, System.Windows.Documents.LogicalDirection.Forward);
                 }
             }
+        }
+
+        private void TextValue_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            if (textBox == null) return;
+          //  textBox.CaptureMouse();
         }
     }
 }

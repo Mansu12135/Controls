@@ -33,7 +33,7 @@ namespace Controls
             DettachDynamicEvents();
             CloneTextBox = null;
         }
-        protected string BindingPath { get; }
+        protected string BindingPath { get; set; }
         private void InitializeDynamicControls(TextBox originalControl)
         {
             CloneTextBox = new TextBox();

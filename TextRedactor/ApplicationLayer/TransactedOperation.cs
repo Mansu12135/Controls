@@ -5,11 +5,11 @@ namespace ApplicationLayer
 {
     internal class TransactedOperation
     {
-        private Action MainAction { get; }
+        private Action MainAction { get;  set; }
 
-        private Action RollBackAction { get; }
+        private Action RollBackAction { get; set; }
 
-        private TransactionCompletedEventHandler Handler { get; }
+        private TransactionCompletedEventHandler Handler { get; set; }
 
         internal TransactionInformation Inforamtion { get; private set; }
 

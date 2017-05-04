@@ -18,6 +18,7 @@ namespace ApplicationLayer
             CallStack = new List<FileSystemTask>();
             Control = control as IBasicPanel<Project>;
             QueueThread = new Thread(StartWork);
+            QueueThread.Name = "Thread of FileSystemQueue";
             QueueThread.Start();
         }
 

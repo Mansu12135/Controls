@@ -28,13 +28,13 @@ namespace UILayer
             DictionaryManager = new DictionaryManager();
             AutoSave = true;
             Document.IsOptimalParagraphEnabled = true;
-            //DataObject.AddPastingHandler(this, OnPaste);
+            DataObject.AddPastingHandler(this, OnPaste);
         }
 
         public void Dispose()
         {
             StopSaveManager();
-            // DataObject.RemovePastingHandler(this, OnPaste);
+            DataObject.RemovePastingHandler(this, OnPaste);
         }
 
         internal SuperTextRedactor Parent;
@@ -62,7 +62,7 @@ namespace UILayer
 
         public int LetterCount { get; set; }
         public int WordCount { get; set; }
-        public string WordLetterCount { get; set; } = "";
+        public string WordLetterCount { get; set; } 
         public bool AutoSave { get; set; }
 
         public void OnCommandExecuted(object sender, ExecutedRoutedEventArgs e)
@@ -70,7 +70,8 @@ namespace UILayer
             if (!AutoSave || string.IsNullOrEmpty(FilePath)) return;
             var richText = sender as RichTextBox;
             if (richText == null) return;
-            RangeList?.OnTextRangeChanged(richText.Document.ContentStart.GetOffsetToPosition(richText.Selection.Start));
+            if(RangeList!=null)
+            RangeList.OnTextRangeChanged(richText.Document.ContentStart.GetOffsetToPosition(richText.Selection.Start));
         }
 
         //public int ParagraphCount
@@ -88,10 +89,10 @@ namespace UILayer
         //private int vParagraphCount;
 
         //private bool OnPasteFlag = false;
-        //private void OnPaste(object sender, DataObjectPastingEventArgs e)
-        //{
-        //    OnPasteFlag = true;
-        //}
+        private void OnPaste(object sender, DataObjectPastingEventArgs e)
+        {
+            e.FormatToApply = "Text";
+        }
 
         //private void OnParagraphCountChanged()
         //{
@@ -300,6 +301,7 @@ namespace UILayer
             SaveManager = new SaveManager();
             SaveManager.OnStatusChanged += SaveManager_OnStatusChanged;
             Thread = new Thread(() => SaveManager.DoStart(filePath, RangeList));
+            Thread.Name = "Thread of Saving for BaseRichTextBox";
             Thread.SetApartmentState(ApartmentState.STA);
             Thread.Start();
         }
@@ -339,7 +341,8 @@ namespace UILayer
             base.OnTextChanged(e);
             if (!AutoSave || string.IsNullOrEmpty(FilePath) || e.Changes.Count == 0) return;
             var change = e.Changes.Where(x=>x.AddedLength!=x.RemovedLength).First();//.OrderByDescending(item => item.Offset + item.AddedLength + item.RemovedLength).First();
-            RangeList?.OnTextRangeChanged(change.Offset);
+           if(RangeList!=null)
+            RangeList.OnTextRangeChanged(change.Offset);
             //PreviousParagraphCount = Document.Blocks.ToList().Count - 1;
             //vParagraphCount = PreviousParagraphCount;
             //return;

@@ -103,7 +103,7 @@ namespace ApplicationLayer
             {
                 using (var stream = new MemoryStream())
                 {
-                    MainList[index].Save(stream, DataFormats.Rtf);
+                    MainList[index].Save(stream, DataFormats.XamlPackage);
                     bytes = stream.ToArray();
                 }
             });
@@ -114,7 +114,7 @@ namespace ApplicationLayer
         {
             using (var stream = new MemoryStream(bytes))
             {
-                range.Load(stream, DataFormats.Rtf);
+                range.Load(stream, DataFormats.XamlPackage);
             }
             //if (range.Text.EndsWith(Environment.NewLine))
             //{
@@ -163,14 +163,29 @@ namespace ApplicationLayer
             return item.Text.Length != 0 && item.Text.Length <= TextRangeLength;
         }
 
-        public int Count => MainList.Count;
+        public int Count
+        {
+            get
+            {
+                return MainList.Count;
+            }
+        }
+
+        
 
         private void OnCollectionChanged(int index, Changed state)
         {
-            CollectionChanged?.Invoke(index, state);
+            if(CollectionChanged!=null)
+            CollectionChanged.Invoke(index, state);
         }
 
-        public TextRange this[int index] => MainList[index];
+        public TextRange this[int index]
+        {
+            get
+            {
+                return MainList[index];
+            }
+        }
 
         public delegate void CollectionChangedHandler(int index, Changed state);
 

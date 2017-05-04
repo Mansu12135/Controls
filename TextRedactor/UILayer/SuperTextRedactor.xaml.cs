@@ -245,7 +245,7 @@ namespace UILayer
                     Author = exportPanel.TextBoxAuthor.Text,
                     DatePublish = exportPanel.TextBoxPublishingDate.SelectedDate,
                     SavePath = folderPath,
-                    ImagePath = exportPanel.ImageName.Tag?.ToString()
+                    ImagePath = (exportPanel.ImageName.Tag==null) ? "": exportPanel.ImageName.Tag.ToString()
                 };
                 TextBox.MainControl.SaveAsEpub(exportInfo, BrowseProject.CurentProject.Files);
             }
@@ -385,7 +385,7 @@ namespace UILayer
             string name = NotesBrowser.GenerateName("Note");
             //   range.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
 
-          //  AddFlag(range, name);
+            
             AddNote(range, name);
             NotesBrowser.MainControl.Items.Refresh();
         }
@@ -395,6 +395,7 @@ namespace UILayer
             int endOffset = TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.End); //new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.End).Text.Length;
             string text = range.Text;
             NotesBrowser.AddItem(new Note(name, text, new TextRange(range.Start, range.End), startOffset, endOffset));
+            AddFlag(range, name);
         }
 
         private void AddFlag(TextSelection range, string name)

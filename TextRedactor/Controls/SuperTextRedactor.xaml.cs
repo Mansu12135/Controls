@@ -248,7 +248,7 @@ namespace Controls
                     Author = exportPanel.TextBoxAuthor.Text,
                     DatePublish = exportPanel.TextBoxPublishingDate.SelectedDate,
                     SavePath = folderPath,
-                    ImagePath = exportPanel.ImageName.Tag?.ToString()
+                    ImagePath = (exportPanel.ImageName.Tag == null) ? "" : exportPanel.ImageName.Tag.ToString()
                 };
                 TextBox.MainControl.SaveAsEpub(exportInfo, BrowseProject.CurentProject.Files);
             }

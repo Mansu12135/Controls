@@ -55,7 +55,7 @@
                                                 </Image>
                                             </Border>
                                         </DockPanel>
-                                        <TextBox Text="{Binding Value.Text}" BorderThickness="0" Margin="0,6,0,0"  Name="TextValue" BorderBrush="{x:Null}"  Width="{Binding ActualWidth, ElementName=stackPanel}"  TextWrapping="Wrap" HorizontalAlignment="Stretch"/>
+                                        <TextBox Text="{Binding Value.Text, Mode=TwoWay}" BorderThickness="0" Margin="0,6,0,0"  Name="TextValue" BorderBrush="{x:Null}"  Width="{Binding ActualWidth, ElementName=stackPanel}"  TextWrapping="Wrap" HorizontalAlignment="Stretch" GotFocus="TextValue_GotFocus"/>
                                     </StackPanel>
                                 </Border>
                                 <ControlTemplate.Triggers>

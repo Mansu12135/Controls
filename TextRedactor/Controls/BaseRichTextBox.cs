@@ -62,7 +62,7 @@ namespace Controls
 
         public int LetterCount { get; set; }
         public int WordCount { get; set; }
-        public string WordLetterCount { get; set; } = "";
+        public string WordLetterCount { get; set; }
         public bool AutoSave { get; set; }
 
         public void OnCommandExecuted(object sender, ExecutedRoutedEventArgs e)
@@ -70,7 +70,8 @@ namespace Controls
             if (!AutoSave || string.IsNullOrEmpty(FilePath)) return;
             var richText = sender as RichTextBox;
             if (richText == null) return;
-            RangeList?.OnTextRangeChanged(richText.Document.ContentStart.GetOffsetToPosition(richText.Selection.Start));
+            if(RangeList!=null)
+            RangeList.OnTextRangeChanged(richText.Document.ContentStart.GetOffsetToPosition(richText.Selection.Start));
         }
 
         //public int ParagraphCount
@@ -317,7 +318,8 @@ namespace Controls
             base.OnTextChanged(e);
             if (!AutoSave || string.IsNullOrEmpty(FilePath) || e.Changes.Count == 0) return;
             var change = e.Changes.Where(x=>x.AddedLength!=x.RemovedLength).OrderByDescending(item => item.Offset + item.AddedLength + item.RemovedLength).First();
-            RangeList?.OnTextRangeChanged(change.Offset);
+           if(RangeList!=null)
+            RangeList.OnTextRangeChanged(change.Offset);
             //PreviousParagraphCount = Document.Blocks.ToList().Count - 1;
             //vParagraphCount = PreviousParagraphCount;
             //return;

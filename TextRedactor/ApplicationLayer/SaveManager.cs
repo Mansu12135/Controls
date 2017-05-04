@@ -102,19 +102,18 @@ namespace ApplicationLayer
             {
                 if (write)
                 {
-                    using (FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None,
-                       20 * 1024 * 1024))
+                    using (FileStream stream = new FileStream(path, FileMode.Create))
+                    //using (FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None,
+                    //   20 * 1024 * 1024))
                     {
-                        new TextRange(document.ContentStart, document.ContentEnd).Save(stream, DataFormats.Rtf);
+                        new TextRange(document.ContentStart, document.ContentEnd).Save(stream, DataFormats.XamlPackage);
                     }
                 }
                 else
                 {
-                    using (
-              FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None,
-                  20 * 1024 * 1024))
+                    using (FileStream stream = new FileStream(path, FileMode.Create))
                     {
-                        new TextRange(document.ContentStart, document.ContentEnd).Load(stream, DataFormats.Rtf);
+                        new TextRange(document.ContentStart, document.ContentEnd).Load(stream, DataFormats.XamlPackage);
                     }
                 }
             }

@@ -4,7 +4,7 @@ namespace UILayer
 {
     class BaseCommandBinding : CommandBinding
     {
-        private BaseRichTextBox Element { get; }
+        private BaseRichTextBox Element { get; set; }
 
         public BaseCommandBinding(ICommand command, ExecutedRoutedEventHandler executed, CanExecuteRoutedEventHandler canExecute, BaseRichTextBox richTextBox)
             :base(command,executed,canExecute)

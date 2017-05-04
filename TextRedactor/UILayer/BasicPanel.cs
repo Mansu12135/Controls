@@ -48,7 +48,7 @@ namespace UILayer
             DettachDynamicEvents();
             CloneTextBox = null;
         }
-        protected string BindingPath { get; }
+        protected string BindingPath { get; set; }
 
         public SaveItemManager<T> SaveItemManager
         {
