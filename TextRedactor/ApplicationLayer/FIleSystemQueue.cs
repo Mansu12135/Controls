@@ -113,6 +113,8 @@ namespace ApplicationLayer
         public void Dispose()
         {
             Work = false;
+            QueueThread.Join();
+            QueueThread.Abort();
         }
     }
 }

@@ -92,6 +92,7 @@ namespace UILayer
             CloneTextBox.Height = originalControl.ActualHeight;
             CloneTextBox.Width = originalControl.ActualWidth;
             InitializeBinding();
+            CloneTextBox.CaptureMouse();
             CloneTextBox.Text = originalControl.Text;
             CloneTextBox.FontSize = originalControl.FontSize;
             CloneTextBox.VerticalAlignment = VerticalAlignment.Top;
@@ -116,6 +117,8 @@ namespace UILayer
 
         private void AttachDynamicEvents()
         {
+            CloneTextBox.LostMouseCapture -= CloneTextBox_LostFocus;
+            CloneTextBox.LostMouseCapture += CloneTextBox_LostFocus;
             CloneTextBox.KeyDown -= CloneTextBox_KeyDown;
             CloneTextBox.KeyDown += CloneTextBox_KeyDown;
             CloneTextBox.LostFocus -= CloneTextBox_LostFocus;
@@ -180,6 +183,7 @@ namespace UILayer
 
         private void DettachDynamicEvents()
         {
+            CloneTextBox.LostMouseCapture -= CloneTextBox_LostFocus;
             CloneTextBox.KeyDown -= CloneTextBox_KeyDown;
             CloneTextBox.LostFocus -= CloneTextBox_LostFocus;
         }

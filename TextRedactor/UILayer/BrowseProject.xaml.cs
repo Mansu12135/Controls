@@ -34,6 +34,7 @@ namespace UILayer
 
         public void Dispose()
         {
+            ((IFileSystemControl)this).FSWorker.Dispose();
             if (string.IsNullOrEmpty(LoadedFile)) { return; }
             ParentControl.BrowseProject.UpdateOffsetOnNotes();
             ParentControl.NotesBrowser.CloseNotes(LoadedFile);
@@ -82,6 +83,11 @@ namespace UILayer
                     value = newValue;
                 }
                 vProjectPath = value;
+                if (!Directory.Exists(vProjectPath))
+                {
+                    Directory.CreateDirectory(vProjectPath);
+                    ItemsCollection.Clear();
+                }
             }
         }
 

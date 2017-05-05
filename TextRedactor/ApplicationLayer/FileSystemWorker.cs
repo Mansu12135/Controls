@@ -25,6 +25,7 @@ namespace ApplicationLayer
         public void Dispose()
         {
             DettachFromControl();
+            Queue.Dispose();
         }
 
         private void AttachToControl()
