@@ -7,10 +7,9 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Windows.Media.Imaging;
 using System.Drawing;
-using System.Windows.Media;
 using ApplicationLayer;
+using Gma.UserActivityMonitor;
 using Net.Sgoliver.NRtfTree.Util;
 
 namespace UILayer
@@ -620,27 +619,6 @@ namespace UILayer
             CurentProject = project;
         }
 
-        private void TextNameFile_LostFocus(object sender, RoutedEventArgs e)
-        {
-
-
-        }
-
-        private void buttonOpenFile_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            Label lab = sender as Label;
-            if (lab != null)
-            {
-                TextBox t = lab.Content as TextBox;
-                if (t != null)
-                {
-                    BeginChangingDynamicItem(t);
-                    ChangedFileName = true;
-                    IsChangeFileName = true;
-                }
-            }
-        }
-
         private void TextNameFile_OnKeyDown(object sender, KeyEventArgs e)
         {
 
@@ -669,28 +647,27 @@ namespace UILayer
         {
             BrowseContainer.Children.Add(CloneTextBox);
             CloneTextBox.Focus();
-            BrowseContainer.PreviewMouseDown -= CloneTextBox_LostFocus;
-            BrowseContainer.PreviewMouseDown += CloneTextBox_LostFocus;
             MainProjectList.IsEnabled = false;
         }
 
         protected override void RemoveDynamicControls()
         {
-            BrowseContainer.PreviewMouseDown -= CloneTextBox_LostFocus;
             BrowseContainer.Children.Remove(CloneTextBox);
             MainProjectList.IsEnabled = true;
         }
 
-        protected override void CloneTextBox_LostFocus(object sender, RoutedEventArgs e)
+        protected override void CloneTextBox_LostFocus(object sender, EventArgs e)
         {
             base.CloneTextBox_LostFocus(sender, e);
             if (!IsValid) { return; }
-            var mouseEventArgs = e as MouseEventArgs;
+            var mouseEventArgs = e as MouseEventExtArgs;
             if (e != null && mouseEventArgs == null) { return; }
             if (e != null)
             {
-                var clickPosition = mouseEventArgs.GetPosition(MainProjectList);
-                if (CloneTextBoxLocation.Contains((int)clickPosition.X, (int)clickPosition.Y)) { return; }
+                System.Windows.Point absolutePoint =
+                    CloneTextBox.PointToScreen(new System.Windows.Point(0d, 0d));
+                var absoluteRectangle = new Rectangle((int)absolutePoint.X, (int)absolutePoint.Y, CloneTextBoxLocation.Width, CloneTextBoxLocation.Height);
+                if (absoluteRectangle.Contains(mouseEventArgs.X, mouseEventArgs.Y)) { return; }
             }
             if (CloneTextBox.Tag.ToString() != CloneTextBox.Text)
             {

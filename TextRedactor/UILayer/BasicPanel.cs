@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using ApplicationLayer;
+using Gma.UserActivityMonitor;
 using Binding = System.Windows.Data.Binding;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using TextBox = System.Windows.Controls.TextBox;
@@ -92,7 +93,6 @@ namespace UILayer
             CloneTextBox.Height = originalControl.ActualHeight;
             CloneTextBox.Width = originalControl.ActualWidth;
             InitializeBinding();
-            CloneTextBox.CaptureMouse();
             CloneTextBox.Text = originalControl.Text;
             CloneTextBox.FontSize = originalControl.FontSize;
             CloneTextBox.VerticalAlignment = VerticalAlignment.Top;
@@ -117,12 +117,8 @@ namespace UILayer
 
         private void AttachDynamicEvents()
         {
-            CloneTextBox.LostMouseCapture -= CloneTextBox_LostFocus;
-            CloneTextBox.LostMouseCapture += CloneTextBox_LostFocus;
             CloneTextBox.KeyDown -= CloneTextBox_KeyDown;
             CloneTextBox.KeyDown += CloneTextBox_KeyDown;
-            CloneTextBox.LostFocus -= CloneTextBox_LostFocus;
-            CloneTextBox.LostFocus += CloneTextBox_LostFocus;
         }
 
         private void CloneTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -176,22 +172,23 @@ namespace UILayer
             }
         }
 
-        protected virtual void CloneTextBox_LostFocus(object sender, RoutedEventArgs e)
+        protected virtual void CloneTextBox_LostFocus(object sender, EventArgs e)
         {
             OnValidate();
         }
 
         private void DettachDynamicEvents()
         {
-            CloneTextBox.LostMouseCapture -= CloneTextBox_LostFocus;
+            HookManager.MouseDown -= CloneTextBox_LostFocus;
             CloneTextBox.KeyDown -= CloneTextBox_KeyDown;
-            CloneTextBox.LostFocus -= CloneTextBox_LostFocus;
         }
         protected void BeginChangingDynamicItem(TextBox originalControl)
         {
             CloneTextBoxLocation = GetCloneControlLocation(originalControl);
             InitializeDynamicControls(originalControl);
             AddDynamicControls();
+            HookManager.MouseDown -= CloneTextBox_LostFocus;
+            HookManager.MouseDown += CloneTextBox_LostFocus;
         }
 
         protected virtual Rectangle GetCloneControlLocation(TextBox control)

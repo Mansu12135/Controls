@@ -2,16 +2,13 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
-using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Shapes;
-using ApplicationLayer;
 using Rectangle = System.Drawing.Rectangle;
 using System;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Drawing;
+using Gma.UserActivityMonitor;
 
 namespace UILayer
 {
@@ -155,28 +152,27 @@ namespace UILayer
         protected override void AddDynamicControls()
         {
             NotesContainer.Children.Add(CloneTextBox);
-            NotesContainer.PreviewMouseDown -= CloneTextBox_LostFocus;
-            NotesContainer.PreviewMouseDown += CloneTextBox_LostFocus;
             MainControl.IsEnabled = false;
         }
 
         protected override void RemoveDynamicControls()
         {
-            NotesContainer.PreviewMouseDown -= CloneTextBox_LostFocus;
             NotesContainer.Children.Remove(CloneTextBox);
             MainControl.IsEnabled = true;
         }
 
-        protected override void CloneTextBox_LostFocus(object sender, RoutedEventArgs e)
+        protected override void CloneTextBox_LostFocus(object sender, EventArgs e)
         {
             base.CloneTextBox_LostFocus(sender, e);
             if (!IsValid) { return; }
-            var mouseEventArgs = e as MouseEventArgs;
+            var mouseEventArgs = e as MouseEventExtArgs;
             if (e != null && mouseEventArgs == null) { return; }
             if (e != null)
             {
-                var clickPosition = mouseEventArgs.GetPosition(MainControl);
-                if (CloneTextBoxLocation.Contains((int)clickPosition.X, (int)clickPosition.Y)) { return; }
+                System.Windows.Point absolutePoint =
+                                    CloneTextBox.PointToScreen(new System.Windows.Point(0d, 0d));
+                var absoluteRectangle = new Rectangle((int)absolutePoint.X, (int)absolutePoint.Y, CloneTextBoxLocation.Width, CloneTextBoxLocation.Height);
+                if (absoluteRectangle.Contains(mouseEventArgs.X, mouseEventArgs.Y)) { return; }
             }
             if (CloneTextBox.Tag.ToString() != CloneTextBox.Text)
             {
@@ -246,7 +242,6 @@ namespace UILayer
         {
             var textBox = sender as TextBox;
             if (textBox == null) return;
-          //  textBox.CaptureMouse();
         }
     }
 }
