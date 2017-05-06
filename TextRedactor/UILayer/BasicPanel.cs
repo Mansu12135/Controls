@@ -75,6 +75,11 @@ namespace UILayer
             FileCreated.Invoke(sender, e);
         }
 
+        protected void OnRenamedFiles(object sender, FileArgs e)
+        {
+            FileChanged.Invoke(sender, e);
+        }
+
         FileSystemWorker<Project> IFileSystemControl.FSWorker
         {
             get { return fsWorker ?? new FileSystemWorker<Project>(this as IBasicPanel<Project>); }
@@ -218,7 +223,7 @@ namespace UILayer
             Notes.Add(item.Name, item);
         }
 
-        public virtual void Callback(bool rezult, string message)
+        public virtual void Callback(bool rezult, string message, EventArgs args)
         {
 
         }

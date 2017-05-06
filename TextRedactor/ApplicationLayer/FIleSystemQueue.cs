@@ -10,6 +10,7 @@ namespace ApplicationLayer
     {
         private List<FileSystemTask> CallStack;
         private IBasicPanel<Project> Control;
+        private readonly string NoteExtension = ".not";
         private Thread QueueThread;
         private bool Work = true;
 
@@ -22,7 +23,7 @@ namespace ApplicationLayer
             QueueThread.Start();
         }
 
-        internal void AddTask(string path, EventArgs args, Action<bool, string> callback, Priority priority = Priority.Normal)
+        internal void AddTask(string path, EventArgs args, Action<bool, string, EventArgs> callback, Priority priority = Priority.Normal)
         {
             CallStack.Add(new FileSystemTask(path,args, callback, Thread.CurrentThread, priority));
         }
@@ -35,7 +36,7 @@ namespace ApplicationLayer
                 FileSystemTask task = GetTaskByPriority();
                 if(task == null) { continue; }
                 string message = "";
-                task.DoFeedBack(DoParseAndDo(task, ref message), message);
+                task.DoFeedBack(DoParseAndDo(task, ref message), message, task.Args);
                 CallStack.Remove(task);
             }
         }
@@ -101,7 +102,17 @@ namespace ApplicationLayer
                 RenamedArgs renamedArgs = args.RenamedArgs;
                 if (renamedArgs != null)
                 {
-                    if (!TransactionFile.MoveFile(renamedArgs.From, renamedArgs.To, ref message)) { return false; }
+                    string path = Path.Combine(task.Path, "Files");
+                    bool res =  TransactionFile.MoveFile(
+                            Path.Combine(path, renamedArgs.From + BrowseSystem.Extension), Path.Combine(path, renamedArgs.To + BrowseSystem.Extension),
+                            ref message);
+                //if(!File.Exists(Path.Combine(path, renamedArgs.From + NoteExtension))) { return res; }
+                //     res &= TransactionFile.MoveFile(
+                //               Path.Combine(path, renamedArgs.From + NoteExtension),
+                //               Path.Combine(path, renamedArgs.To + NoteExtension),
+                //               ref message);
+                //    renamedArgs = new RenamedArgs(Path.Combine(path, renamedArgs.From + BrowseSystem.Extension), Path.Combine(path, renamedArgs.To + BrowseSystem.Extension), renamedArgs.Callback);
+                    return res;
                 }
                     resposne = Do(args.Happened, false, args, ref message);
                 return resposne;

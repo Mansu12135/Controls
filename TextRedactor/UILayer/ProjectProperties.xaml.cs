@@ -60,14 +60,6 @@ namespace UILayer
             }
         }
 
-        private void FileProperties_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            //FileBrowser.dataGrid.IsReadOnly = false;
-            //FileBrowser.dataGrid.Focus();
-            //FileBrowser.dataGrid.UpdateLayout();
-            //((Image)sender).IsEnabled = false;
-        }
-
         private void textBoxProjectName_LostFocus(object sender, RoutedEventArgs e)
         {
             string newName = textBoxProjectName.Text;

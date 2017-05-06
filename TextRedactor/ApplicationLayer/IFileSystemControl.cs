@@ -7,7 +7,7 @@ namespace ApplicationLayer
     {
         FileSystemWorker<Project> FSWorker { get; }
 
-        void Callback(bool rezult, string message);
+        void Callback(bool rezult, string message, EventArgs args);
 
         event EventHandler<ProjectArgs> ProjectChanged;
 
@@ -32,7 +32,7 @@ namespace ApplicationLayer
     {
         internal RenamedArgs RenamedArgs;
 
-        public ProjectArgs(string project, Happened happened, Action<bool, string> callback)
+        public ProjectArgs(string project, Happened happened, Action<bool, string, EventArgs> callback)
         {
             Project = project;
             Happened = happened;
@@ -49,21 +49,21 @@ namespace ApplicationLayer
 
         public string Project { get; private set; }
 
-        public Action<bool, string> Callback { get; private set; }
+        public Action<bool, string, EventArgs> Callback { get; private set; }
 
         public Happened Happened { get; private set; }
     }
 
     public class RenamedArgs : EventArgs
     {
-        public RenamedArgs(string from, string to, Action<bool, string> callback)
+        public RenamedArgs(string from, string to, Action<bool, string, EventArgs> callback)
         {
             From = from;
             To = to;
             Callback = callback;
         }
 
-        public Action<bool, string> Callback { get; private set; }
+        public Action<bool, string, EventArgs> Callback { get; private set; }
 
         public Happened Happened { get { return Happened.Changed; } }
 
@@ -74,13 +74,13 @@ namespace ApplicationLayer
 
     public class FileArgs : EventArgs
     {
-        internal RenamedArgs RenamedArgs;
+        public RenamedArgs RenamedArgs;
 
-        internal Action<bool, string> Callback;
+        internal Action<bool, string, EventArgs> Callback;
 
         internal string Project;
 
-        public FileArgs(List<string> files, string project, Happened happened, Action<bool, string> callback)
+        public FileArgs(List<string> files, string project, Happened happened, Action<bool, string, EventArgs> callback)
         {
             Files = files;
             Project = project;
@@ -93,6 +93,7 @@ namespace ApplicationLayer
             Project = project;
             Happened = args.Happened;
             RenamedArgs = args;
+            Callback = args.Callback;
         }
 
         public List<string> Files { get; private set; }

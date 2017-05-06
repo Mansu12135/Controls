@@ -74,7 +74,7 @@ namespace ApplicationLayer
                             Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To,
                                 args.RenamedArgs.From + ProjectExtension)
                         }, args.RenamedArgs.From, Happened.Deleted,
-                        (b, s) => { }));
+                        (b, s, arg) => { }));
             }, new List<string>
                         {
                             Path.Combine(control.FSWorker.WorkDirectory, args.RenamedArgs.To,

@@ -55,6 +55,11 @@ namespace ApplicationLayer
 
         private void OnRenamedChanged(object sender, FileArgs e)
         {
+            if (e.RenamedArgs != null)
+            {
+                Queue.AddTask(Path.Combine(WorkDirectory, e.Project), e, e.Callback);
+                return;
+            }
             e.Files.ForEach(file => Queue.AddTask(Path.Combine(WorkDirectory, e.Project), e, e.Callback));
         }
 

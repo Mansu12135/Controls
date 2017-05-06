@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace ApplicationLayer
 {
     internal class FileSystemTask: IDisposable
     {
-        private Action<bool, string> CallBack;
+        private Action<bool, string, EventArgs> CallBack;
         private Dispatcher ThreadDispatcher;
 
         internal string Path;
@@ -18,7 +19,7 @@ namespace ApplicationLayer
 
         internal Priority Priority { get; private set; }
 
-        public FileSystemTask(string path, EventArgs args, Action<bool, string> callBack, Thread currentThread, Priority priority = Priority.Normal)
+        public FileSystemTask(string path, EventArgs args, Action<bool, string, EventArgs> callBack, Thread currentThread, Priority priority = Priority.Normal)
         {
             Path = path;
             Args = args;
@@ -37,9 +38,16 @@ namespace ApplicationLayer
             }
         }
 
-        internal void DoFeedBack(bool rezult, string message)
+        internal void DoFeedBack(bool rezult, string message, EventArgs args)
         {
-            ThreadDispatcher.Invoke(() => CallBack.Invoke(rezult, message));
+            if (ThreadDispatcher != null)
+            {
+                ThreadDispatcher.Invoke(() => CallBack.Invoke(rezult, message, args));
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(() => CallBack.Invoke(rezult, message, args));
+            }
             Dispose();
         }
 

@@ -276,16 +276,28 @@ namespace UILayer
             if (System.IO.Path.GetFileNameWithoutExtension(LoadedFile) == file.Name) LoadedFile = System.IO.Path.GetDirectoryName(LoadedFile) + "\\" + newFile + ".not";
             int index = Notes[project].Files.FindIndex(item => item.Path == file.Path);
             if (index < 0) { return; }
-            newFile = newFile + System.IO.Path.GetExtension(file.Path);
-            File.Move(file.Path, System.IO.Path.GetDirectoryName(file.Path) + "\\" + newFile);
-            if (System.IO.File.Exists(ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(file.Name) + ".not"))
-            {
-                File.Move(ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(file.Name) + ".not", ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(newFile) + ".not");
-                if (LoadedFile == ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(file.Name) + ".not") { LoadedFile = ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(newFile) + ".not"; }
-            }
-            Notes[project].Files[index] = new LoadedFile(System.IO.Path.GetDirectoryName(file.Path) + "\\" + newFile, ProjectsPath + "\\" + project);
-            OnSave(()=> { },project);
-            ((ISettings)ParentControl.Parent).SaveSettings();
+            OnRenamedFiles(new object(), new FileArgs(project, new RenamedArgs(file.Name, newFile, EndRenameFile)));
+            //newFile = newFile + System.IO.Path.GetExtension(file.Path);
+            //File.Move(file.Path, System.IO.Path.GetDirectoryName(file.Path) + "\\" + newFile);
+            //if (System.IO.File.Exists(ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(file.Name) + ".not"))
+            //{
+            //    File.Move(ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(file.Name) + ".not", ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(newFile) + ".not");
+            //    if (LoadedFile == ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(file.Name) + ".not") { LoadedFile = ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(newFile) + ".not"; }
+            //}
+            //Notes[project].Files[index] = new LoadedFile(System.IO.Path.GetDirectoryName(file.Path) + "\\" + newFile, ProjectsPath + "\\" + project);
+            //OnSave(()=> { },project);
+            //((ISettings)ParentControl.Parent).SaveSettings();
+        }
+
+        private void EndRenameFile(bool rezult, string message, EventArgs args)
+        {
+            //var renamedArgs = args as FileArgs;
+            //string project = new DirectoryInfo(LoadedFile.Replace(ProjectsPath, "")).Name;
+            //int index = Notes[project].Files.FindIndex(item => item.Name == renamedArgs.RenamedArgs.From);
+            //if (index < 0) { return; }
+            //Notes[project].Files[index] = new LoadedFile(Path.Combine(ProjectsPath, project, "Files") + "\\" + renamedArgs.RenamedArgs.To + ".rtf", ProjectsPath + "\\" + project);//EXTENSION
+            //OnSave(() => { }, project);
+            //((ISettings)ParentControl.Parent).SaveSettings();
         }
 
         public void AddFileToProject(string project, string filePath)
@@ -659,8 +671,15 @@ namespace UILayer
         protected override void CloneTextBox_LostFocus(object sender, EventArgs e)
         {
             base.CloneTextBox_LostFocus(sender, e);
-            if (!IsValid) { return; }
             var mouseEventArgs = e as MouseEventExtArgs;
+            if (!IsValid)
+            {
+                if (mouseEventArgs != null)
+                {
+                    mouseEventArgs.Handled = true;
+                }
+                return;
+            }
             if (e != null && mouseEventArgs == null) { return; }
             if (e != null)
             {
@@ -688,7 +707,7 @@ namespace UILayer
             EndChangingDynamicItem();
         }
 
-        public override void Callback(bool rezult, string message)
+        public override void Callback(bool rezult, string message, EventArgs args)
         {
             MainProjectList.Items.Refresh();
         }
