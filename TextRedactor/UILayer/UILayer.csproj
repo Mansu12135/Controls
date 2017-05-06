@@ -35,20 +35,23 @@
       <HintPath>..\ApplicationLayer\bin\Debug\ApplicationLayer.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="EpubConvertor">
-      <HintPath>C:\Users\Никита\Downloads\EpubConvertor.dll</HintPath>
+    <Reference Include="EpubConvertor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\EpubConvertor\EpubConvertor\bin\Debug\EpubConvertor.dll</HintPath>
     </Reference>
     <Reference Include="Gma.UserActivityMonitor">
-      <HintPath>C:\Users\Никита\Downloads\globalhook2_src\GlobalHook\Gma.UserActivityMonitor\bin\Debug\Gma.UserActivityMonitor.dll</HintPath>
+      <HintPath>..\..\..\..\Gma.UserActivityMonitor.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>..\..\..\EpubConvertor\EpubConvertor\bin\Debug\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\EpubConvertor\EpubConvertor\bin\Debug\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="HtmlToXamlConverter, Version=1.0.5727.24510, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlToXamlConverter.1.0.5727.24510\lib\net45\HtmlToXamlConverter.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip">
-      <HintPath>..\..\..\EpubConvertor\EpubConvertor\bin\Debug\Ionic.Zip.dll</HintPath>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\EpubConvertor\EpubConvertor\bin\Debug\Ionic.Zip.dll</HintPath>
     </Reference>
     <Reference Include="nrtftree-library, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\nrtftree-library.0.4.0\lib\net452\nrtftree-library.dll</HintPath>

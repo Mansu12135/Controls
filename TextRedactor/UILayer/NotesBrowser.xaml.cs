@@ -9,6 +9,7 @@ using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using Gma.UserActivityMonitor;
+using System.Windows.Input;
 
 namespace UILayer
 {
@@ -152,6 +153,7 @@ namespace UILayer
         protected override void AddDynamicControls()
         {
             NotesContainer.Children.Add(CloneTextBox);
+            CloneTextBox.Focus();
             MainControl.IsEnabled = false;
         }
 
@@ -242,6 +244,15 @@ namespace UILayer
         {
             var textBox = sender as TextBox;
             if (textBox == null) return;
+            HookManager.MouseDown -= TextValue_LostFocus;
+            HookManager.MouseDown += TextValue_LostFocus;
         }
+
+        private void TextValue_LostFocus(object sender, EventArgs e)
+        {
+            HookManager.MouseDown -= TextValue_LostFocus;
+        }
+
+      
     }
 }

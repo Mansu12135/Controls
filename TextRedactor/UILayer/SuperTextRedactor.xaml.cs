@@ -331,7 +331,9 @@ namespace UILayer
         {
             string defenition = "";
             string thesaurus = "";
-            List<Structure> result = TextBox.MainControl.GetInformation(panel.TextWord.Text);
+            panel.defenition = string.Empty;
+            panel.synonimus = string.Empty;
+            List<Structure> result = TextBox.MainControl.GetInformation(panel.TextWord.Text.Trim());
             if (result == null) return;
             foreach (var item in result)
             {
