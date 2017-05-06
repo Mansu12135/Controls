@@ -418,6 +418,7 @@ namespace UILayer
             //   TextPointer p = TextBox.MainControl.Selection.Start;
             TextBox.MainControl.BeginChange();
             InlineUIContainer imageContainer = new InlineUIContainer(image, range.Start);
+            imageContainer.Unloaded += BrowseProject.Element_Unloaded;
             TextBox.MainControl.EndChange();
             TextBox.MainControl.Focus();
             //  TextBox.MainControl.CaretPosition = imageContainer.ElementEnd;
