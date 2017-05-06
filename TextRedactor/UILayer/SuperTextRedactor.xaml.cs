@@ -331,7 +331,9 @@ namespace UILayer
         {
             string defenition = "";
             string thesaurus = "";
-            List<Structure> result = TextBox.MainControl.GetInformation(panel.TextWord.Text);
+            panel.defenition = string.Empty;
+            panel.synonimus = string.Empty;
+            List<Structure> result = TextBox.MainControl.GetInformation(panel.TextWord.Text.Trim());
             if (result == null) return;
             foreach (var item in result)
             {
@@ -416,6 +418,7 @@ namespace UILayer
             //   TextPointer p = TextBox.MainControl.Selection.Start;
             TextBox.MainControl.BeginChange();
             InlineUIContainer imageContainer = new InlineUIContainer(image, range.Start);
+            imageContainer.Unloaded += BrowseProject.Element_Unloaded;
             TextBox.MainControl.EndChange();
             TextBox.MainControl.Focus();
             //  TextBox.MainControl.CaretPosition = imageContainer.ElementEnd;

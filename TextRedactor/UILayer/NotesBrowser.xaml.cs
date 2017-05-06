@@ -9,6 +9,7 @@ using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using Gma.UserActivityMonitor;
+using System.Windows.Input;
 
 namespace UILayer
 {
@@ -78,7 +79,7 @@ namespace UILayer
             }
             MainControl.Items.Refresh();
         }
-        public byte[] getJPGFromImageControl(System.Windows.Media.ImageSource imageC)
+        public static byte[] getJPGFromImageControl(System.Windows.Media.ImageSource imageC)
         {
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             byte[] bytes = null;
@@ -97,7 +98,7 @@ namespace UILayer
 
             return bytes;
         }
-        public byte[] getJPGFromImageControl(Bitmap tempImage)
+        public static byte[] getJPGFromImageControl(Bitmap tempImage)
         {
             byte[] flag;
             BitmapSource ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
@@ -152,6 +153,7 @@ namespace UILayer
         protected override void AddDynamicControls()
         {
             NotesContainer.Children.Add(CloneTextBox);
+            CloneTextBox.Focus();
             MainControl.IsEnabled = false;
         }
 
@@ -235,6 +237,7 @@ namespace UILayer
                     ParentControl.TextBox.MainControl.Focus();
                     ParentControl.TextBox.MainControl.CaretPosition = par.Value.Range.Start;// ParentControl.TextBox.MainControl.GetTextPointAt(ParentControl.TextBox.MainControl.Document.ContentStart, par.Value.OffsetStart, System.Windows.Documents.LogicalDirection.Forward);
                 }
+                MainControl.SelectedIndex = -1;
             }
         }
 
@@ -242,6 +245,15 @@ namespace UILayer
         {
             var textBox = sender as TextBox;
             if (textBox == null) return;
+            HookManager.MouseDown -= TextValue_LostFocus;
+            HookManager.MouseDown += TextValue_LostFocus;
         }
+
+        private void TextValue_LostFocus(object sender, EventArgs e)
+        {
+            HookManager.MouseDown -= TextValue_LostFocus;
+        }
+
+       
     }
 }
