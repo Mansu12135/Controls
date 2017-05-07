@@ -103,22 +103,47 @@ namespace ApplicationLayer
                 if (renamedArgs != null)
                 {
                     string path = Path.Combine(task.Path, "Files");
-                    bool res =  TransactionFile.MoveFile(
-                            Path.Combine(path, renamedArgs.From + BrowseSystem.Extension), Path.Combine(path, renamedArgs.To + BrowseSystem.Extension),
-                            ref message);
-                //if(!File.Exists(Path.Combine(path, renamedArgs.From + NoteExtension))) { return res; }
-                //     res &= TransactionFile.MoveFile(
-                //               Path.Combine(path, renamedArgs.From + NoteExtension),
-                //               Path.Combine(path, renamedArgs.To + NoteExtension),
-                //               ref message);
-                //    renamedArgs = new RenamedArgs(Path.Combine(path, renamedArgs.From + BrowseSystem.Extension), Path.Combine(path, renamedArgs.To + BrowseSystem.Extension), renamedArgs.Callback);
-                    return res;
+                    ComplexTransaction transaction = new ComplexTransaction();
+                    transaction.AddOperation(() =>
+                    RenameFile(Path.Combine(path, renamedArgs.From + BrowseSystem.Extension), Path.Combine(path, renamedArgs.To + BrowseSystem.Extension)),
+                        () =>
+                        RenameFile(Path.Combine(path, renamedArgs.To + BrowseSystem.Extension), Path.Combine(path, renamedArgs.From + BrowseSystem.Extension)));
+                    if (File.Exists(Path.Combine(path, renamedArgs.From + NoteExtension)))
+                    {
+                        transaction.AddOperation(
+                            () =>
+                                RenameFile(Path.Combine(path, renamedArgs.From + NoteExtension),
+                                   Path.Combine(path, renamedArgs.To + NoteExtension)),
+                            () =>
+                                RenameFile(Path.Combine(path, renamedArgs.To + NoteExtension),
+                                    Path.Combine(path, renamedArgs.From + NoteExtension)));
+                    }
+                    transaction.DoOperation();
+                    return File.Exists(Path.Combine(path, renamedArgs.To + BrowseSystem.Extension));
+                    //bool res =  TransactionFile.MoveFile(
+                    //        Path.Combine(path, renamedArgs.From + BrowseSystem.Extension), Path.Combine(path, renamedArgs.To + BrowseSystem.Extension),
+                    //        ref message);
+                    //if(!File.Exists(Path.Combine(path, renamedArgs.From + NoteExtension))) { return res; }
+                    //     res &= TransactionFile.MoveFile(
+                    //               Path.Combine(path, renamedArgs.From + NoteExtension),
+                    //               Path.Combine(path, renamedArgs.To + NoteExtension),
+                    //               ref message);
+                    //    renamedArgs = new RenamedArgs(Path.Combine(path, renamedArgs.From + BrowseSystem.Extension), Path.Combine(path, renamedArgs.To + BrowseSystem.Extension), renamedArgs.Callback);
+                    // return res;
                 }
                     resposne = Do(args.Happened, false, args, ref message);
                 return resposne;
             }
             message = "Invalid parameter";
             return false;
+        }
+
+        private bool RenameFile(string pathFrom, string pathTo)
+        {
+            string message = string.Empty;
+            return TransactionFile.MoveFile(
+                            pathFrom, pathTo,
+                            ref message);
         }
 
         public void Dispose()

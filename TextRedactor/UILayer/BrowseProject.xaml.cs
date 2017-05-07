@@ -202,9 +202,16 @@ namespace UILayer
         {
             string path = ProjectsPath + "\\" + project + "\\Files\\" + file + ".rtf";
             if (File.Exists(path)) { return; }
-            RtfDocument doc = new RtfDocument();
-            doc.Save(path);
-            Notes[project].Files.Add(new LoadedFile(path, ProjectsPath + "\\" + project));
+            OnCreatedFiles(new object(), new FileArgs(new List<string>{ file }, project,Happened.Created, EndFilesCreated));
+        }
+
+        private void EndFilesCreated(bool rezult, string message, EventArgs args)
+        {
+            var fileArgs = args as FileArgs;
+            foreach (string file in fileArgs.Files)
+            {
+                Notes[fileArgs.Project].Files.Add(new LoadedFile(Path.Combine(ProjectsPath + "\\" + fileArgs.Project, "Files", file), ProjectsPath + "\\" + fileArgs.Project));
+            }
         }
 
         public void RenameProject(string project, string newName)
@@ -277,27 +284,17 @@ namespace UILayer
             int index = Notes[project].Files.FindIndex(item => item.Path == file.Path);
             if (index < 0) { return; }
             OnRenamedFiles(new object(), new FileArgs(project, new RenamedArgs(file.Name, newFile, EndRenameFile)));
-            //newFile = newFile + System.IO.Path.GetExtension(file.Path);
-            //File.Move(file.Path, System.IO.Path.GetDirectoryName(file.Path) + "\\" + newFile);
-            //if (System.IO.File.Exists(ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(file.Name) + ".not"))
-            //{
-            //    File.Move(ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(file.Name) + ".not", ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(newFile) + ".not");
-            //    if (LoadedFile == ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(file.Name) + ".not") { LoadedFile = ProjectsPath + "\\" + project + "\\Files\\" + System.IO.Path.GetFileNameWithoutExtension(newFile) + ".not"; }
-            //}
-            //Notes[project].Files[index] = new LoadedFile(System.IO.Path.GetDirectoryName(file.Path) + "\\" + newFile, ProjectsPath + "\\" + project);
-            //OnSave(()=> { },project);
-            //((ISettings)ParentControl.Parent).SaveSettings();
         }
 
         private void EndRenameFile(bool rezult, string message, EventArgs args)
         {
-            //var renamedArgs = args as FileArgs;
-            //string project = new DirectoryInfo(LoadedFile.Replace(ProjectsPath, "")).Name;
-            //int index = Notes[project].Files.FindIndex(item => item.Name == renamedArgs.RenamedArgs.From);
-            //if (index < 0) { return; }
-            //Notes[project].Files[index] = new LoadedFile(Path.Combine(ProjectsPath, project, "Files") + "\\" + renamedArgs.RenamedArgs.To + ".rtf", ProjectsPath + "\\" + project);//EXTENSION
-            //OnSave(() => { }, project);
-            //((ISettings)ParentControl.Parent).SaveSettings();
+            var renamedArgs = args as FileArgs;
+            string project = renamedArgs.Project;
+            int index = Notes[project].Files.FindIndex(item => item.Name == renamedArgs.RenamedArgs.From);
+            if (index < 0) { return; }
+            Notes[project].Files[index] = new LoadedFile(Path.Combine(ProjectsPath, project, "Files") + "\\" + renamedArgs.RenamedArgs.To + ".rtf", ProjectsPath + "\\" + project);//EXTENSION
+            OnSave(() => { }, project);
+            ((ISettings)ParentControl.Parent).SaveSettings();
         }
 
         public void AddFileToProject(string project, string filePath)

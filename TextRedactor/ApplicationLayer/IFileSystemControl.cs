@@ -78,7 +78,7 @@ namespace ApplicationLayer
 
         internal Action<bool, string, EventArgs> Callback;
 
-        internal string Project;
+        public string Project;
 
         public FileArgs(List<string> files, string project, Happened happened, Action<bool, string, EventArgs> callback)
         {

@@ -70,6 +70,11 @@ namespace UILayer
             ProjectChanged.Invoke(sender, e);
         }
 
+        protected void OnCreatedFiles(object sender, FileArgs e)
+        {
+            FileCreated.Invoke(sender, e);
+        }
+
         protected void OnCreateFiles(object sender, FileArgs e)
         {
             FileCreated.Invoke(sender, e);
