@@ -295,6 +295,7 @@ namespace UILayer
             Notes[project].Files[index] = new LoadedFile(Path.Combine(ProjectsPath, project, "Files") + "\\" + renamedArgs.RenamedArgs.To + ".rtf", ProjectsPath + "\\" + project);//EXTENSION
             OnSave(() => { }, project);
             ((ISettings)ParentControl.Parent).SaveSettings();
+            MainProjectList.Items.Refresh();
         }
 
         public void AddFileToProject(string project, string filePath)
