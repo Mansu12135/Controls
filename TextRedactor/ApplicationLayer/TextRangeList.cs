@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -40,7 +39,7 @@ namespace ApplicationLayer
                 {
                     n = i;
                 }
-                if (IsValid(MainList[i])) continue;
+                if (IsValid(MainList[i]) && MainList[0].Start.GetOffsetToPosition(pointer) >= 0) continue;
                 Repopulate(i);
                 return;
             }
