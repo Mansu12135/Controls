@@ -21,15 +21,7 @@
         <ScrollViewer Margin="20,0">
             <controls:BaseRichTextBox x:Name="MainControl"  x:FieldModifier="public"  FontSize="14"   BorderThickness="0" SpellCheck.IsEnabled="True" VerticalScrollBarVisibility="Hidden" BorderBrush="{x:Null}" Background="White" Padding="0,30" ScrollViewer.CanContentScroll="True" IsEnabled="False" HorizontalAlignment="Center" AllowDrop="False">
                 <FlowDocument>
-                    <BlockUIContainer>
-                        <Image Source="Resources/grey_logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" MaxWidth="250" />
-                    </BlockUIContainer>
-                    <Paragraph TextAlignment="Center" Foreground="#FF838181" >
-                        <Bold>START A PROJECT</Bold>
-                    </Paragraph>
-                    <BlockUIContainer>
-                        <Image Source="Resources/romb.png" Width="20" Height="20" />
-                    </BlockUIContainer>
+                 
                 </FlowDocument>
             </controls:BaseRichTextBox>
         </ScrollViewer>

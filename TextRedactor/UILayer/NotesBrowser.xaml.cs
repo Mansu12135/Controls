@@ -182,12 +182,40 @@ namespace UILayer
                 //File.Move(file, Path.GetDirectoryName(file) + "\\" + CloneTextBox.Text + Path.GetExtension(file));
                 Notes.Add(CloneTextBox.Text, Notes[name]);
                 Notes[CloneTextBox.Text].Name = CloneTextBox.Text;
+                updageTagOnFlag(Notes[CloneTextBox.Text]);
                 Notes.Remove(name);
             }
             MainControl.Items.Refresh();
             EndChangingDynamicItem();
         }
+        private void updageTagOnFlag(Note note)
+        {
+            byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
+            for (TextPointer position = note.Range.Start; position != null && position.CompareTo(note.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
+            {
+                InlineUIContainer element = position.Parent as InlineUIContainer;
+                if (element != null && element.Child is System.Windows.Controls.Image)
+                {
+                    var image = element.Child as System.Windows.Controls.Image;
+                    if (image == null) continue;
+                    var imageSourse = image.Source as System.Windows.Media.ImageSource;
+                    if (imageSourse == null) continue;
+                    byte[] byt = NotesBrowser.getJPGFromImageControl(imageSourse);
+                    //сравнивает картинки
+                    if (byt.Length == flag.Length)
+                    {
+                        bool isflag = true;
+                        for (int t = 0; t < byt.Length; t++)
+                        {
+                            if (byt[t] != flag[t]) { isflag = false; break; }
+                        }
+                        if (!isflag) continue;
 
+                        image.Tag = note.Name;
+                    }
+                }
+            }
+        }
         protected override System.Drawing.Rectangle GetCloneControlLocation(TextBox control)
         {
             var point = control.TranslatePoint(new System.Windows.Point(0, 0), MainControl);
@@ -241,19 +269,29 @@ namespace UILayer
             }
         }
 
-        private void TextValue_GotFocus(object sender, RoutedEventArgs e)
-        {
-            var textBox = sender as TextBox;
-            if (textBox == null) return;
-            HookManager.MouseDown -= TextValue_LostFocus;
-            HookManager.MouseDown += TextValue_LostFocus;
-        }
-
-        private void TextValue_LostFocus(object sender, EventArgs e)
-        {
-            HookManager.MouseDown -= TextValue_LostFocus;
-        }
-
        
+      
+        private void HookManager_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (noteText == null) return;
+            var location = GetCloneControlLocation(noteText);
+            var mouseEventArgs = e as MouseEventExtArgs;
+            if (e != null && mouseEventArgs == null) { return; }
+            System.Windows.Point absolutePoint = noteText.PointToScreen(new System.Windows.Point(0d, 0d));
+            var absoluteRectangle = new Rectangle((int)absolutePoint.X, (int)absolutePoint.Y, location.Width, location.Height);
+            if (absoluteRectangle.Contains(mouseEventArgs.X, mouseEventArgs.Y)) { return; }
+            HookManager.MouseDown -= HookManager_MouseDown;
+           
+          //  textBox.MoveFocus(ParentControl.TextBox.MainControl);
+        }
+        TextBox noteText;
+        private void TextValue_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var text = sender as TextBox;
+            if (text == null) return;
+            noteText = text;
+            HookManager.MouseDown -= HookManager_MouseDown;
+            HookManager.MouseDown += HookManager_MouseDown;
+        }
     }
 }

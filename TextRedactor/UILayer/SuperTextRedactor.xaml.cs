@@ -259,21 +259,27 @@ namespace UILayer
             if (panel == null)
             {
                 panel = new DictionaryPanel();
-                panel.HidenDictionary.MouseUp += new MouseButtonEventHandler((s, r) => { MainContainer.Children.Remove(panel); NotesBrowser.Visibility = Visibility.Visible; panel = null; });
+                panel.HidenDictionary.MouseUp += HidenDictionary_MouseUp; 
                 panel.Name = "dictionary";
-                if (ShowNotes.Visibility == Visibility.Visible)
-                {
-                    ShowNotes_MouseUp(null, null);
-                }
+                //if (ShowNotes.Visibility == Visibility.Visible)
+                //{
+                //    HidenNotes_MouseUp(null, null);
+                //}
                 panel.TextWord.KeyUp += TextWord_KeyUp;
                 panel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                 panel.VerticalAlignment = VerticalAlignment.Stretch;
                 //  panel.zIndex = 2;
-                NotesBrowser.Visibility = Visibility.Hidden;
+                //NotesBrowser.Visibility = Visibility.Hidden;
                 Grid.SetColumn(panel, 2);
                 Grid.SetRowSpan(panel, 2);
-                System.Windows.Controls.Panel.SetZIndex(panel, 2);
-                MainContainer.Children.Add(panel);
+                System.Windows.Controls.Panel.SetZIndex(panel, 1);
+             //   panel.Margin = new Thickness(-panel.ActualWidth, panel.Margin.Top, panel.Margin.Right, panel.Margin.Bottom);
+               MainContainer.Children.Add(panel);
+                //   HidenNotes_MouseUp(null,nuul);
+                if (ShowNotes.Visibility == Visibility.Visible)
+                {
+                    AnimateMargin(RedactorConteiner.Margin, new Thickness(RedactorConteiner.Margin.Left, RedactorConteiner.Margin.Top, 0, RedactorConteiner.Margin.Bottom), RedactorConteiner, true, panel.HidenDictionary);
+                }
                 //   Container.Child = panel;
             }
             panel.TextWord.Text = GetCurrentWord();// this.TextBox.MainControl.Selection.Text;
@@ -283,6 +289,17 @@ namespace UILayer
             panel.ModeDictionary.IsChecked = !panel.ModeDictionary.IsChecked;
             panel.ModeDictionary.IsChecked = true;
         }
+
+        private void HidenDictionary_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (ShowNotes.Visibility == Visibility.Visible)
+            {
+                HidenNotes_MouseUp(null,null);
+            }
+            MainContainer.Children.Remove(panel);
+            panel = null;
+        }
+
         private string GetCurrentWord()
         {
             if (TextBox.MainControl.IsReadOnly == true) return "";

@@ -20,7 +20,7 @@
             <ColumnDefinition Width="250*"/>
         </Grid.ColumnDefinitions>
         <local:BrowseProject  x:Name="BrowseProject" x:FieldModifier="public" Grid.RowSpan="2"/>
-        <Border Grid.Column="1" Name="RedactorConteiner" x:FieldModifier="public" Panel.ZIndex="1" >
+        <Border Grid.Column="1" Name="RedactorConteiner" x:FieldModifier="public" Panel.ZIndex="2" >
             <Grid>
                 <Grid.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

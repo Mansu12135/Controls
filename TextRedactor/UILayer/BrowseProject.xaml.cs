@@ -11,6 +11,9 @@ using System.Drawing;
 using ApplicationLayer;
 using Gma.UserActivityMonitor;
 using Net.Sgoliver.NRtfTree.Util;
+using System.Windows.Data;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace UILayer
 {
@@ -96,24 +99,64 @@ namespace UILayer
         }
         public void OpenFirstFile()
         {
-            if (Notes.Count > 0 && Notes.First().Value.Files.Count > 0)
+            if (Notes.Count > 0)
             {
-                if (!ParentControl.TextBox.MainControl.IsEnabled)
+                var proj = Notes.Where(item => item.Value.Files.Count > 0).FirstOrDefault();
+                if (proj.Value == null)
                 {
-                    ParentControl.TextBox.MainControl.IsEnabled = true;
-                    ParentControl.Format.IsEnabled = true;
+                    LoadLogo();
                 }
-                OpenFile(Notes.First().Value.Files[0].Path, Path.GetFileNameWithoutExtension(Notes.First().Value.Files[0].Path));
-                CurentProject = Notes.First().Value;
-                if (!string.IsNullOrEmpty(LoadedFile))
+                else
                 {
-                    UpdateRangeOnNotes();
-                    // UpdateTagOnFlags();
+                    if (!ParentControl.TextBox.MainControl.IsEnabled)
+                    {
+                        ParentControl.TextBox.MainControl.IsEnabled = true;
+                        ParentControl.Format.IsEnabled = true;
+                    }
+                    OpenFile(proj.Value.Files[0].Path, Path.GetFileNameWithoutExtension(proj.Value.Files[0].Path));
+                    CurentProject = proj.Value;
+                    if (!string.IsNullOrEmpty(LoadedFile))
+                    {
+                        UpdateRangeOnNotes();
+                    }
+                    MainProjectList.Items.Refresh();
                 }
             }
+            else
+            {
+                LoadLogo();
+            }     
         }
         private string vProjectPath = "";
+        private void LoadLogo()
+        {
+            ParentControl.TextBox.MainControl.IsEnabled = false;
+            ParentControl.Format.IsEnabled = false;
+            var logo = new System.Windows.Controls.Image() { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Top, MaxWidth = 250 };
+            var tempImage = Properties.Resources.grey_logo;
+            var ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(tempImage.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(250, 200));
+            logo.Source = ScreenCapture;
 
+            //BitmapImage bi = new BitmapImage(new Uri(@"/Resources/grey_logo.png", UriKind.Relative));
+            //var image = new System.Windows.Controls.Image() { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Top, MaxWidth = 250, Width = 200, Height = 200 };
+            //image.Source = bi;
+
+            var paragraph = new Paragraph() { TextAlignment = System.Windows.TextAlignment.Center, Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF838181")) };
+            paragraph.Inlines.Add(new Run("START A PROJECT") { FontWeight = FontWeights.Bold });
+
+            var romb = new System.Windows.Controls.Image() { HorizontalAlignment = HorizontalAlignment.Center, Width = 20, Height = 20};
+            var tempImage2 = Properties.Resources.romb;
+            var ScreenCapture2 = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                 tempImage2.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));
+            romb.Source = ScreenCapture2;
+            ParentControl.TextBox.MainControl.Document.Blocks.Clear();
+            ParentControl.TextBox.MainControl.Document.Blocks.Add(new Paragraph(new InlineUIContainer(logo)) { TextAlignment = System.Windows.TextAlignment.Center });
+            ParentControl.TextBox.MainControl.Document.Blocks.Add(paragraph);
+            ParentControl.TextBox.MainControl.Document.Blocks.Add(new Paragraph(new InlineUIContainer(romb)) { TextAlignment = System.Windows.TextAlignment.Center });
+
+            //flowDocument.Blocks.Add(paragraph);
+           
+        }
         public BrowseProject(Dictionary<string, Project> collection)
         {
             InitializeComponent();
@@ -262,11 +305,40 @@ namespace UILayer
             if (LoadedFile == System.IO.Path.GetDirectoryName(file.Path) + "\\" + file.Name + ".not") { LoadedFile = ""; }
             File.Delete(file.Path);
             Notes[project].Files.RemoveAt(index);
+            if (Notes[project].Files.Count > 0)
+            {
+                OpenFile(Notes[project].Files[0].Path, Path.GetFileNameWithoutExtension(Notes[project].Files[0].Path));
+                if (!string.IsNullOrEmpty(LoadedFile))
+                {
+                    UpdateRangeOnNotes();
+                }
+
+            }
+            else
+            {
+                var proj = Notes.Where(item => item.Value.Files.Count > 0).FirstOrDefault();
+                if (proj.Value == null)
+                {
+                    CurentProject = null;
+                    LoadLogo();
+                }
+                else
+                {
+                    OpenFile(proj.Value.Files[0].Path, Path.GetFileNameWithoutExtension(proj.Value.Files[0].Path));
+                    CurentProject = proj.Value;
+                    if (!string.IsNullOrEmpty(LoadedFile))
+                    {
+                        UpdateRangeOnNotes();
+                    }
+                }
+
+            }
         }
 
         public void DeleteProject(string project)
         {
             if (!Notes.ContainsKey(project)) { return; }
+         
             if (!string.IsNullOrEmpty(LoadedFile) && LoadedFile.StartsWith(ProjectsPath + "\\" + project)) { LoadedFile = ""; }
             if (!string.IsNullOrEmpty(CurentFile) && CurentFile.StartsWith(ProjectsPath + "\\" + project))
             {
@@ -276,6 +348,33 @@ namespace UILayer
 
             Directory.Delete(ProjectsPath + "\\" + project, true);
             Notes.Remove(project);
+
+            if (Notes.Count == 0)
+            {
+                CurentProject = null;
+                LoadLogo();
+            }
+            else
+            {
+                var proj = Notes.Where(item => item.Value.Files.Count > 0).FirstOrDefault();
+                if(proj.Value == null)
+                {
+                    CurentProject = null;
+                    LoadLogo();
+                }
+                else
+                {
+                    OpenFile(proj.Value.Files[0].Path, Path.GetFileNameWithoutExtension(proj.Value.Files[0].Path));
+                    CurentProject = proj.Value;
+                    if (!string.IsNullOrEmpty(LoadedFile))
+                    {
+                        UpdateRangeOnNotes();
+                    }
+                    MainProjectList.Items.Refresh();
+                }
+                
+            }
+
         }
 
         public void RenameFileInProject(string project, LoadedFile file, string newFile)
@@ -292,7 +391,7 @@ namespace UILayer
             string project = renamedArgs.Project;
             int index = Notes[project].Files.FindIndex(item => item.Name == renamedArgs.RenamedArgs.From);
             if (index < 0) { return; }
-            Notes[project].Files[index] = new LoadedFile(Path.Combine(ProjectsPath, project, "Files") + "\\" + renamedArgs.RenamedArgs.To + ".rtf", ProjectsPath + "\\" + project);//EXTENSION
+            Notes[project].Files[index] = new LoadedFile(Path.Combine(ProjectsPath, project, "Files") + "\\" + renamedArgs.RenamedArgs.To + ".rtf", ProjectsPath + "\\" + project, Notes[project].Files[index].IsOpen);//EXTENSION
             OnSave(() => { }, project);
             ((ISettings)ParentControl.Parent).SaveSettings();
             MainProjectList.Items.Refresh();
@@ -324,7 +423,7 @@ namespace UILayer
                 }
                 //item.Files.ForEach(x => x.IsOpen = (x.Path == path) ? 10 : 0);
             }
-            MainProjectList.Items.Refresh();
+           
             ParentControl.TextBox.MainControl.FilePath = "";
             try
             {
@@ -365,8 +464,8 @@ namespace UILayer
             if (!string.IsNullOrEmpty(LoadedFile))
             {
                 UpdateRangeOnNotes();
-                // UpdateTagOnFlags();
             }
+            MainProjectList.Items.Refresh();
         }
 
         public void UpdateRangeOnNotes()
@@ -428,110 +527,7 @@ namespace UILayer
             }
         }
 
-       
-        //private void UpdateNoteInFile()
-        //{
-        //    ParentControl.NotesBrowser.Notes.Clear();
-        //    Type inlineType;
-        //    InlineUIContainer uic;
-        //    System.Windows.Controls.Image replacementImage;
-        //    new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, ParentControl.TextBox.MainControl.Document.ContentEnd).ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
-
-        //    byte[] flag = getJPGFromImageControl(Properties.Resources.noteFlag);
-
-        //    var blocks = ParentControl.TextBox.MainControl.Document.Blocks.ToList();
-        //    for (int b = 0; b < blocks.Count; b++)
-        //    {
-        //        Block block = blocks[b];
-        //        var inlines = ((Paragraph)block).Inlines.ToList();
-        //        for (int j = 0; j < inlines.Count; j++)
-        //        {
-        //            if (inlines[j].GetType() == typeof(InlineUIContainer))
-        //            {
-        //                uic = ((InlineUIContainer)inlines[j]);
-        //                if (uic.Child.GetType() == typeof(System.Windows.Controls.Image))
-        //                {
-        //                    replacementImage = (System.Windows.Controls.Image)uic.Child;
-        //                    byte[] byt = getJPGFromImageControl(replacementImage.Source as BitmapImage);
-        //                    //сравнивает картинки
-        //                    if (byt.Length == flag.Length)
-        //                    {
-        //                        for (int t = 0; t < byt.Length; t++)
-        //                        {
-        //                            if (byt[t] != flag[t]) { return; }
-        //                        }
-        //                         ((Paragraph)ParentControl.TextBox.MainControl.Document.Blocks.ToList()[b]).Inlines.Remove(inlines[j]);
-        //                    }
-        //                }
-        //            }
-        //            //else
-        //            //{
-        //            //  //  new TextRange(i.ContentStart, i.ContentEnd).ApplyPropertyValue(TextElement.BackgroundProperty,  System.Windows.Media.Brushes.White);
-        //            //}
-        //        }
-        //    }
-
-        //}
-
-
-
-        //public static TextPointer GetTextPointAt(TextPointer from, int pos)
-        //{
-        //    TextPointer ret = from;
-        //    int i = 0;
-
-        //    while ((i < pos) && (ret != null))
-        //    {
-        //        if ((ret.GetPointerContext(LogicalDirection.Backward) == TextPointerContext.Text) || (ret.GetPointerContext(LogicalDirection.Backward) == TextPointerContext.None))
-        //        {
-        //            i++;
-        //        }
-
-        //        if (ret.GetPositionAtOffset(1, LogicalDirection.Forward) == null)
-        //            return ret;
-        //        ret = ret.GetPositionAtOffset(1, LogicalDirection.Forward);
-
-        //    }
-
-        //    return ret;
-        //}
-        //private void AddNoteAfterOpenFile()
-        //{
-        //    foreach (var note in ParentControl.NotesBrowser.Notes)
-        //    {
-        //        int start = note.Value.OffsetStart;
-        //        int end = note.Value.OffsetEnd;
-        //        int dif = 0;
-        //        foreach (var not in ParentControl.NotesBrowser.Notes)
-        //        {
-        //            if (not.Key == note.Key) { break; }
-        //            if (not.Value.OffsetStart < start) dif++;
-        //        }
-        //        start += dif;
-        //        end += dif;
-        //        TextPointer startPointer = ParentControl.TextBox.MainControl.Document.ContentStart;
-        //        TextPointer startPos = GetTextPointAt(startPointer, start);
-        //        TextPointer endPos = GetTextPointAt(startPointer, end);
-        //        new TextRange(startPos, endPos).ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.PaleGreen);
-        //        var tempImage = Properties.Resources.noteFlag;
-        //        var ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-        //  tempImage.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));
-
-        //        System.Windows.Controls.Image image = new System.Windows.Controls.Image();
-        //        image.Source = ScreenCapture;
-        //        image.Stretch = Stretch.Fill;
-        //        image.Cursor = Cursors.Hand;
-        //        image.Height = 14;
-        //        image.Width = 14;
-        //        image.Tag = note.Key;
-        //        image.MouseUp += NoteFlag_MouseUp;
-        //        TextPointer p = startPos;
-        //        ParentControl.TextBox.MainControl.BeginChange();
-        //        InlineUIContainer imageContainer = new InlineUIContainer(image, p);
-        //        ParentControl.TextBox.MainControl.EndChange();
-        //        ParentControl.TextBox.MainControl.Focus();
-        //    }
-        //}
+      
 
         private void NoteFlag_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -542,92 +538,7 @@ namespace UILayer
             }
         }
 
-        //internal void UpdateNoteAfterOpening()
-        //{
-        //    var inlines = ParentControl.TextBox.MainControl.Document.Blocks.Where(item => item.GetType() == typeof(Paragraph)).
-        //       SelectMany(item => ((Paragraph)item).Inlines.Where(x => x.GetType() == typeof(InlineUIContainer) || (x.Background != null && (x.Background as SolidColorBrush).Color == System.Windows.Media.Brushes.PaleGreen.Color))).ToList();
-        //    //  byte[] flag = getJPGFromImageControl(Properties.Resources.noteFlag);
-        //    int n = inlines.Count;
-        //    for (int j = 0; j < n; j++)
-        //    {
-        //        var inline = inlines[j] as InlineUIContainer;
-        //        if (inline == null) { continue; }
-        //        var image = inline.Child as System.Windows.Controls.Image;
-        //        if (image == null) { continue; }
-
-        //        if (image.Tag == null) continue;
-
-        //        var key = image.Tag.ToString();
-        //        int i = j;
-        //        int start = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(inlines[j].ElementEnd) + 1;
-        //        //new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentStart).Text.Length;
-        //        while (j < inlines.Count - 1 && inlines[j + 1].Background != null && (inlines[j + 1].Background as SolidColorBrush).Color == System.Windows.Media.Brushes.PaleGreen.Color)
-        //        {
-        //            j++;
-        //        }
-        //        if (ParentControl.NotesBrowser.Notes.ContainsKey(key))
-        //        {
-        //            if (ParentControl.NotesBrowser.Notes[key].OffsetStart != start)
-        //            {
-        //                ParentControl.NotesBrowser.Notes[key].OffsetStart = start;
-        //            }
-        //            ParentControl.NotesBrowser.Notes[key].OffsetEnd = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(inlines[j].ContentEnd);// new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, inlines[j].ContentEnd).Text.Length;
-        //        }
-        //        else
-        //        {
-        //            new TextRange(inlines[i].ContentStart, inlines[j].ContentEnd).ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
-        //            foreach (var block in ParentControl.TextBox.MainControl.Document.Blocks)
-        //            {
-        //                if (block is Paragraph)
-        //                {
-        //                    var paragraph = block as Paragraph;
-
-        //                    if (paragraph.Inlines.Contains(inline))
-        //                    {
-        //                        paragraph.Inlines.Remove(inline);
-        //                        break;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        // }
-        //    }
-        //}
-
-        //public void UpdateTagOnFlags()
-        //{
-        //    var inlines = ParentControl.TextBox.MainControl.Document.Blocks.Where(item => item.GetType() == typeof(Paragraph)).
-        //       SelectMany(item => ((Paragraph)item).Inlines.Where(x => x.GetType() == typeof(InlineUIContainer))).ToList();
-        //    byte[] flag = getJPGFromImageControl(Properties.Resources.noteFlag);
-        //    int n = inlines.Count;
-        //    foreach (var item in inlines)
-        //    {
-        //        var image = ((InlineUIContainer)item).Child as System.Windows.Controls.Image;
-        //        if (image == null) { continue; }
-        //        byte[] byt = getJPGFromImageControl(image.Source as BitmapImage);
-        //        //сравнивает картинки
-        //        if (byt.Length == flag.Length)
-        //        {
-        //            bool isflag = true;
-        //            for (int t = 0; t < byt.Length; t++)
-        //            {
-        //                if (byt[t] != flag[t]) { isflag = false; break; }
-        //            }
-        //            if (!isflag) continue;
-        //            int start = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(item.ElementEnd) + 1;
-        //            //  new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, item.ContentStart).Text.Length;
-        //            var key = ParentControl.NotesBrowser.Notes.Where(x => x.Value.OffsetStart == start);
-        //            if (key.Any())
-        //            {
-        //                image.Tag = key.First().Key;
-        //            }
-        //            else
-        //            {
-
-        //            }
-        //        }
-        //    }
-        //}
+       
         PropertiesForm propertForm;
         private IFileSystemControl _fileSystemControlImplementation;
 
@@ -742,7 +653,7 @@ namespace UILayer
                     IsChangeFileName = false;
                 }
             }
-            MainProjectList.Items.Refresh();
+           // MainProjectList.Items.Refresh();
             EndChangingDynamicItem();
         }
 
