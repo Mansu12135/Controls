@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 using System.Drawing;
 using Gma.UserActivityMonitor;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace UILayer
 {
@@ -292,6 +293,26 @@ namespace UILayer
             noteText = text;
             HookManager.MouseDown -= HookManager_MouseDown;
             HookManager.MouseDown += HookManager_MouseDown;
+        }
+
+        public override void Show()
+        {
+            ThicknessAnimation myThicknessAnimation = new ThicknessAnimation();
+            myThicknessAnimation.From = ParentControl.RedactorConteiner.Margin;
+            myThicknessAnimation.To = new Thickness(ParentControl.RedactorConteiner.Margin.Left, ParentControl.RedactorConteiner.Margin.Top, 0, ParentControl.RedactorConteiner.Margin.Bottom);
+            myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
+            ((Border)ParentControl.RedactorConteiner).BeginAnimation(Border.MarginProperty, myThicknessAnimation);
+            ParentControl.ShowNotes.Visibility = Visibility.Hidden;
+        }
+
+        public override void Hide()
+        {
+            ThicknessAnimation myThicknessAnimation = new ThicknessAnimation();
+            myThicknessAnimation.From = ParentControl.RedactorConteiner.Margin;
+            myThicknessAnimation.To = new Thickness(ParentControl.RedactorConteiner.Margin.Left, ParentControl.RedactorConteiner.Margin.Top, -ActualWidth, ParentControl.RedactorConteiner.Margin.Bottom);
+            myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
+            myThicknessAnimation.Completed += new EventHandler((s, r) => ParentControl.ShowNotes.Visibility = Visibility.Visible);
+            ((Border)ParentControl.RedactorConteiner).BeginAnimation(Border.MarginProperty, myThicknessAnimation);
         }
     }
 }

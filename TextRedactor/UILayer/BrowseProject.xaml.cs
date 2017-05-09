@@ -12,6 +12,7 @@ using ApplicationLayer;
 using Gma.UserActivityMonitor;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace UILayer
 {
@@ -701,6 +702,26 @@ namespace UILayer
                 ChangedFileName = true;
                 IsChangeFileName = true;
             }
+        }
+
+        public override void Show()
+        {
+            ThicknessAnimation myThicknessAnimation = new ThicknessAnimation();
+            myThicknessAnimation.From = ParentControl.RedactorConteiner.Margin;
+            myThicknessAnimation.To = new Thickness(0, ParentControl.RedactorConteiner.Margin.Top, ParentControl.RedactorConteiner.Margin.Right, ParentControl.RedactorConteiner.Margin.Bottom);
+            myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
+            ((Border)ParentControl.RedactorConteiner).BeginAnimation(Border.MarginProperty, myThicknessAnimation);
+            ParentControl.ShowProject.Visibility = Visibility.Hidden;
+        }
+
+        public override void Hide()
+        {
+            ThicknessAnimation myThicknessAnimation = new ThicknessAnimation();
+            myThicknessAnimation.From = ParentControl.RedactorConteiner.Margin;
+            myThicknessAnimation.To = new Thickness(-ActualWidth, ParentControl.RedactorConteiner.Margin.Top, ParentControl.RedactorConteiner.Margin.Right, ParentControl.RedactorConteiner.Margin.Bottom);
+            myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
+            myThicknessAnimation.Completed += new EventHandler((s, r) => ParentControl.ShowProject.Visibility = Visibility.Visible);
+            ((Border)ParentControl.RedactorConteiner).BeginAnimation(Border.MarginProperty, myThicknessAnimation);
         }
     }
 }

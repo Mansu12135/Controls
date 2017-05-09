@@ -154,11 +154,11 @@ namespace UILayer
         {
             if (ShowNotes.Visibility == Visibility.Hidden)
             {
-                HidenNotes_MouseUp(null, null);
+                NotesBrowser.Hide();
             }
             if (ShowProject.Visibility == Visibility.Hidden)
             {
-                HidenProject_MouseUp(null, null);
+                BrowseProject.Hide();
             }
         }
 
@@ -166,22 +166,22 @@ namespace UILayer
         {
             if (ShowNotes.Visibility == Visibility.Hidden)
             {
-                HidenNotes_MouseUp(null, null);
+                NotesBrowser.Hide();
             }
             if (ShowProject.Visibility == Visibility.Visible)
             {
-                ShowProject_MouseUp(null, null);
+                BrowseProject.Show();
             }
         }
         private void ProjectAndNotes()
         {
             if (ShowNotes.Visibility == Visibility.Visible)
             {
-                ShowNotes_MouseUp(null, null);
+                NotesBrowser.Show();
             }
             if (ShowProject.Visibility == Visibility.Visible)
             {
-                ShowProject_MouseUp(null, null);
+                BrowseProject.Show();
             }
         }
         private void AnimateMargin(Thickness from, Thickness to, object control, bool hide, System.Windows.Controls.Label label = null)
@@ -198,12 +198,12 @@ namespace UILayer
         }
         private void HidenNotes_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            AnimateMargin(RedactorConteiner.Margin, new Thickness(RedactorConteiner.Margin.Left, RedactorConteiner.Margin.Top, -NotesBrowser.ActualWidth, RedactorConteiner.Margin.Bottom), RedactorConteiner, true, ShowNotes);
+            NotesBrowser.Hide();
         }
 
         private void HidenProject_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            AnimateMargin(RedactorConteiner.Margin, new Thickness(-BrowseProject.ActualWidth, RedactorConteiner.Margin.Top, RedactorConteiner.Margin.Right, RedactorConteiner.Margin.Bottom), RedactorConteiner, true, ShowProject);
+            BrowseProject.Hide();
         }
 
         public void Dispose()
@@ -761,13 +761,11 @@ namespace UILayer
         }
         private void ShowProject_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            AnimateMargin(RedactorConteiner.Margin, new Thickness(0, RedactorConteiner.Margin.Top, RedactorConteiner.Margin.Right, RedactorConteiner.Margin.Bottom), RedactorConteiner, false, ShowProject);
-            ShowProject.Visibility = Visibility.Hidden;
+            BrowseProject.Show();
         }
         private void ShowNotes_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            AnimateMargin(RedactorConteiner.Margin, new Thickness(RedactorConteiner.Margin.Left, RedactorConteiner.Margin.Top, 0, RedactorConteiner.Margin.Bottom), RedactorConteiner, false, ShowNotes);
-            ShowNotes.Visibility = Visibility.Hidden;
+            NotesBrowser.Show();
         }
 
         private void MenuAddPr_Click(object sender, RoutedEventArgs e)

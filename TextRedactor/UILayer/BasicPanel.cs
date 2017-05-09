@@ -145,6 +145,10 @@ namespace UILayer
 
         public virtual string ProjectsPath { get; set; }
 
+        public virtual void Show() { }
+
+        public virtual void Hide() { }
+
         string IFileSystemControl.CurrentProjectsPath {
             get { return ProjectsPath; }
         }
