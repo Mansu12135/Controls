@@ -7,7 +7,7 @@ namespace UILayer
     /// <summary>
     /// Логика взаимодействия для DictionaryPanel.xaml
     /// </summary>
-    public partial class DictionaryPanel : BasicPanel<Item>
+    public partial class DictionaryPanel : UserControl
     {
         public DictionaryPanel()
         {

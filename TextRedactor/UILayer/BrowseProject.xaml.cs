@@ -257,7 +257,7 @@ namespace UILayer
 
         public void RenameProject(string project, string newName)
         {
-            OnRenamedProject(new object(), new ProjectArgs(new RenamedArgs(project, newName, Callback)));
+            OnRenamedProject(new object(), new ProjectArgs(new RenamedArgs(project, newName, OnRenamed)));
             //if (!Notes.ContainsKey(project)) { return; }
             //if (System.IO.Directory.Exists(ProjectsPath + "\\" + newName))
             //{
@@ -285,6 +285,29 @@ namespace UILayer
             //if (propertForm == null) { return; }
             //propertForm.value.Name = newName;
             //((Project)propertForm.value).Files = newProject.Files;
+        }
+
+        private void OnRenamed(bool rezult, string message, EventArgs args)
+        {
+            var projectArgs = args as ProjectArgs;
+            string newName = projectArgs.RenamedArgs.To;
+
+            List<LoadedFile> files = new List<LoadedFile>();
+            Notes[newName].Files.ForEach(item => files.Add(item));
+            Notes[newName].Files.Clear();
+            foreach (var file in files)
+            {
+                Notes[newName].Files.Add(new LoadedFile(ProjectsPath + "\\" + newName + "\\Files\\" + System.IO.Path.GetFileName(file.Path), ProjectsPath + "\\" + newName));
+            }
+            if (!string.IsNullOrEmpty(LoadedFile))
+            {
+                string lastFile = Path.GetFileName(LoadedFile);
+                LoadedFile = ProjectsPath + "\\" + newName + "\\Files\\" + lastFile;
+            }
+            ((ISettings)ParentControl.Parent).SaveSettings();
+            if (propertForm == null) { return; }
+            propertForm.value.Name = newName;
+            MainProjectList.Items.Refresh();
         }
 
         protected override object OnSave(Action action, string project)
