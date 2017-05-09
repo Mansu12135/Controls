@@ -135,15 +135,15 @@ namespace UILayer
             var image = sender as Image;
             if (image == null || image.Tag == null) return;
             string fileName = image.Tag.ToString();
-            propertiesForm.AddTask(new System.Threading.Tasks.Task(
+            var project = (Project)propertiesForm.value;
+            propertiesForm.AddTask(new ContiniouslyOnUITask(
             () =>
             {
-                var project = (Project)propertiesForm.value;
                 if (project == null || string.IsNullOrEmpty(fileName)) { return; }
                 string fullFileName = project.ListFiles.Find(file => file.Name == fileName).Path;
                 if (string.IsNullOrEmpty(fullFileName)) { return; }
                 ((BrowseProject)propertiesForm.CalledControl).DeleteFile(project.Name, fullFileName);
-            }));
+            }, ()=> ((BrowseProject)propertiesForm.CalledControl).OnDeleted(project.Name)));
             listOfFiles.Remove(listOfFiles.Where(item => item.FilePath == fileName).First());
             FileList.Items.Refresh();
         }

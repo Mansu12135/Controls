@@ -10,8 +10,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing;
 using ApplicationLayer;
 using Gma.UserActivityMonitor;
-using Net.Sgoliver.NRtfTree.Util;
-using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 
@@ -305,6 +303,12 @@ namespace UILayer
             if (LoadedFile == System.IO.Path.GetDirectoryName(file.Path) + "\\" + file.Name + ".not") { LoadedFile = ""; }
             File.Delete(file.Path);
             Notes[project].Files.RemoveAt(index);
+            if (!Dispatcher.CheckAccess()){ return; }
+            OnDeleted(project);
+        }
+
+        internal void OnDeleted(string project)
+        {
             if (Notes[project].Files.Count > 0)
             {
                 OpenFile(Notes[project].Files[0].Path, Path.GetFileNameWithoutExtension(Notes[project].Files[0].Path));
@@ -312,7 +316,6 @@ namespace UILayer
                 {
                     UpdateRangeOnNotes();
                 }
-
             }
             else
             {
@@ -331,7 +334,6 @@ namespace UILayer
                         UpdateRangeOnNotes();
                     }
                 }
-
             }
         }
 

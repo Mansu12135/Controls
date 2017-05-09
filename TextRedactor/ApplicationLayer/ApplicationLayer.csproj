@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComplexTransaction.cs" />
+    <Compile Include="ContiniouslyOnUITask.cs" />
     <Compile Include="DictionaryManager.cs" />
     <Compile Include="DictionaryStructures.cs" />
     <Compile Include="BrowseSystem.cs" />
