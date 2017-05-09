@@ -30,7 +30,7 @@ namespace ApplicationLayer
 
     public class ProjectArgs : EventArgs
     {
-        internal RenamedArgs RenamedArgs;
+        public RenamedArgs RenamedArgs { get; private set; }
 
         public ProjectArgs(string project, Happened happened, Action<bool, string, EventArgs> callback)
         {
@@ -74,7 +74,7 @@ namespace ApplicationLayer
 
     public class FileArgs : EventArgs
     {
-        public RenamedArgs RenamedArgs;
+        public RenamedArgs RenamedArgs { get; private set; }
 
         internal Action<bool, string, EventArgs> Callback;
 
