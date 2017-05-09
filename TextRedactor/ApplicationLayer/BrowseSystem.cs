@@ -9,7 +9,7 @@ namespace ApplicationLayer
     internal static class BrowseSystem
     {
         internal static readonly string SubFolder = "Files";
-        internal static readonly string Extension = ".rtf";
+        internal static readonly string Extension = ".xaml";
         private static readonly string ProjectExtension = ".prj";
 
         private static bool CreateProjectFile(object project, string path, ref string message)

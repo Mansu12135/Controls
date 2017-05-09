@@ -40,7 +40,7 @@ namespace UILayer
                 case "add":
                     var dialog = new OpenFileDialog();
                     dialog.CheckPathExists = true;
-                    dialog.Filter = "TextFile (*.rtf)|*.rtf";
+                    dialog.Filter = "TextFile (*.xaml)|*.xaml";
                     dialog.InitialDirectory = ((BrowseProject)projectProperties.propertiesForm.CalledControl).ProjectsPath + "\\" + projectProperties.propertiesForm.value.Name;
                     var rezult = dialog.ShowDialog();
                     if (rezult != DialogResult.OK) { return; }

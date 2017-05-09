@@ -90,7 +90,7 @@ namespace ApplicationLayer
                         , txHandle
                         , IntPtr.Zero
                         , IntPtr.Zero);
-                if (Path.GetExtension(path) == ".rtf")
+                if (Path.GetExtension(path) == ".xaml")
                 {
                     WriteToFile(Properties.Resources.Template, path, ref message, fileHandle);
                 }

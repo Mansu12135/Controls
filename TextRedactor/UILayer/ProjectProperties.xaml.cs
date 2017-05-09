@@ -90,7 +90,7 @@ namespace UILayer
         {
             var dialog = new OpenFileDialog();
             dialog.CheckPathExists = true;
-            dialog.Filter = "TextFile (*.rtf)|*.rtf";
+            dialog.Filter = "TextFile (*.xaml)|*.xaml";
             dialog.InitialDirectory = ((BrowseProject)propertiesForm.CalledControl).ProjectsPath + "\\" + propertiesForm.value.Name;
             var rezult = dialog.ShowDialog();
             if (rezult != DialogResult.OK) { return; }

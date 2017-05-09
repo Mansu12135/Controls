@@ -416,7 +416,7 @@ namespace UILayer
 
         public void SaveAsEpub(ExportInfo info, List<LoadedFile> files)
         {
-            var document = new Document(InputFormat.rtf);
+            var document = new Document(InputFormat.XamlPackage);
             foreach (var file in files)
             {
                 document.AddFile(file.Path);
