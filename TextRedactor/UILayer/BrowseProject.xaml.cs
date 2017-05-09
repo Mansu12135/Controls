@@ -242,7 +242,7 @@ namespace UILayer
 
         public void AddNewFileToProject(string project, string file)
         {
-            string path = ProjectsPath + "\\" + project + "\\Files\\" + file + ".rtf";
+            string path = ProjectsPath + "\\" + project + "\\Files\\" + file + ".xaml";
             if (File.Exists(path)) { return; }
             OnCreatedFiles(new object(), new FileArgs(new List<string>{ file }, project,Happened.Created, EndFilesCreated));
         }
@@ -416,7 +416,7 @@ namespace UILayer
             string project = renamedArgs.Project;
             int index = Notes[project].Files.FindIndex(item => item.Name == renamedArgs.RenamedArgs.From);
             if (index < 0) { return; }
-            Notes[project].Files[index] = new LoadedFile(Path.Combine(ProjectsPath, project, "Files") + "\\" + renamedArgs.RenamedArgs.To + ".rtf", ProjectsPath + "\\" + project, Notes[project].Files[index].IsOpen);//EXTENSION
+            Notes[project].Files[index] = new LoadedFile(Path.Combine(ProjectsPath, project, "Files") + "\\" + renamedArgs.RenamedArgs.To + ".xaml", ProjectsPath + "\\" + project, Notes[project].Files[index].IsOpen);//EXTENSION
             OnSave(() => { }, project);
             ((ISettings)ParentControl.Parent).SaveSettings();
             MainProjectList.Items.Refresh();
