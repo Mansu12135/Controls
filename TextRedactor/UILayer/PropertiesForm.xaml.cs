@@ -54,8 +54,17 @@ namespace UILayer
         {
             Tasks.ForEach(task =>
             {
-                task.Start();
-                task.Wait();
+                var contTask = task as ContiniouslyOnUITask;
+                if (contTask != null)
+                {
+                    contTask.Start();
+                    contTask.Wait();
+                }
+                else
+                {
+                    task.Start();
+                    task.Wait();
+                }
             });
             Tasks.Clear();
             if (CalledControl != null && value != null)
