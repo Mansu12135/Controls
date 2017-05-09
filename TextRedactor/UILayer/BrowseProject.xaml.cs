@@ -352,27 +352,26 @@ namespace UILayer
             if (Notes.Count == 0)
             {
                 CurentProject = null;
+                ParentControl.TextBox.MainControl.FilePath = string.Empty;
                 LoadLogo();
             }
             else
             {
                 var proj = Notes.Where(item => item.Value.Files.Count > 0).FirstOrDefault();
-                if(proj.Value == null)
+                if (proj.Value == null)
                 {
                     CurentProject = null;
+                    ParentControl.TextBox.MainControl.FilePath = string.Empty;
                     LoadLogo();
+                    return;
                 }
-                else
+                OpenFile(proj.Value.Files[0].Path, Path.GetFileNameWithoutExtension(proj.Value.Files[0].Path));
+                CurentProject = proj.Value;
+                if (!string.IsNullOrEmpty(LoadedFile))
                 {
-                    OpenFile(proj.Value.Files[0].Path, Path.GetFileNameWithoutExtension(proj.Value.Files[0].Path));
-                    CurentProject = proj.Value;
-                    if (!string.IsNullOrEmpty(LoadedFile))
-                    {
-                        UpdateRangeOnNotes();
-                    }
-                    MainProjectList.Items.Refresh();
+                    UpdateRangeOnNotes();
                 }
-                
+                MainProjectList.Items.Refresh();
             }
 
         }

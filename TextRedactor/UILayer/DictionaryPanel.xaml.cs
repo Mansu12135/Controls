@@ -1,12 +1,13 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using ApplicationLayer;
 
 namespace UILayer
 {
     /// <summary>
     /// Логика взаимодействия для DictionaryPanel.xaml
     /// </summary>
-    public partial class DictionaryPanel : UserControl
+    public partial class DictionaryPanel : BasicPanel<Item>
     {
         public DictionaryPanel()
         {
