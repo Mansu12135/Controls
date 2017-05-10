@@ -217,37 +217,17 @@ namespace UILayer
             if (exportPanel == null)
             {
                 exportPanel = new ExportPanel();
-                exportPanel.HidenExport.MouseUp += new MouseButtonEventHandler((s, r) => { Container.Child = null; });
+                exportPanel.HidenExport.MouseUp += new MouseButtonEventHandler((s, r) => { Container.Child = null; exportPanel = null; });
                 exportPanel.Name = "export";
                 exportPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                 exportPanel.VerticalAlignment = VerticalAlignment.Stretch;
-                exportPanel.ButExport.Click += ButExport_Click; ;
                 exportPanel.project = BrowseProject.CurentProject;
-                exportPanel.Init();
+                exportPanel.Init(TextBox.MainControl);
                 // Grid.SetColumn(exportPanel, 2);
                 //Grid.SetRowSpan(exportPanel, 2);
                 //System.Windows.Controls.Panel.SetZIndex(exportPanel, 2);
                 //MainContainer.Children.Add(exportPanel);
                 Container.Child = exportPanel;
-            }
-        }
-
-        private void ButExport_Click(object sender, RoutedEventArgs e)
-        {
-            string folderPath = "";
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-            {
-                folderPath = folderBrowserDialog.SelectedPath;
-                ExportInfo exportInfo = new ExportInfo()
-                {
-                    Title = exportPanel.TextBoxTitle.Text,
-                    Author = exportPanel.TextBoxAuthor.Text,
-                    DatePublish = exportPanel.TextBoxPublishingDate.SelectedDate,
-                    SavePath = folderPath,
-                    ImagePath = (exportPanel.ImageName.Tag==null) ? "": exportPanel.ImageName.Tag.ToString()
-                };
-                TextBox.MainControl.SaveAsEpub(exportInfo, BrowseProject.CurentProject.Files);
             }
         }
 
@@ -260,7 +240,7 @@ namespace UILayer
             {
                 panel = new DictionaryPanel();
                 panel.HidenDictionary.MouseUp += HidenDictionary_MouseUp; 
-                panel.Name = "dictionary";
+                //panel.Name = "dictionary";
                 //if (ShowNotes.Visibility == Visibility.Visible)
                 //{
                 //    HidenNotes_MouseUp(null, null);

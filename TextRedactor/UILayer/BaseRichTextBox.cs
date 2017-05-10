@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows.Media;
 using ApplicationLayer;
 using EpubConvertor;
+using System.IO;
 
 namespace UILayer
 {
@@ -432,16 +433,7 @@ namespace UILayer
                 document.PathToCover = info.ImagePath;
             }
             var convertor = new Convertor(document);
-            convertor.CreateEpub(info.SavePath.EndsWith("\\") ? info.SavePath : (info.SavePath + "\\") + info.Title + ".epub");
-          //  HackDocument document = new HackDocument(filePath);
-           // document.BuiltinDocumentProperties.Title = info.Title;
-          //  document.BuiltinDocumentProperties.Author = info.Author;
-          //  document.BuiltinDocumentProperties.CreateDate = (DateTime)info.DatePublish == null ? DateTime.Now : (DateTime)info.DatePublish;
-         //   var section = document.AddSection();
-         //   section.Document.LoadRtf(@"C:\test.rtf");
-          //  section = document.AddSection();
-          //  section.Document.LoadRtf(filePath);
-         //   document.PremiumSave(info.SavePath + "\\" + Path.GetFileNameWithoutExtension(filePath) + ".epub", FileFormat.EPub);
+            convertor.CreateEpub(Path.Combine(info.SavePath, info.Title + ".epub"));
         }
         //public byte[] ConvertDocumentToPdf(Stream aInputStream)
         //{

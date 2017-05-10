@@ -35,9 +35,8 @@
       <HintPath>..\ApplicationLayer\bin\Debug\ApplicationLayer.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="EpubConvertor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\EpubConvertor\EpubConvertor\bin\Debug\EpubConvertor.dll</HintPath>
+    <Reference Include="EpubConvertor">
+      <HintPath>..\..\..\..\EpubConvertor.dll</HintPath>
     </Reference>
     <Reference Include="Gma.UserActivityMonitor">
       <HintPath>..\..\..\..\Gma.UserActivityMonitor.dll</HintPath>

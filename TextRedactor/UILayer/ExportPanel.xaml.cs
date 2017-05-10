@@ -27,34 +27,36 @@ namespace UILayer
     public partial class ExportPanel : System.Windows.Controls.UserControl
     {
         public Project project;
+        private BaseRichTextBox document; 
         public ExportPanel()
         {
             InitializeComponent();
         }
 
-        public void Init()
+        public void Init(BaseRichTextBox doc)
         {
+            document = doc;
             TextBoxAuthor.Text = project.Author;
             TextBoxTitle.Text = project.Name;
-            ExportTextBox.Document = new FlowDocument();
-            foreach (var doc in project.Files)
-            {
-                FlowDocument paragraph = new FlowDocument();
-                //using (var fStream = new FileStream(doc.Path, FileMode.OpenOrCreate, FileAccess.Read))
-                //{
-                try
-                {
-                    FileWorkerManager.Do(paragraph, doc.Path, false);
-                    //  new TextRange(paragraph.ContentStart, paragraph.ContentEnd).Load(fStream, System.Windows.DataFormats.Rtf);
-                }
-                catch (Exception ex)
-                {
-                    System.Windows.MessageBox.Show(ex.Message);
-                    return;
-                }
-                //   }
-                ExportTextBox.Document.Blocks.AddRange(paragraph.Blocks.ToList());
-            }
+            //ExportTextBox.Document = new FlowDocument();
+            //foreach (var doc in project.Files)
+            //{
+            //    FlowDocument paragraph = new FlowDocument();
+            //    //using (var fStream = new FileStream(doc.Path, FileMode.OpenOrCreate, FileAccess.Read))
+            //    //{
+            //    try
+            //    {
+            //        FileWorkerManager.Do(paragraph, doc.Path, false);
+            //        //  new TextRange(paragraph.ContentStart, paragraph.ContentEnd).Load(fStream, System.Windows.DataFormats.Rtf);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        System.Windows.MessageBox.Show(ex.Message);
+            //        return;
+            //    }
+            //    //   }
+            //    ExportTextBox.Document.Blocks.AddRange(paragraph.Blocks.ToList());
+            //}
 
         }
 
@@ -76,6 +78,25 @@ namespace UILayer
             ImageName.Tag = null;
             ImageName.Content = "";
             DeleteImage.Visibility = Visibility.Hidden;
+        }
+
+        private void ButExport_Click(object sender, RoutedEventArgs e)
+        {
+            string folderPath = "";
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                folderPath = folderBrowserDialog.SelectedPath;
+                ExportInfo exportInfo = new ExportInfo()
+                {
+                    Title = TextBoxTitle.Text,
+                    Author = TextBoxAuthor.Text,
+                    DatePublish = TextBoxPublishingDate.SelectedDate,
+                    SavePath = folderPath,
+                    ImagePath = (ImageName.Tag == null) ? "" : ImageName.Tag.ToString()
+                };
+                document.SaveAsEpub(exportInfo, project.Files);
+            }
         }
     }
     public class ExportInfo

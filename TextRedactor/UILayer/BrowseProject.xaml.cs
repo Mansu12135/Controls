@@ -298,7 +298,11 @@ namespace UILayer
             Notes[newName].Files.Clear();
             foreach (var file in files)
             {
-                Notes[newName].Files.Add(new LoadedFile(ProjectsPath + "\\" + newName + "\\Files\\" + System.IO.Path.GetFileName(file.Path), ProjectsPath + "\\" + newName));
+                if (file.IsOpen > 0)
+                {
+                    ParentControl.TextBox.MainControl.FilePath = ProjectsPath + "\\" + newName + "\\Files\\" + System.IO.Path.GetFileName(file.Path);
+                }
+                Notes[newName].Files.Add(new LoadedFile(ProjectsPath + "\\" + newName + "\\Files\\" + System.IO.Path.GetFileName(file.Path), ProjectsPath + "\\" + newName, file.IsOpen));
             }
             if (!string.IsNullOrEmpty(LoadedFile))
             {
@@ -306,8 +310,10 @@ namespace UILayer
                 LoadedFile = ProjectsPath + "\\" + newName + "\\Files\\" + lastFile;
             }
             ((ISettings)ParentControl.Parent).SaveSettings();
-            if (propertForm == null) { return; }
-            propertForm.value.Name = newName;
+            if (propertForm != null)
+            {
+                propertForm.value.Name = newName;
+            }
             MainProjectList.Items.Refresh();
         }
 
