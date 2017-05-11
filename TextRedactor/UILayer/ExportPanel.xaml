@@ -37,7 +37,7 @@
 
 
         <Label x:Name="HidenExport" Content="Hide export panel" HorizontalAlignment="Left" Margin="6,0,0,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand" Height="26" Width="102"/>
-        <Button  x:Name="ButExport" Content="EXPORT" Cursor="Hand" x:FieldModifier="public" Grid.ColumnSpan="2" FontFamily="Segoe UI Semibold"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="207,18,207,16" Grid.Row="4" Height="26" Width="75" Click="ButExport_Click"></Button>
+        <Button  x:Name="ButExport" Content="EXPORT" Cursor="Hand" x:FieldModifier="public" Grid.ColumnSpan="2" FontFamily="Segoe UI Semibold"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="207,0" Grid.Row="4" Width="75" Click="ButExport_Click"></Button>
         <!--<Border BorderThickness="1" x:Name="ButExport" x:FieldModifier="public" Height="30" Margin="175,15,175,16" Grid.Row="4" Width="100" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Border.BorderBrush>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
@@ -84,5 +84,7 @@
                 <Image Name="DeleteImage" Source="Resources/close_icon.png" Visibility="Hidden" MouseUp="DeleteImage_MouseUp"></Image>
             </Border>
         </StackPanel>
+        <RadioButton x:Name="CheckEpub" Content="EPUB" Grid.Column="1"  FontFamily="Segoe UI Semibold" FontSize="10" HorizontalAlignment="Left" Margin="21,10,0,0" Grid.Row="3" VerticalAlignment="Top"/>
+        <RadioButton x:Name="CheckMobi" Content="MOBI" Grid.Column="1" HorizontalAlignment="Left" Margin="21,30,0,0"  FontFamily="Segoe UI Semibold" FontSize="10" Grid.Row="3" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

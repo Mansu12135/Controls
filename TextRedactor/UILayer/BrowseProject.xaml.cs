@@ -466,6 +466,7 @@ namespace UILayer
                     OnFileOpen(folder + "\\", content);
                     LoadedFile = folder + "\\" + content + ".not";
                     CurentFile = path;
+                    CurentProject = Notes[Directory.GetParent(folder).Name];
                 }
             }
             catch (Exception ex)

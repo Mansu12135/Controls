@@ -11,6 +11,7 @@ using System.Windows.Media;
 using ApplicationLayer;
 using EpubConvertor;
 using System.IO;
+using System.Diagnostics;
 
 namespace UILayer
 {
@@ -454,17 +455,17 @@ namespace UILayer
         //    tDocument.SaveToStream(aOutputStream, tFileFormat);
         //    tDocument.Close();
         //}
-        public void SaveAsMobi(ExportInfo info, string filePath)
+        public void SaveAsMobi(ExportInfo info, List<LoadedFile> files)
         {
-            //SaveAsEpub(info, filePath);
-            //var process = new Process();
-            //process.StartInfo.UseShellExecute = false;
-            //process.StartInfo.RedirectStandardOutput = true;
-            //process.StartInfo.FileName = System.Windows.Forms.Application.StartupPath + "\\" + "kindlegen.exe";
-            //process.StartInfo.Arguments = info.SavePath + "\\ToEpub.epub";
-            //process.Start();
-            //process.WaitForExit();
-            //File.Delete(info.SavePath + "\\ToEpub.epub");
+            SaveAsEpub(info, files);
+            var process = new Process();
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.FileName = System.Windows.Forms.Application.StartupPath + "\\" + "kindlegen.exe";
+            process.StartInfo.Arguments = Path.Combine(info.SavePath, info.Title + ".epub");
+            process.Start();
+            process.WaitForExit();
+            File.Delete(Path.Combine(info.SavePath, info.Title + ".epub"));
         }
     }
 }

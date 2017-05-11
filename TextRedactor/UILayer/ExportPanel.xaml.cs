@@ -82,6 +82,7 @@ namespace UILayer
 
         private void ButExport_Click(object sender, RoutedEventArgs e)
         {
+            if(CheckEpub.IsChecked== false && CheckMobi.IsChecked == false) { return; }
             string folderPath = "";
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
@@ -95,7 +96,14 @@ namespace UILayer
                     SavePath = folderPath,
                     ImagePath = (ImageName.Tag == null) ? "" : ImageName.Tag.ToString()
                 };
-                document.SaveAsEpub(exportInfo, project.Files);
+                if (CheckEpub.IsChecked == true)
+                {
+                    document.SaveAsEpub(exportInfo, project.Files);
+                }
+                if (CheckMobi.IsChecked == true)
+                {
+                    document.SaveAsMobi(exportInfo, project.Files);
+                }
             }
         }
     }

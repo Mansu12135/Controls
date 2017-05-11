@@ -217,18 +217,39 @@ namespace UILayer
             if (exportPanel == null)
             {
                 exportPanel = new ExportPanel();
-                exportPanel.HidenExport.MouseUp += new MouseButtonEventHandler((s, r) => { Container.Child = null; exportPanel = null; });
+                exportPanel.HidenExport.MouseUp += HidenExport_MouseUp; 
                 exportPanel.Name = "export";
                 exportPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                 exportPanel.VerticalAlignment = VerticalAlignment.Stretch;
                 exportPanel.project = BrowseProject.CurentProject;
                 exportPanel.Init(TextBox.MainControl);
+                foreach(KeyValuePair<string,Project> item in BrowseProject.MainProjectList.Items)
+                {
+                    if (item.Value != BrowseProject.CurentProject)
+                    {
+                        ((ListBoxItem)BrowseProject.MainProjectList.ItemContainerGenerator.ContainerFromItem(item)).IsEnabled = false;
+                    }
+                }
+                
                 // Grid.SetColumn(exportPanel, 2);
                 //Grid.SetRowSpan(exportPanel, 2);
                 //System.Windows.Controls.Panel.SetZIndex(exportPanel, 2);
                 //MainContainer.Children.Add(exportPanel);
                 Container.Child = exportPanel;
             }
+        }
+
+        private void HidenExport_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            foreach (KeyValuePair<string, Project> item in BrowseProject.MainProjectList.Items)
+            {
+                if (item.Value != BrowseProject.CurentProject)
+                {
+                    ((ListBoxItem)BrowseProject.MainProjectList.ItemContainerGenerator.ContainerFromItem(item)).IsEnabled = true;
+                }
+            }
+            Container.Child = null;
+            exportPanel = null;
         }
 
         ExportPanel exportPanel;
