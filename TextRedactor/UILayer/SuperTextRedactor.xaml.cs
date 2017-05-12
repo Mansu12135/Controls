@@ -230,7 +230,8 @@ namespace UILayer
                         ((ListBoxItem)BrowseProject.MainProjectList.ItemContainerGenerator.ContainerFromItem(item)).IsEnabled = false;
                     }
                 }
-                
+                Format.IsEnabled = false;
+                TextBox.IsEnabled = false;
                 // Grid.SetColumn(exportPanel, 2);
                 //Grid.SetRowSpan(exportPanel, 2);
                 //System.Windows.Controls.Panel.SetZIndex(exportPanel, 2);
@@ -248,6 +249,8 @@ namespace UILayer
                     ((ListBoxItem)BrowseProject.MainProjectList.ItemContainerGenerator.ContainerFromItem(item)).IsEnabled = true;
                 }
             }
+            Format.IsEnabled = true;
+            TextBox.IsEnabled = true;
             Container.Child = null;
             exportPanel = null;
         }
@@ -416,6 +419,7 @@ namespace UILayer
             string text = range.Text;
             NotesBrowser.AddItem(new Note(name, text, new TextRange(range.Start, range.End), startOffset, endOffset));
             AddFlag(range, name);
+            NotesBrowser.CloseNotes(BrowseProject.LoadedFile);
         }
 
         private void AddFlag(TextSelection range, string name)

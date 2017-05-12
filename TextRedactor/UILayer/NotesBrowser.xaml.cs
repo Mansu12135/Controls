@@ -148,6 +148,7 @@ namespace UILayer
                 }
             }
             Notes.Remove(im.Tag.ToString());
+            OnSave(() => { }, ParentControl.BrowseProject.LoadedFile);
             MainControl.Items.Refresh();
         }
 
@@ -185,6 +186,7 @@ namespace UILayer
                 Notes[CloneTextBox.Text].Name = CloneTextBox.Text;
                 updageTagOnFlag(Notes[CloneTextBox.Text]);
                 Notes.Remove(name);
+                OnSave(() => { }, ParentControl.BrowseProject.LoadedFile);
             }
             MainControl.Items.Refresh();
             EndChangingDynamicItem();
@@ -232,7 +234,7 @@ namespace UILayer
                 Validation.MarkInvalid(Binding, new ValidationError(new ExceptionValidationRule(), Binding));
                 if (ErrorToolTip == null)
                 {
-                    ErrorToolTip = new ToolTip { Content = TextRedactor.PathErrorMessage };
+                    ErrorToolTip = new ToolTip { Content = TextRedactor.NoteErrorMessage };
                     CloneTextBox.ToolTip = ErrorToolTip;
                 }
                 ErrorToolTip.IsOpen = true;
@@ -282,8 +284,9 @@ namespace UILayer
             var absoluteRectangle = new Rectangle((int)absolutePoint.X, (int)absolutePoint.Y, location.Width, location.Height);
             if (absoluteRectangle.Contains(mouseEventArgs.X, mouseEventArgs.Y)) { return; }
             HookManager.MouseDown -= HookManager_MouseDown;
-           
-          //  textBox.MoveFocus(ParentControl.TextBox.MainControl);
+            noteText.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            ParentControl.TextBox.MainControl.Focus();
+            //  textBox.MoveFocus(ParentControl.TextBox.MainControl);
         }
         TextBox noteText;
         private void TextValue_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -313,6 +316,6 @@ namespace UILayer
             myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
             myThicknessAnimation.Completed += new EventHandler((s, r) => ParentControl.ShowNotes.Visibility = Visibility.Visible);
             ((Border)ParentControl.RedactorConteiner).BeginAnimation(Border.MarginProperty, myThicknessAnimation);
-        }
+        }   
     }
 }

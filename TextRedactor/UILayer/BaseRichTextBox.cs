@@ -457,7 +457,8 @@ namespace UILayer
         //}
         public void SaveAsMobi(ExportInfo info, List<LoadedFile> files)
         {
-            //Path.GetTempPath() + info.title.... 
+            var newPath = info.SavePath;
+            info.SavePath = Path.GetTempPath();
             SaveAsEpub(info, files);
             var process = new Process();
             process.StartInfo.UseShellExecute = false;
@@ -467,6 +468,8 @@ namespace UILayer
             process.StartInfo.Arguments = Path.Combine(info.SavePath, info.Title + ".epub");
             process.Start();
             process.WaitForExit();
+            File.Move(Path.Combine(info.SavePath, info.Title + ".mobi"), Path.Combine(newPath, info.Title + ".mobi"));
+
             File.Delete(Path.Combine(info.SavePath, info.Title + ".epub"));
         }
     }
