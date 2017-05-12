@@ -457,10 +457,12 @@ namespace UILayer
         //}
         public void SaveAsMobi(ExportInfo info, List<LoadedFile> files)
         {
+            //Path.GetTempPath() + info.title.... 
             SaveAsEpub(info, files);
             var process = new Process();
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.CreateNoWindow = true;
             process.StartInfo.FileName = System.Windows.Forms.Application.StartupPath + "\\" + "kindlegen.exe";
             process.StartInfo.Arguments = Path.Combine(info.SavePath, info.Title + ".epub");
             process.Start();
