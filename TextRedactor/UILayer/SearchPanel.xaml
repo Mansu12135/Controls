@@ -33,11 +33,11 @@
             </Border>
 
         </StackPanel>
-        <TextBox x:Name="TextWord" Margin="21,6,0,5" Grid.Row="1" TextWrapping="Wrap" Text="Enter word..." HorizontalAlignment="Left" VerticalAlignment="Center" Width="175" FontSize="14" Padding="0,2" FontStyle="Italic" Foreground="#FF919191" SelectionBrush="#FF8FAECD" Background="White" Grid.ColumnSpan="2" >
+        <TextBox x:Name="TextWord" Margin="21,6,0,5" Grid.Row="1" TextWrapping="Wrap" Text="Enter word..." HorizontalAlignment="Left" VerticalAlignment="Center" Width="175" FontSize="14" Padding="0,2" FontStyle="Italic" Foreground="#FF919191" SelectionBrush="#FF8FAECD" Background="White" Grid.ColumnSpan="2" KeyUp="TextWord_KeyUp" >
         </TextBox>
         <Label x:Name="HidenSearch" Content="Hide" HorizontalAlignment="Left" Margin="6,0,0,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand"/>
         <Border BorderBrush="Black" BorderThickness="0" Grid.Column="1" HorizontalAlignment="Left" Height="13" Margin="77,12,0,0" Grid.Row="1" Grid.RowSpan="3" VerticalAlignment="Top" Width="13" Padding="0">
-            <Image x:Name="GoToNextFind" Cursor="Hand" Source="Resources/arrow-of-double-angle-pointing-down.png" RenderTransformOrigin="0.5,0.5" >
+            <Image x:Name="GoToNextFind" Cursor="Hand" Source="Resources/arrow-of-double-angle-pointing-down.png" RenderTransformOrigin="0.5,0.5" MouseUp="GoToNextFind_MouseUp" >
                 <Image.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -51,7 +51,7 @@
         <TextBox x:Name="TextWordReplace" Margin="21,2,0,21" Grid.Row="2" TextWrapping="NoWrap" Text="" HorizontalAlignment="Left" VerticalAlignment="Center" Width="175" FontSize="14" Padding="0,2" FontStyle="Italic" Foreground="#FF919191" SelectionBrush="#FF8FAECD" Background="White" Grid.ColumnSpan="2" />
         <CheckBox x:Name="ReplaceOnce" Grid.Row="2" Margin="21,30,0,0" Content="Replace" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <CheckBox x:Name="ReplaceAll" Grid.Row="2" Margin="116,30,0,0" Content="Replace all" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2" />
-        <Border x:Name="ButReplace" BorderBrush="Black" BorderThickness="0" Grid.Column="1" HorizontalAlignment="Left" Height="13" Margin="77,8,0,0" Grid.Row="2" Grid.RowSpan="3" VerticalAlignment="Top" Width="13" Padding="0">
+        <Border x:Name="ButReplace" BorderBrush="Black" BorderThickness="0" Grid.Column="1" HorizontalAlignment="Left" Height="13" Margin="77,8,0,0" Grid.Row="2" Grid.RowSpan="3" VerticalAlignment="Top" Width="13" Padding="0" MouseUp="ButReplace_MouseUp">
             <Image x:Name="ReplaceNextFind" Cursor="Hand" Source="Resources/arrow-of-double-angle-pointing-down.png" RenderTransformOrigin="0.5,0.5" >
                 <Image.RenderTransform>
                     <TransformGroup>

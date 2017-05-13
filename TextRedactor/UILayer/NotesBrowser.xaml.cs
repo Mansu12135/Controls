@@ -36,7 +36,8 @@ namespace UILayer
                 serializer.Serialize(stream, Notes);
             }
         }
-
+        internal bool IsVisible { get { return _isVisible; } set { _isVisible = value; } }
+        private bool _isVisible = true;
         internal override string GenerateName(string name, string path = "", bool isProg = false)
         {
             string generattingName = name;
@@ -114,7 +115,7 @@ namespace UILayer
             }
             return flag;
         }
-        public System.Windows.Controls.Image NotePicture { get; set; }
+
         private void DelNote_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var im = sender as System.Windows.Controls.Image;
@@ -272,8 +273,8 @@ namespace UILayer
             }
         }
 
-       
-      
+
+
         private void HookManager_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (noteText == null) return;
@@ -306,6 +307,7 @@ namespace UILayer
             myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
             ((Border)ParentControl.RedactorConteiner).BeginAnimation(Border.MarginProperty, myThicknessAnimation);
             ParentControl.ShowNotes.Visibility = Visibility.Hidden;
+            IsVisible = true;
         }
 
         public override void Hide()
@@ -316,6 +318,7 @@ namespace UILayer
             myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
             myThicknessAnimation.Completed += new EventHandler((s, r) => ParentControl.ShowNotes.Visibility = Visibility.Visible);
             ((Border)ParentControl.RedactorConteiner).BeginAnimation(Border.MarginProperty, myThicknessAnimation);
-        }   
+            IsVisible = false;
+        }
     }
 }

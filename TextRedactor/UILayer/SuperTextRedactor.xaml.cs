@@ -30,8 +30,8 @@ namespace UILayer
         private Command OnlyProjectCommand;
         private Command ProjectAndNoteCommand;
         internal Window Parent;
-        private int FlowPosition;
-        private int activeFindIndex;
+       // private int FlowPosition;
+       // private int activeFindIndex;
 
         public double defaultFont;
         public double defaultSpacing;
@@ -184,18 +184,7 @@ namespace UILayer
                 BrowseProject.Show();
             }
         }
-        private void AnimateMargin(Thickness from, Thickness to, object control, bool hide, System.Windows.Controls.Label label = null)
-        {
-            ThicknessAnimation myThicknessAnimation = new ThicknessAnimation();
-            myThicknessAnimation.From = from;
-            myThicknessAnimation.To = to;
-            myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
-            if (label != null)
-            {
-                myThicknessAnimation.Completed += new EventHandler((s, r) => label.Visibility = hide ? Visibility.Visible : Visibility.Hidden);
-            }
-            ((Border)control).BeginAnimation(Border.MarginProperty, myThicknessAnimation);
-        }
+       
         private void HidenNotes_MouseUp(object sender, MouseButtonEventArgs e)
         {
             NotesBrowser.Hide();
@@ -262,45 +251,33 @@ namespace UILayer
         {
             if (panel == null)
             {
-                panel = new DictionaryPanel();
+                panel = new DictionaryPanel(this);
                 panel.HidenDictionary.MouseUp += HidenDictionary_MouseUp; 
-                //panel.Name = "dictionary";
-                //if (ShowNotes.Visibility == Visibility.Visible)
-                //{
-                //    HidenNotes_MouseUp(null, null);
-                //}
                 panel.TextWord.KeyUp += TextWord_KeyUp;
                 panel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                 panel.VerticalAlignment = VerticalAlignment.Stretch;
-                //  panel.zIndex = 2;
-                //NotesBrowser.Visibility = Visibility.Hidden;
-                Grid.SetColumn(panel, 2);
+               Grid.SetColumn(panel, 2);
                 Grid.SetRowSpan(panel, 2);
                 System.Windows.Controls.Panel.SetZIndex(panel, 1);
-             //   panel.Margin = new Thickness(-panel.ActualWidth, panel.Margin.Top, panel.Margin.Right, panel.Margin.Bottom);
                MainContainer.Children.Add(panel);
-                //   HidenNotes_MouseUp(null,nuul);
-                if (ShowNotes.Visibility == Visibility.Visible)
-                {
-                    AnimateMargin(RedactorConteiner.Margin, new Thickness(RedactorConteiner.Margin.Left, RedactorConteiner.Margin.Top, 0, RedactorConteiner.Margin.Bottom), RedactorConteiner, true, panel.HidenDictionary);
-                }
-                //   Container.Child = panel;
+                panel.Show();
             }
-            panel.TextWord.Text = GetCurrentWord();// this.TextBox.MainControl.Selection.Text;
+            panel.TextWord.Text = GetCurrentWord();
             ShowDictionaryResult(panel.TextWord.Text);
-            //TODO
-            //есле уже true то оно не обновляет, пока что дописала доп условие
             panel.ModeDictionary.IsChecked = !panel.ModeDictionary.IsChecked;
             panel.ModeDictionary.IsChecked = true;
         }
 
         private void HidenDictionary_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (ShowNotes.Visibility == Visibility.Visible)
+            if (!NotesBrowser.IsVisible)
             {
-                HidenNotes_MouseUp(null,null);
+                panel.Hide();
             }
-            MainContainer.Children.Remove(panel);
+            else
+            {
+                MainContainer.Children.Remove(panel);
+            }
             panel = null;
         }
 
@@ -489,257 +466,7 @@ namespace UILayer
             //}
         }
 
-        private int Replace(List<SearchResult> found, string to)
-        {
-            int count = 0;
-            if (found.Any())
-            {
-                FlowPosition = 0;
-                // var document = LoadFile(found[0].Path);
-                foreach (var item in found)
-                {
-                    var range = item.Range;
-                    // new TextRange(
-                    //   TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(item.Start),
-                    // TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(item.End));
-                    if (range.Text.Trim() != item.Text.Trim())
-                    {
-                        FlowPosition = 0;
-                        return 0;
-                    }
-                    //FlowPosition += to.Length - range.Text.Length;
-                    range.Text = to;
-                    // count++;
-                }
-                //    SaveChanges(found[0], document);
-            }
-            // TextBox.MainControl.Document.Focus();
-            return count;
-        }
-
-        private int ReplaceAll(List<SearchResult> founds, string to)
-        {
-            int count = 0;
-            var list = founds.GroupBy(r => r.Path).ToList();
-            foreach (var item in list)
-            {
-                count += Replace(item.OfType<SearchResult>().ToList(), to);
-            }
-            return count;
-        }
-
-        public int Replace(string from, string to, FindReplaceExpression expression)
-        {
-            int count = 0;
-            switch (expression)
-            {
-                case FindReplaceExpression.FirstFound:
-                    {
-                        var list = new List<SearchResult>();
-                        list.Add(SearchSelector.rezults.ElementAt(activeFindIndex));
-                        count = Replace(list, to);
-                        if (count > 0)
-                        {
-                            SearchSelector.rezults.Remove(SearchSelector.rezults.ElementAt(activeFindIndex));
-                        }
-                        break;
-                    }
-                case FindReplaceExpression.InThisPage:
-                    {
-                        count = 0;
-                        break;
-                    }
-                case FindReplaceExpression.InThisParagraph:
-                    {
-                        count = 0;
-                        break;
-                    }
-                case FindReplaceExpression.InThisBook:
-                    {
-                        count = ReplaceAll(Search(from, expression), to);
-
-                        // SearchSelector.RestoreOriginalState(this);
-                        break;
-                    }
-            }
-            //SearchSelector.rezults.ForEach(item =>
-            //    item.Position += FlowPosition);
-            BrowseProject.OpenFile(BrowseProject.CurentFile, Path.GetFileNameWithoutExtension(BrowseProject.CurentFile));
-            NotesBrowser.MainControl.Items.Refresh();
-            return count;
-        }
-
-        //private SearchResult Find(string therm, string file)
-        //{
-        //    var document = LoadFile(file);
-        //    TextPointer current = document.ContentStart;
-        //    int index;
-        //    int count = 0;
-        //    foreach (var block in document.Blocks)
-        //    {
-        //        string textInRun = new TextRange(block.ContentStart, block.ContentEnd).Text;
-        //        if (!string.IsNullOrWhiteSpace(textInRun))
-        //        {
-        //            index = textInRun.IndexOf(therm);
-        //            if (index != -1)
-        //            {
-        //                return new SearchResult { Position = index + count, Path = file, Text = therm };// new TextRange(document.ContentStart.GetPositionAtOffset(index), document.ContentStart.GetPositionAtOffset(index + therm.Length)).Text });
-        //            }
-        //            count += textInRun.Length;
-        //        }
-        //    }
-        //    //    while (current != null)
-        //    //{
-        //    //    int index;
-        //    //    string textInRun = current.GetTextInRun(LogicalDirection.Forward);
-        //    //    if (!string.IsNullOrWhiteSpace(textInRun))
-        //    //    {
-        //    //        index = textInRun.IndexOf(therm);
-        //    //        if (index != -1)
-        //    //        {
-        //    //            return new KeyValuePair<int, SearchResult>(index, new SearchResult { Path = file, Text = new TextRange(document.ContentStart.GetPositionAtOffset(index), document.ContentStart.GetPositionAtOffset(index + therm.Length)).Text });
-        //    //        }
-        //    //    }
-        //    //    current = current.GetNextContextPosition(LogicalDirection.Forward);
-        //    //}
-        //    return null;
-        //}
-
-        //private void SelectSearchWord(string file, List<SearchResult> items)
-        //{
-        //    foreach (var item in items)
-        //    {
-        //        if (item.Path == file)
-        //        {
-        //            new TextRange
-        //                (TextBox.MainControl.GetTextPointAt(TextBox.MainControl.Document.ContentStart, item.Position),
-        //                TextBox.MainControl.GetTextPointAt(TextBox.MainControl.Document.ContentStart, item.Position + item.Text.Length))
-        //                .ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.Yellow);
-        //        }
-        //    }
-        //}
-
-
-        //private void Founds(string textInRun, string threm, string file, int paragraphPosition, ref List<SearchResult> items)
-        //{
-        //    if (!string.IsNullOrWhiteSpace(textInRun))
-        //    {
-        //        int count = 0;
-        //        while (count != -1)
-        //        {
-        //            count = textInRun.IndexOf(threm, count);
-        //            if (count > -1)
-        //            {
-        //                items.Add(new SearchResult { Position = paragraphPosition+count, Path = file, Text = threm});
-        //                count += threm.Length;
-        //            }
-        //        }
-        //    }
-        //}
-
-        private List<SearchResult> FindAll(string therm, string file)
-        {
-
-            var list = new List<SearchResult>();
-            var document = TextBox.MainControl;//LoadFile(file);
-            document.SelectAll();
-            document.Selection
-                       //   new TextRange
-                       //             (document.ContentStart, document.ContentEnd)
-                       .ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.White);
-            Regex reg = new Regex(therm, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            TextPointer position = document.Document.ContentStart;
-            List<TextRange> ranges = new List<TextRange>();
-            int count = 0;
-            while (position != null)
-            {
-                if (position.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
-                {
-                    string text = position.GetTextInRun(LogicalDirection.Forward);
-                    var matchs = reg.Matches(text);
-
-                    foreach (Match match in matchs)
-                    {
-
-                        TextPointer start = position.GetPositionAtOffset(match.Index);
-                        TextPointer end = start.GetPositionAtOffset(therm.Trim().Length);
-                        TextRange textrange = new TextRange(start, end);
-                        //  ranges.Add(textrange);
-                        //       var range = new TextRange(start, end);// document.ContentStart.(position)+document.ContentStart.GetPositionAtOffset(match.Index), document.ContentStart.GetPositionAtOffset(therm.Trim().Length));
-                        list.Add(new SearchResult { Path = file, Text = textrange.Text, Range = textrange /*Start = document.ContentStart.GetOffsetToPosition(start), End = document.ContentStart.GetOffsetToPosition(end)*/});
-                        //range.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(Colors.Red));
-
-                    }
-                }
-                else
-                {
-                    count++;
-                }
-                position = position.GetNextContextPosition(LogicalDirection.Forward);
-            }
-            foreach (var range in list)
-            {
-                range.Range.ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(Colors.Yellow));
-                //   range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
-            }
-
-            //foreach (var item in list)
-            //{
-            //    new TextRange(document.ContentStart.GetPositionAtOffset(list.LastOrDefault().Start), document.ContentStart.GetPositionAtOffset(list.LastOrDefault().End)).
-            //     ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.Yellow);
-            //}
-            //TextPointer p = TextBox.MainControl.Document.ContentStart;
-            //while (true)
-            //{
-            //    var range = FindWordFromPosition(p, therm);
-            //    if(range == null) { break; }
-            //    list.Add(new SearchResult { Path = file, Position = TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.Start.DocumentStart), Text = range.Text });
-            //    p = range.End;
-            //}
-
-
-            return list;
-        }
-
-        public List<SearchResult> Search(string therm, FindReplaceExpression expression)
-        {
-            var list = new List<SearchResult>();
-            switch (expression)
-            {
-                case FindReplaceExpression.InThisPage:
-                    {
-                        var temp = FindAll(therm, BrowseProject.CurentFile);
-                        foreach (var rezult in temp)
-                        {
-                            list.Add(rezult);
-                        }
-                        break;
-                    }
-                case FindReplaceExpression.InThisBook:
-                    {
-                        string project = new FileInfo(BrowseProject.CurentFile).Directory.Parent.Name;
-                        if (!BrowseProject.Notes.ContainsKey(project)) { break; }
-                        foreach (var file in BrowseProject.Notes[project].Files)
-                        {
-                            var temp = FindAll(therm, file.Path);
-                            foreach (var rezult in temp)
-                            {
-                                list.Add(rezult);
-                            }
-                        }
-                        break;
-                    }
-            }
-            return list;
-        }
-
-        public enum FindReplaceExpression
-        {
-            FirstFound = 0,
-            InThisPage = 1,
-            InThisParagraph = 2,
-            InThisBook = 3
-        }
+      
         public void InitFullScr(Window w)
         {
             if (!(w is ISettings)) { throw new Exception(); }
@@ -782,62 +509,39 @@ namespace UILayer
         {
             if (searchPanel == null)
             {
-                searchPanel = new SearchPanel();
-                searchPanel.HidenSearch.MouseUp += new MouseButtonEventHandler((s, r) => {
-                    MainContainer.Children.Remove(searchPanel); NotesBrowser.Visibility = Visibility.Visible; searchPanel = null;
-                    SearchSelector.RestoreOriginalState(this);
-                });
-                searchPanel.GoToNextFind.MouseUp += GoToNextFind_MouseUp;
-                searchPanel.ButReplace.MouseUp += ButReplace_MouseUp;
-                searchPanel.TextWord.KeyUp += TextWord_KeyUp1;
-                searchPanel.Name = "search";
-                if (ShowNotes.Visibility == Visibility.Visible)
-                {
-                    ShowNotes_MouseUp(null, null);
-                }
+                searchPanel = new SearchPanel(this);
+                searchPanel.HidenSearch.MouseUp += HidenSearch_MouseUp;        
+                searchPanel.Show();
                 searchPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                 searchPanel.VerticalAlignment = VerticalAlignment.Stretch;
-                NotesBrowser.Visibility = Visibility.Hidden;
                 Grid.SetColumn(searchPanel, 2);
                 Grid.SetRowSpan(searchPanel, 2);
-                System.Windows.Controls.Panel.SetZIndex(searchPanel, 2);
+                System.Windows.Controls.Panel.SetZIndex(searchPanel, 1);
                 MainContainer.Children.Add(searchPanel);
-                //  Container.Child = searchPanel;
+            }
+            if (!TextBox.MainControl.IsReadOnly && !string.IsNullOrWhiteSpace(TextBox.MainControl.Selection.Text))
+            {
+                searchPanel.GetSearchResalt(TextBox.MainControl.Selection.Text);
+               
+            }
+        }
+
+        private void HidenSearch_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!NotesBrowser.IsVisible)
+            {
+                searchPanel.Hide();
             }
             else
             {
-                //Grid.SetColumn(searchPanel, 2);
-                //Grid.SetRowSpan(searchPanel, 2);
-                //System.Windows.Controls.Panel.SetZIndex(searchPanel, 2);
-                //MainContainer.Children.Add(searchPanel);
-                // Container.Child = searchPanel;
+                MainContainer.Children.Remove(searchPanel);
             }
-            if (!TextBox.MainControl.IsReadOnly && !string.IsNullOrWhiteSpace(TextBox.MainControl.Selection.Text))
-                GetSearchResalt(TextBox.MainControl.Selection.Text);
-            //   TextBox.MainControl.CaretPosition = BrowseProject.GetTextPointAt(TextBox.MainControl.Document.ContentStart, ResultSearch.ElementAt(activeFindIndex).Key);
+            SearchSelector.RestoreOriginalState(this);
+            searchPanel = null;
         }
-        private void GetSearchResalt(string value)
-        {
-            //TextBox.MainControl.Test(value);
-            SearchSelector.rezults = Search(value, FindReplaceExpression.InThisPage);
-            //  SearchSelector.SelectAll(BrowseProject.CurentFile, TextBox.MainControl);
-            //SelectSearchWord(BrowseProject.CurentFile, ResultSearch);
-            searchPanel.SearchResult.ItemsSource = SearchSelector.rezults;
-            searchPanel.SearchResult.SelectionChanged += SearchResult_SelectionChanged;
-            searchPanel.TextWord.Text = value;
-            activeFindIndex = 0;
-            if (SearchSelector.rezults.Any())
-            {
-                searchPanel.SearchResult.SelectedIndex = 0;
-            }
-        }
-        private void TextWord_KeyUp1(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(searchPanel.TextWord.Text) && !string.IsNullOrEmpty(BrowseProject.CurentFile))
-            {
-                GetSearchResalt(searchPanel.TextWord.Text);
-            }
-        }
+
+       
+       
 
         private void RefreshAfterSearch(FlowDocument document)
         {
@@ -855,37 +559,7 @@ namespace UILayer
                 }
             }
         }
-        private void ButReplace_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if ((bool)searchPanel.ReplaceOnce.IsChecked)
-            {
-                Replace(searchPanel.TextWord.Text, searchPanel.TextWordReplace.Text, FindReplaceExpression.FirstFound);
-            }
-            else if ((bool)searchPanel.ReplaceAll.IsChecked)
-            {
-                Replace(searchPanel.TextWord.Text, searchPanel.TextWordReplace.Text, FindReplaceExpression.InThisBook);
-            }
-            searchPanel.SearchResult.Items.Refresh();
-        }
-
-        private void SearchResult_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var list = sender as System.Windows.Controls.ListBox;
-            if (list == null) { return; }
-            activeFindIndex = list.SelectedIndex;
-            if (activeFindIndex != -1)
-            {
-                TextBox.MainControl.Focus();
-                TextBox.MainControl.CaretPosition = (SearchSelector.rezults[activeFindIndex].Range.Start);
-                //TextBox.MainControl.CaretPosition = SearchSelector.rezults[activeFindIndex].Text.End;
-            }
-        }
-
-        private void GoToNextFind_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            activeFindIndex = activeFindIndex < SearchSelector.rezults.Count - 1 ? activeFindIndex + 1 : 0;
-            TextBox.MainControl.CaretPosition = (SearchSelector.rezults[activeFindIndex].Range.Start);
-        }
+       
 
         private void AboutInformationOnClick(object sender, RoutedEventArgs e)
         {
