@@ -506,34 +506,37 @@ namespace UILayer
             {
                 note.Value.Range = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetStart),
                     ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetEnd));
-                byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
-                for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
-                {
-                    InlineUIContainer element = position.Parent as InlineUIContainer;
-                    if (element != null && element.Child is System.Windows.Controls.Image)
-                    {
-                        var image = element.Child as System.Windows.Controls.Image;
-                        if (image == null) continue;
-                        var imageSourse = image.Source as System.Windows.Media.ImageSource;
-                        if (imageSourse == null) continue;
-                        byte[] byt = NotesBrowser.getJPGFromImageControl(imageSourse);
-                        //сравнивает картинки
-                        if (byt.Length == flag.Length)
-                        {
-                            bool isflag = true;
-                            for (int t = 0; t < byt.Length; t++)
-                            {
-                                if (byt[t] != flag[t]) { isflag = false; break; }
-                            }
-                            if (!isflag) continue;
-                            image.Cursor = Cursors.Hand;
-                            image.Tag = note.Key;
-                            image.MouseUp += NoteFlag_MouseUp;
-                            element.Unloaded += Element_Unloaded;
-                            //new TextRange(element.ContentStart, element.ContentEnd).Text = string.Empty;
-                        }
-                    }
-                }
+                //   ParentControl.AddFlag(note.Value.Range, note.Value.Name);
+                note.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.PaleGreen);
+
+                //byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
+                //for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
+                //{
+                //    InlineUIContainer element = position.Parent as InlineUIContainer;
+                //    if (element != null && element.Child is System.Windows.Controls.Image)
+                //    {
+                //        var image = element.Child as System.Windows.Controls.Image;
+                //        if (image == null) continue;
+                //        var imageSourse = image.Source as System.Windows.Media.ImageSource;
+                //        if (imageSourse == null) continue;
+                //        byte[] byt = NotesBrowser.getJPGFromImageControl(imageSourse);
+                //        //сравнивает картинки
+                //        if (byt.Length == flag.Length)
+                //        {
+                //            bool isflag = true;
+                //            for (int t = 0; t < byt.Length; t++)
+                //            {
+                //                if (byt[t] != flag[t]) { isflag = false; break; }
+                //            }
+                //            if (!isflag) continue;
+                //            image.Cursor = Cursors.Hand;
+                //            image.Tag = note.Key;
+                //            image.MouseUp += NoteFlag_MouseUp;
+                //            element.Unloaded += Element_Unloaded;
+                //            //new TextRange(element.ContentStart, element.ContentEnd).Text = string.Empty;
+                //        }
+                //    }
+                //}
             }
         }
 
@@ -556,6 +559,36 @@ namespace UILayer
             {
                 note.Value.OffsetStart = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.Start);
                 note.Value.OffsetEnd = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.End);
+            }
+            foreach (var note in ParentControl.NotesBrowser.Notes)
+            {
+                byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
+                note.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
+                //for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
+                //{
+                //    InlineUIContainer element = position.Parent as InlineUIContainer;
+                //    if (element != null && element.Child is System.Windows.Controls.Image)
+                //    {
+                //        var image = element.Child as System.Windows.Controls.Image;
+                //        if (image == null) continue;
+                //        var imageSourse = image.Source as System.Windows.Media.ImageSource;
+                //        if (imageSourse == null) continue;
+                //        byte[] byt = NotesBrowser.getJPGFromImageControl(imageSourse);
+                //        //сравнивает картинки
+                //        if (byt.Length == flag.Length)
+                //        {
+                //            bool isflag = true;
+                //            for (int t = 0; t < byt.Length; t++)
+                //            {
+                //                if (byt[t] != flag[t]) { isflag = false; break; }
+                //            }
+                //            if (!isflag) continue;
+                //            element.Unloaded -= Element_Unloaded;
+                //            element.SiblingInlines.Remove(element);
+                //            break;
+                //        }
+                //    }
+                //}
             }
         }
 

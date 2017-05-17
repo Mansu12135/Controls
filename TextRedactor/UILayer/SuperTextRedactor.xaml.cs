@@ -207,11 +207,11 @@ namespace UILayer
             {
                 exportPanel = new ExportPanel();
                 exportPanel.HidenExport.MouseUp += HidenExport_MouseUp; 
-                exportPanel.Name = "export";
                 exportPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                 exportPanel.VerticalAlignment = VerticalAlignment.Stretch;
+                exportPanel.Margin = new Thickness(NotesBrowser.ActualWidth,0, -NotesBrowser.ActualWidth, 0);
                 exportPanel.project = BrowseProject.CurentProject;
-                exportPanel.Init(TextBox.MainControl);
+                exportPanel.Init(this);
                 foreach(KeyValuePair<string,Project> item in BrowseProject.MainProjectList.Items)
                 {
                     if (item.Value != BrowseProject.CurentProject)
@@ -221,27 +221,19 @@ namespace UILayer
                 }
                 Format.IsEnabled = false;
                 TextBox.IsEnabled = false;
-                // Grid.SetColumn(exportPanel, 2);
-                //Grid.SetRowSpan(exportPanel, 2);
-                //System.Windows.Controls.Panel.SetZIndex(exportPanel, 2);
-                //MainContainer.Children.Add(exportPanel);
-                Container.Child = exportPanel;
+                 Grid.SetColumn(exportPanel, 2);
+                Grid.SetRowSpan(exportPanel, 2);
+                System.Windows.Controls.Panel.SetZIndex(exportPanel, 2);
+                MainContainer.Children.Add(exportPanel);
+                exportPanel.Show();
+                //Container.Child = exportPanel;
             }
         }
 
         private void HidenExport_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            foreach (KeyValuePair<string, Project> item in BrowseProject.MainProjectList.Items)
-            {
-                if (item.Value != BrowseProject.CurentProject)
-                {
-                    ((ListBoxItem)BrowseProject.MainProjectList.ItemContainerGenerator.ContainerFromItem(item)).IsEnabled = true;
-                }
-            }
-            Format.IsEnabled = true;
-            TextBox.IsEnabled = true;
-            Container.Child = null;
-            exportPanel = null;
+            exportPanel.Hide();
+             exportPanel = null;
         }
 
         ExportPanel exportPanel;
@@ -399,7 +391,7 @@ namespace UILayer
             NotesBrowser.CloseNotes(BrowseProject.LoadedFile);
         }
 
-        private void AddFlag(TextSelection range, string name)
+        public void AddFlag(TextRange range, string name)
         {
             range.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
             //  new TextRange(TextBox.MainControl.Selection.Start, TextBox.MainControl.Selection.End).ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
@@ -417,6 +409,7 @@ namespace UILayer
             //   TextPointer p = TextBox.MainControl.Selection.Start;
             TextBox.MainControl.BeginChange();
             InlineUIContainer imageContainer = new InlineUIContainer(image, range.Start);
+            imageContainer.Unloaded -= BrowseProject.Element_Unloaded;
             imageContainer.Unloaded += BrowseProject.Element_Unloaded;
             TextBox.MainControl.EndChange();
             TextBox.MainControl.Focus();

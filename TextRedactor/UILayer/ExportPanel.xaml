@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UILayer"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"  Width="490" Height="600" BorderThickness="1,0,0,0" BorderBrush="#FFC1C1C1">
+             d:DesignHeight="300" d:DesignWidth="300"  Width="Auto" Height="Auto" BorderThickness="1,0,0,0" BorderBrush="#FFC1C1C1">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

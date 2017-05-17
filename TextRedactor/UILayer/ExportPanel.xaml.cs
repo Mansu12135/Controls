@@ -18,6 +18,7 @@ using ApplicationLayer;
 using Microsoft.Win32;
 using UILayer;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
+using System.Windows.Media.Animation;
 
 namespace UILayer
 {
@@ -27,15 +28,17 @@ namespace UILayer
     public partial class ExportPanel : System.Windows.Controls.UserControl
     {
         public Project project;
-        private BaseRichTextBox document; 
+        private BaseRichTextBox document;
+        private SuperTextRedactor parentControl;
         public ExportPanel()
         {
             InitializeComponent();
         }
 
-        public void Init(BaseRichTextBox doc)
+        public void Init(SuperTextRedactor parent)
         {
-            document = doc;
+            parentControl = parent;
+            document = parentControl.TextBox.MainControl;
             TextBoxAuthor.Text = project.Author;
             TextBoxTitle.Text = project.Name;
             //ExportTextBox.Document = new FlowDocument();
@@ -105,6 +108,40 @@ namespace UILayer
                     document.SaveAsMobi(exportInfo, project.Files);
                 }
             }
+        }
+        public void Show()
+        {
+            ThicknessAnimation myThicknessAnimation = new ThicknessAnimation();
+            myThicknessAnimation.From = Margin;
+            myThicknessAnimation.To = new Thickness(-Margin.Left, Margin.Top, 0, Margin.Bottom);
+            myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
+            BeginAnimation(MarginProperty, myThicknessAnimation);
+         
+        }
+
+        public void Hide()
+        {
+            ThicknessAnimation myThicknessAnimation = new ThicknessAnimation();
+            myThicknessAnimation.From = Margin;
+            myThicknessAnimation.To = new Thickness(-Margin.Left, Margin.Top, Margin.Left, Margin.Bottom);
+            myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
+            myThicknessAnimation.Completed += MyThicknessAnimation_Completed;
+            BeginAnimation(MarginProperty, myThicknessAnimation);
+          
+        }
+
+        private void MyThicknessAnimation_Completed(object sender, EventArgs e)
+        {
+            foreach (KeyValuePair<string, Project> item in parentControl.BrowseProject.MainProjectList.Items)
+            {
+                if (item.Value != parentControl.BrowseProject.CurentProject)
+                {
+                    ((ListBoxItem)parentControl.BrowseProject.MainProjectList.ItemContainerGenerator.ContainerFromItem(item)).IsEnabled = true;
+                }
+            }
+            parentControl.Format.IsEnabled = true;
+            parentControl.TextBox.IsEnabled = true;
+            parentControl.MainContainer.Children.Remove(this);
         }
     }
     public class ExportInfo
