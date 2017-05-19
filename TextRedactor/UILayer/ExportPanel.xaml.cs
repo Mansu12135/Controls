@@ -28,7 +28,7 @@ namespace UILayer
     public partial class ExportPanel : System.Windows.Controls.UserControl
     {
         public Project project;
-        private BaseRichTextBox document;
+       // private BaseRichTextBox document;
         private SuperTextRedactor parentControl;
         public ExportPanel()
         {
@@ -38,9 +38,10 @@ namespace UILayer
         public void Init(SuperTextRedactor parent)
         {
             parentControl = parent;
-            document = parentControl.TextBox.MainControl;
+          //  document = parentControl.TextBox.MainControl;
             TextBoxAuthor.Text = project.Author;
             TextBoxTitle.Text = project.Name;
+            LoadPreview(project.Files[0].Path);
             //ExportTextBox.Document = new FlowDocument();
             //foreach (var doc in project.Files)
             //{
@@ -63,6 +64,31 @@ namespace UILayer
 
         }
 
+        private void LoadPreview(string path)
+        {
+            ExportTextBox.Document = new FlowDocument();
+            var title = new Paragraph() { TextAlignment = System.Windows.TextAlignment.Center, Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF838181")), Margin = new Thickness(10, 80, 10, 30) };
+            title.Inlines.Add(new Run(Environment.NewLine + Environment.NewLine + System.IO.Path.GetFileNameWithoutExtension(parentControl.BrowseProject.CurentFile)) { FontWeight = FontWeights.Bold, FontSize=14 });
+            title.Inlines.Add(new Run(Environment.NewLine + "____________________") { FontWeight = FontWeights.Bold, FontSize = 14});
+            FlowDocument doc = new FlowDocument();
+            using (var fStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read))
+            {
+                try
+                {
+                    new TextRange(doc.ContentStart, doc.ContentEnd).Load(fStream, System.Windows.DataFormats.XamlPackage);
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show(ex.Message);
+                    return;
+                }
+            }
+            new TextRange(doc.ContentStart, doc.ContentEnd).ApplyPropertyValue(TextElement.FontSizeProperty,10.0);
+           // doc.FontSize = 8;
+            ExportTextBox.Document.Blocks.Add(title);
+            ExportTextBox.Document.Blocks.AddRange(doc.Blocks.ToList());
+
+        }
         private void ButAddCover_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog();
@@ -101,11 +127,11 @@ namespace UILayer
                 };
                 if (CheckEpub.IsChecked == true)
                 {
-                    document.SaveAsEpub(exportInfo, project.Files);
+                   parentControl.TextBox.MainControl.SaveAsEpub(exportInfo, project.Files);
                 }
                 if (CheckMobi.IsChecked == true)
                 {
-                    document.SaveAsMobi(exportInfo, project.Files);
+                    parentControl.TextBox.MainControl.SaveAsMobi(exportInfo, project.Files);
                 }
             }
         }
