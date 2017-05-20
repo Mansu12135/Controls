@@ -291,8 +291,6 @@ namespace UILayer
         {
             if (SaveManager == null) { return; }
             SaveManager.Dispose();
-            Thread.Join();
-            Thread.Abort();
             Thread = null;
             SaveManager = null;
         }
@@ -342,9 +340,9 @@ namespace UILayer
         {
             base.OnTextChanged(e);
             if (!AutoSave || string.IsNullOrEmpty(FilePath) || e.Changes.Count == 0) return;
-            var change = e.Changes.Where(x=>x.AddedLength!=x.RemovedLength).First();//.OrderByDescending(item => item.Offset + item.AddedLength + item.RemovedLength).First();
-           if(RangeList!=null)
-            RangeList.OnTextRangeChanged(change.Offset);
+            var change = e.Changes.Where(x => x.AddedLength != x.RemovedLength).FirstOrDefault();//.OrderByDescending(item => item.Offset + item.AddedLength + item.RemovedLength).First();
+            if (RangeList == null || change == null) { return; }
+                RangeList.OnTextRangeChanged(change.Offset);
             //PreviousParagraphCount = Document.Blocks.ToList().Count - 1;
             //vParagraphCount = PreviousParagraphCount;
             //return;

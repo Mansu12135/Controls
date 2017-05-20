@@ -51,7 +51,7 @@
             <Border.Background>
                 <ImageBrush ImageSource="Resources/tablet2.png"/>
             </Border.Background>
-            <RichTextBox x:Name="ExportTextBox" BorderBrush="{x:Null}" IsEnabled="False" Padding="10" FontSize="6" IsUndoEnabled="False" Margin="0"></RichTextBox>
+            <RichTextBox x:Name="ExportTextBox" BorderBrush="{x:Null}"  Padding="10" FontSize="6" IsUndoEnabled="False" Margin="0" HorizontalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" IsReadOnly="True"></RichTextBox>
         </Border>
         <Border BorderThickness="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,58,66,58" Grid.Row="2" VerticalAlignment="Center" Width="28" Height="28">
             <Image Source="Resources/arrow-of-double-angle-pointing-down.png"></Image>

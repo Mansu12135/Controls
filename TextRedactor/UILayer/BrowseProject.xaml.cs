@@ -454,7 +454,6 @@ namespace UILayer
                 }
                 //item.Files.ForEach(x => x.IsOpen = (x.Path == path) ? 10 : 0);
             }
-           
             ParentControl.TextBox.MainControl.FilePath = "";
             try
             {
@@ -564,31 +563,31 @@ namespace UILayer
             {
                 byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
                 note.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
-                //for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
-                //{
-                //    InlineUIContainer element = position.Parent as InlineUIContainer;
-                //    if (element != null && element.Child is System.Windows.Controls.Image)
-                //    {
-                //        var image = element.Child as System.Windows.Controls.Image;
-                //        if (image == null) continue;
-                //        var imageSourse = image.Source as System.Windows.Media.ImageSource;
-                //        if (imageSourse == null) continue;
-                //        byte[] byt = NotesBrowser.getJPGFromImageControl(imageSourse);
-                //        //сравнивает картинки
-                //        if (byt.Length == flag.Length)
-                //        {
-                //            bool isflag = true;
-                //            for (int t = 0; t < byt.Length; t++)
-                //            {
-                //                if (byt[t] != flag[t]) { isflag = false; break; }
-                //            }
-                //            if (!isflag) continue;
-                //            element.Unloaded -= Element_Unloaded;
-                //            element.SiblingInlines.Remove(element);
-                //            break;
-                //        }
-                //    }
-                //}
+                for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
+                {
+                    InlineUIContainer element = position.Parent as InlineUIContainer;
+                    if (element != null && element.Child is System.Windows.Controls.Image)
+                    {
+                        var image = element.Child as System.Windows.Controls.Image;
+                        if (image == null) continue;
+                        var imageSourse = image.Source as System.Windows.Media.ImageSource;
+                        if (imageSourse == null) continue;
+                        byte[] byt = NotesBrowser.getJPGFromImageControl(imageSourse);
+                        //сравнивает картинки
+                        if (byt.Length == flag.Length)
+                        {
+                            bool isflag = true;
+                            for (int t = 0; t < byt.Length; t++)
+                            {
+                                if (byt[t] != flag[t]) { isflag = false; break; }
+                            }
+                            if (!isflag) continue;
+                            element.Unloaded -= Element_Unloaded;
+                            element.SiblingInlines.Remove(element);
+                            break;
+                        }
+                    }
+                }
             }
         }
 

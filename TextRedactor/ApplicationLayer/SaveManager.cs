@@ -4,7 +4,6 @@ using System.Windows;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.RightsManagement;
 using System.Threading;
 
 namespace ApplicationLayer
@@ -64,7 +63,7 @@ namespace ApplicationLayer
         {
             while (isAlive)
             {
-                if (l.Count > 0 || l.Count > 0)
+                if (l.Count > 0)
                 {
                     Lock.Wait();
                     List.SynchronizeTo(l[0], MainList);
@@ -74,6 +73,7 @@ namespace ApplicationLayer
                     OnStatusChanged.Invoke(SaveManagerStatus.Stoped, 0);
                 }
             }
+            Thread.CurrentThread.Abort();
         }
 
         public delegate void SaveManagerStatusChangedHandler(SaveManagerStatus status, int inQueue);
