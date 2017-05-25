@@ -42,6 +42,7 @@ namespace UILayer
             TextBoxAuthor.Text = project.Author;
             TextBoxTitle.Text = project.Name;
             LoadPreview(project.Files[0].Path);
+
             //ExportTextBox.Document = new FlowDocument();
             //foreach (var doc in project.Files)
             //{
@@ -61,6 +62,7 @@ namespace UILayer
             //    //   }
             //    ExportTextBox.Document.Blocks.AddRange(paragraph.Blocks.ToList());
             //}
+           
 
         }
 
@@ -168,6 +170,16 @@ namespace UILayer
             parentControl.Format.IsEnabled = true;
             parentControl.TextBox.IsEnabled = true;
             parentControl.MainContainer.Children.Remove(this);
+        }
+
+        private void PageDown_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ExportTextBox.ScrollToVerticalOffset(ExportTextBox.VerticalOffset+ ExportTextBox.ViewportHeight);
+        }
+
+        private void PageUp_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ExportTextBox.ScrollToVerticalOffset(ExportTextBox.VerticalOffset - ExportTextBox.ViewportHeight);
         }
     }
     public class ExportInfo

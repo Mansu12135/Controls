@@ -504,10 +504,12 @@ namespace UILayer
             foreach (var note in ParentControl.NotesBrowser.Notes)
             {
                 note.Value.Range = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetStart),
-                    ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetEnd));
-                //   ParentControl.AddFlag(note.Value.Range, note.Value.Name);
+                   ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetEnd));
+
+                ParentControl.AddFlag(note.Value.Range, note.Value.Name);
                 note.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.PaleGreen);
 
+               
                 //byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
                 //for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
                 //{
@@ -556,11 +558,6 @@ namespace UILayer
         {
             foreach (var note in ParentControl.NotesBrowser.Notes)
             {
-                note.Value.OffsetStart = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.Start);
-                note.Value.OffsetEnd = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.End);
-            }
-            foreach (var note in ParentControl.NotesBrowser.Notes)
-            {
                 byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
                 note.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
                 for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
@@ -589,6 +586,12 @@ namespace UILayer
                     }
                 }
             }
+            foreach (var note in ParentControl.NotesBrowser.Notes)
+            {
+                note.Value.OffsetStart = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.Start);
+                note.Value.OffsetEnd = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.End);
+            }
+
         }
 
       

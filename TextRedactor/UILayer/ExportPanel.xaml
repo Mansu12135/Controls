@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UILayer"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"  Width="Auto" Height="Auto" BorderThickness="1,0,0,0" BorderBrush="#FFC1C1C1">
+             d:DesignHeight="600" d:DesignWidth="400"  Width="Auto" Height="Auto" BorderThickness="1,0,0,0" BorderBrush="#FFC1C1C1">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -51,13 +51,13 @@
             <Border.Background>
                 <ImageBrush ImageSource="Resources/tablet2.png"/>
             </Border.Background>
-            <RichTextBox x:Name="ExportTextBox" BorderBrush="{x:Null}"  Padding="10" FontSize="6" IsUndoEnabled="False" Margin="0" HorizontalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" IsReadOnly="True"></RichTextBox>
+            <RichTextBox x:Name="ExportTextBox" BorderBrush="{x:Null}"  Padding="10" FontSize="6" IsUndoEnabled="False" Margin="0" HorizontalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" IsEnabled="False"/>
         </Border>
         <Border BorderThickness="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,58,66,58" Grid.Row="2" VerticalAlignment="Center" Width="28" Height="28">
-            <Image Source="Resources/arrow-of-double-angle-pointing-down.png"></Image>
+            <Image x:Name="PageDown" Source="Resources/arrow-of-double-angle-pointing-down.png" MouseUp="PageDown_MouseUp"></Image>
         </Border>
         <Border BorderThickness="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,68,66,68" Grid.Row="1" VerticalAlignment="Center" Width="28" Height="28">
-            <Image Source="Resources/double-up-arrow-angles.png"></Image>
+            <Image x:Name="PageUp" Source="Resources/double-up-arrow-angles.png" MouseUp="PageUp_MouseUp"></Image>
         </Border>
         <Label Content="Title:" HorizontalAlignment="Right" Margin="0,5,145,0" Grid.Row="3" VerticalAlignment="Top" Padding="2" FontFamily="Segoe UI Semibold" FontSize="10" Height="17" Width="26"/>
         <TextBox x:Name="TextBoxTitle" HorizontalAlignment="Right" Height="24" Margin="0,4,34,0" Grid.Row="3" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="109" Padding="0" FontFamily="Times New Roman" VerticalContentAlignment="Center" FontSize="10" BorderBrush="#FFCCCED3" Foreground="#FF8D8D8D" FontStyle="Italic"/>
