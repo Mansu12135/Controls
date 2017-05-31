@@ -496,6 +496,12 @@ namespace UILayer
             {
                 UpdateRangeOnNotes();
             }
+            //preview for export
+            //maybe do with event
+            if(ParentControl.exportPanel!= null)
+            {
+                ParentControl.exportPanel.LoadPreview(textBlock.Tag.ToString());
+            }
             MainProjectList.Items.Refresh();
         }
 

@@ -63,8 +63,8 @@ namespace UILayer
             Format.FontFamily.SelectionChanged += ((s, e) => TextBox.MainControl.Focus());
             // Format.ButtonDictionary.MouseUp += ButtonDictionary_MouseUp;
             Format.ExportButton.MouseUp += ExportButton_MouseUp;
-            Format.ButListNum.MouseUp += ButListNum_MouseUp;
-            Format.ButListBubl.MouseUp += ButListBubl_MouseUp;
+            //Format.ButListNum.MouseUp += ButListNum_MouseUp;
+          //  Format.ButListBubl.MouseUp += ButListBubl_MouseUp;
             BrowseProject.HidenProject.MouseUp += HidenProject_MouseUp;
             NotesBrowser.HidenNotes.MouseUp += HidenNotes_MouseUp;
             TextBox.MainControl.Parent = this;
@@ -72,7 +72,74 @@ namespace UILayer
             Format.comboWigth.SelectionChanged += ComboWigth_SelectionChanged;
             Format.comboWigth.LostFocus += ComboWigth_LostFocus;
             Format.comboWigth.KeyDown += ComboWigth_KeyDown;
+            Format.NumerCombo.SelectionChanged += NumerCombo_SelectionChanged;
+            Format.bublCombo.SelectionChanged += BublCombo_SelectionChanged;
         }
+
+        private void BublCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var textBox = Format.bublCombo.SelectedValue as TextBlock;
+            if (textBox == null || textBox.Tag == null) { return; }
+            List list = new List();
+            list.MarkerStyle = TextMarkerStyle.Disc;
+            switch (textBox.Tag.ToString())
+            {
+                case "Circle":
+                    list.MarkerStyle = TextMarkerStyle.Circle;
+                    break;
+                case "Disc":
+                    list.MarkerStyle = TextMarkerStyle.Disc;
+                    break;
+                case "Box":
+                    list.MarkerStyle = TextMarkerStyle.Box;
+                    break;
+                case "Square":
+                    list.MarkerStyle = TextMarkerStyle.Square;
+                    break;
+
+                default:
+                    list.MarkerStyle = TextMarkerStyle.Decimal;
+                    break;
+            }
+            var listItem = new ListItem();
+            list.ListItems.Add(listItem);
+            TextBox.MainControl.Document.Blocks.InsertBefore(TextBox.MainControl.CaretPosition.Paragraph, list);
+            Format.bublCombo.SelectedIndex = -1;
+        }
+
+        private void NumerCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var textBox = Format.NumerCombo.SelectedValue as TextBlock;
+            if (textBox == null || textBox.Tag == null) { return; }
+            List list = new List();
+            list.MarkerStyle = TextMarkerStyle.Disc;
+            switch (textBox.Tag.ToString())
+            {
+                case "Decimal":
+                    list.MarkerStyle = TextMarkerStyle.Decimal;
+                    break;
+                case "LowerLatin":
+                    list.MarkerStyle = TextMarkerStyle.LowerLatin;
+                    break;
+                case "LowerRoman":
+                    list.MarkerStyle = TextMarkerStyle.LowerRoman;
+                    break;
+                case "UpperLatin":
+                    list.MarkerStyle = TextMarkerStyle.UpperLatin;
+                    break;
+                case "UpperRoman":
+                    list.MarkerStyle = TextMarkerStyle.UpperRoman;
+                    break;
+                default:
+                    list.MarkerStyle = TextMarkerStyle.Decimal;
+                    break;
+            }
+            var listItem = new ListItem();
+            list.ListItems.Add(listItem);
+            TextBox.MainControl.Document.Blocks.InsertBefore(TextBox.MainControl.CaretPosition.Paragraph,list);
+            Format.NumerCombo.SelectedIndex = -1;
+        }
+
         private void ButListBubl_MouseUp(object sender, MouseButtonEventArgs e)
         {
             List list = new List();
@@ -236,7 +303,7 @@ namespace UILayer
              exportPanel = null;
         }
 
-        ExportPanel exportPanel;
+       public ExportPanel exportPanel;
         DictionaryPanel panel;
         SearchPanel searchPanel;
         private void InitDictionary()

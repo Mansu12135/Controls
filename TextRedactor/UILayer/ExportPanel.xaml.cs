@@ -66,7 +66,7 @@ namespace UILayer
 
         }
 
-        private void LoadPreview(string path)
+        internal void LoadPreview(string path)
         {
             ExportTextBox.Document = new FlowDocument();
             var title = new Paragraph() { TextAlignment = System.Windows.TextAlignment.Center, Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF838181")), Margin = new Thickness(10, 80, 10, 30) };
