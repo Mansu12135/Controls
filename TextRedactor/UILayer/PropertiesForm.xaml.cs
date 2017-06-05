@@ -41,6 +41,7 @@ namespace UILayer
                 Element.Child = opt;
                 Width /= 1.5;
                 Title = "Options";
+                opt.Init();
             }
 
         }

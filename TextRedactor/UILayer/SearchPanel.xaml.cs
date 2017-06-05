@@ -143,7 +143,7 @@ namespace UILayer
                         TextRange textrange = new TextRange(start, end);
                         //  ranges.Add(textrange);
                         //       var range = new TextRange(start, end);// document.ContentStart.(position)+document.ContentStart.GetPositionAtOffset(match.Index), document.ContentStart.GetPositionAtOffset(therm.Trim().Length));
-                        list.Add(new SearchResult { Path = file, Text = textrange.Text, Range = textrange /*Start = document.ContentStart.GetOffsetToPosition(start), End = document.ContentStart.GetOffsetToPosition(end)*/});
+                        list.Add(new SearchResult { Path = file, Text = GetTextAround(textrange), Range = textrange /*Start = document.ContentStart.GetOffsetToPosition(start), End = document.ContentStart.GetOffsetToPosition(end)*/});
                         //range.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(Colors.Red));
 
                     }
@@ -300,6 +300,32 @@ namespace UILayer
         private void ButReplace_MouseUp(object sender, MouseButtonEventArgs e)
         {
             DoReplace();
+        }
+        private string GetTextAround(TextRange range)
+        {
+            string rezult = "";
+            TextPointer start, end;
+            var rangeStartOffset = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.Start);
+            var rangeEndOffset = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.End);
+            var docEnd = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(ParentControl.TextBox.MainControl.Document.ContentEnd);
+            if (rangeStartOffset < 10)
+            {
+                start = ParentControl.TextBox.MainControl.Document.ContentStart;
+            }
+            else
+            {
+                start = ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(rangeStartOffset - 10);
+            }
+            if (rangeEndOffset > docEnd - 10)
+            {
+                end = ParentControl.TextBox.MainControl.Document.ContentEnd;
+            }
+            else
+            {
+                end = ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(rangeEndOffset + 10);
+            }
+            rezult = new TextRange(start, end).Text;
+            return rezult;
         }
     }
 }

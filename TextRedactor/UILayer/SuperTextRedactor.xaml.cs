@@ -306,6 +306,7 @@ namespace UILayer
        public ExportPanel exportPanel;
         DictionaryPanel panel;
         SearchPanel searchPanel;
+        bool inSearch = false;
         private void InitDictionary()
         {
             if (panel == null)

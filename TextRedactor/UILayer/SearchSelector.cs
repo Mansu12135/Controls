@@ -11,9 +11,9 @@ namespace UILayer
 
         public static void SelectAll(string file, BaseRichTextBox control)
         {
-            new TextRange
-                       (control.Document.ContentStart, control.Document.ContentEnd)
-                       .ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.White);
+            //new TextRange
+            //           (control.Document.ContentStart, control.Document.ContentEnd)
+            //           .ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.White);
             foreach (var item in rezults)
             {
                 if (item.Path == file)
@@ -43,9 +43,7 @@ namespace UILayer
                         .ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.White);
             foreach(var item in control.NotesBrowser.Notes)
             {
-                new TextRange
-                       (control.TextBox.MainControl.GetTextPointAt(control.TextBox.MainControl.Document.ContentStart, item.Value.OffsetStart), (control.TextBox.MainControl.GetTextPointAt(control.TextBox.MainControl.Document.ContentStart, item.Value.OffsetEnd)))
-                       .ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
+               item.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
             }
         }
 

@@ -771,5 +771,15 @@ namespace UILayer
             myThicknessAnimation.Completed += new EventHandler((s, r) => ParentControl.ShowProject.Visibility = Visibility.Visible);
             ((Border)ParentControl.RedactorConteiner).BeginAnimation(Border.MarginProperty, myThicknessAnimation);
         }
+
+        public void SetLineSpacing()
+        {
+          foreach(var block in ParentControl.TextBox.MainControl.Document.Blocks)
+            {
+                var p = block as Paragraph;
+                if (p == null) continue;
+                p.LineHeight = p.FontSize + ParentControl.defaultSpacing;
+            }
+        }
     }
 }

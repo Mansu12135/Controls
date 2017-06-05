@@ -30,6 +30,7 @@ namespace UILayer
         public static Dictionary<int, double> FontSize = new Dictionary<int, double>();
 
         public static Dictionary<int, double> MarginWigth = new Dictionary<int, double>();
+        public static Dictionary<int, double> Spacing = new Dictionary<int, double>();
 
     }
 }
