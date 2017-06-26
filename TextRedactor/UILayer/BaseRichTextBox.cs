@@ -308,6 +308,7 @@ namespace UILayer
 
         private void SaveManager_OnStatusChanged(SaveManagerStatus status, int inQueue)
         {
+            if (Dispatcher.HasShutdownStarted) { return; }
             if (!Dispatcher.CheckAccess())
             {
                 Parent.TextBox.Dispatcher.Invoke(() => SaveManager_OnStatusChanged(status, inQueue));

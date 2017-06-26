@@ -35,12 +35,11 @@
       <HintPath>..\ApplicationLayer\bin\Debug\ApplicationLayer.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="EpubConvertor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\EpubConvertor.dll</HintPath>
+    <Reference Include="EpubConvertor">
+      <HintPath>..\..\..\EpubConvertor\EpubConvertor\bin\Debug\EpubConvertor.dll</HintPath>
     </Reference>
     <Reference Include="Gma.UserActivityMonitor">
-      <HintPath>..\..\..\..\Gma.UserActivityMonitor.dll</HintPath>
+      <HintPath>C:\Users\Никита\Downloads\globalhook2_src\GlobalHook\Gma.UserActivityMonitor\bin\Debug\Gma.UserActivityMonitor.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
