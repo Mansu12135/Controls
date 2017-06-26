@@ -231,7 +231,7 @@ namespace UILayer
             }
             //SearchSelector.rezults.ForEach(item =>
             //    item.Position += FlowPosition);
-            ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, System.IO.Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
+           // ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, System.IO.Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
             ParentControl.NotesBrowser.MainControl.Items.Refresh();
             return count;
         }
