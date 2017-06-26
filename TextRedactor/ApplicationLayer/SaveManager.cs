@@ -61,7 +61,7 @@ namespace ApplicationLayer
 
         private void DoListen()
         {
-            while (isAlive)
+            while (isAlive || l.Any())
             {
                 if (l.Count > 0)
                 {

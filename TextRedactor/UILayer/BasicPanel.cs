@@ -15,7 +15,7 @@ using UserControl = System.Windows.Controls.UserControl;
 
 namespace UILayer
 {
-    public abstract class BasicPanel<T> : UserControl, IBasicPanel<T> where T : Item
+    public abstract class BasicPanel<T> : UserControl, IDisposable, IBasicPanel<T> where T : Item
     {
         protected ToolTip ErrorToolTip;
         protected BindingExpression Binding { get; set; }
@@ -300,6 +300,10 @@ namespace UILayer
         //}
         //private EventHandler<FileArgs> CreatedFile;
 
-
+        public void Dispose()
+        {
+            Disposing();
+        }
+        public virtual void Disposing() { }
     }
 }

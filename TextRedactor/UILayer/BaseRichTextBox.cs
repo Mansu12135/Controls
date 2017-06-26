@@ -308,8 +308,11 @@ namespace UILayer
 
         private void SaveManager_OnStatusChanged(SaveManagerStatus status, int inQueue)
         {
-            Parent.TextBox.Dispatcher.Invoke(() =>
+            if (!Dispatcher.CheckAccess())
             {
+                Parent.TextBox.Dispatcher.Invoke(() => SaveManager_OnStatusChanged(status, inQueue));
+                return;
+            }
                 if (status == SaveManagerStatus.Stoped)
                 {
                     Parent.TextBox.ProgBar.Visibility = Visibility.Hidden;
@@ -321,9 +324,6 @@ namespace UILayer
                     Parent.TextBox.StateLabel.Content = "saving";
                 }
                 //  Parent.TextBox.StateLabel.Content = status + inQueue.ToString();
-
-            });
-
         }
 
         protected override void OnContextMenuOpening(ContextMenuEventArgs e)

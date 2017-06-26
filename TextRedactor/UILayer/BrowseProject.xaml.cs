@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing;
+using System.Windows.Markup;
 using ApplicationLayer;
 using Gma.UserActivityMonitor;
 using System.Windows.Media.Imaging;
@@ -19,7 +20,7 @@ namespace UILayer
     /// <summary>
     /// Логика взаимодействия для BrowseProject.xaml
     /// </summary>
-    public partial class BrowseProject : BasicPanel<Project>, IDisposable
+    public partial class BrowseProject : BasicPanel<Project>
     {
         internal string LoadedFile { get; private set; }
         public Project CurentProject;
@@ -32,14 +33,33 @@ namespace UILayer
             InitializeComponent();
             OnInitialize();
         }
-
-        public void Dispose()
+        public override void Disposing()
         {
             ((IFileSystemControl)this).FSWorker.Dispose();
             if (string.IsNullOrEmpty(LoadedFile)) { return; }
             ParentControl.BrowseProject.UpdateOffsetOnNotes();
             ParentControl.NotesBrowser.CloseNotes(LoadedFile);
         }
+
+        //internal string Test(string path)
+        //{
+        //    var document = new FlowDocument();
+        //    var t = new TextRange(document.ContentStart, document.ContentEnd);
+        //    using (var stream = File.OpenRead(path))
+        //    {
+        //        t.Load(stream,
+        //            DataFormats.XamlPackage);
+        //    }
+        //    var a = XamlWriter.Save(document);
+        //    return a;
+        //}
+        //public void Dispose()
+        //{
+        //    ((IFileSystemControl)this).FSWorker.Dispose();
+        //    if (string.IsNullOrEmpty(LoadedFile)) { return; }
+        //    ParentControl.BrowseProject.UpdateOffsetOnNotes();
+        //    ParentControl.NotesBrowser.CloseNotes(LoadedFile);
+        //}
 
         private void CopyAll(DirectoryInfo source, DirectoryInfo target)
         {
@@ -457,6 +477,8 @@ namespace UILayer
             ParentControl.TextBox.MainControl.FilePath = "";
             try
             {
+                //can write Blocks.Clear;
+                ParentControl.TextBox.MainControl.Document = new FlowDocument();
                 var range = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart, ParentControl.TextBox.MainControl.Document.ContentEnd);
                 using (var fStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read))
                 {
@@ -494,7 +516,7 @@ namespace UILayer
             OpenFile(textBlock.Tag.ToString(), Path.GetFileNameWithoutExtension(textBlock.Tag.ToString()));
             if (!string.IsNullOrEmpty(LoadedFile))
             {
-                UpdateRangeOnNotes();
+               UpdateRangeOnNotes();
             }
             //preview for export
             //maybe do with event
@@ -509,14 +531,17 @@ namespace UILayer
         {
             foreach (var note in ParentControl.NotesBrowser.Notes)
             {
-                note.Value.Range = new TextRange(ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetStart),
-                   ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetEnd));
+                note.Value.Range = new TextRange(
+                    ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetStart),
+                    ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetEnd));
+                var pointer = ParentControl.AddFlag(note.Value.Range, note.Value.Name);
+                if (note.Value.Range.Start != pointer)
+                {
+                    note.Value.Range = new TextRange(pointer, note.Value.Range.End);
+                }
+            }
 
-                ParentControl.AddFlag(note.Value.Range, note.Value.Name);
-                note.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.PaleGreen);
-
-               
-                //byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
+            //byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
                 //for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
                 //{
                 //    InlineUIContainer element = position.Parent as InlineUIContainer;
@@ -544,7 +569,6 @@ namespace UILayer
                 //        }
                 //    }
                 //}
-            }
         }
 
         internal void Element_Unloaded(object sender, RoutedEventArgs e)
@@ -562,9 +586,11 @@ namespace UILayer
 
         private void UpdateOffsetOnNotes()
         {
-            foreach (var note in ParentControl.NotesBrowser.Notes)
+            byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
+            for (int i = ParentControl.NotesBrowser.Notes.Count - 1; i >= 0; i--)
             {
-                byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
+                var note = ParentControl.NotesBrowser.Notes.ElementAt(i);
+                var a = SuperTextRedactor.TestRange(note.Value.Range);
                 note.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
                 for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
                 {
@@ -591,13 +617,9 @@ namespace UILayer
                         }
                     }
                 }
-            }
-            foreach (var note in ParentControl.NotesBrowser.Notes)
-            {
                 note.Value.OffsetStart = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.Start);
                 note.Value.OffsetEnd = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.End);
             }
-
         }
 
       

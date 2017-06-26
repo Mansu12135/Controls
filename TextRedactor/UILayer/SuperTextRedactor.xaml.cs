@@ -11,11 +11,13 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using ApplicationLayer;
 using Cursors = System.Windows.Input.Cursors;
+using DataFormats = System.Windows.DataFormats;
 using UserControl = System.Windows.Controls.UserControl;
 
 
@@ -264,7 +266,11 @@ namespace UILayer
 
         public void Dispose()
         {
-            BrowseProject.Dispose();
+            if (searchPanel != null)
+            {
+                searchPanel.Disposing();
+            }
+            BrowseProject.Disposing();
             TextBox.MainControl.Dispose();
         }
 
@@ -454,15 +460,28 @@ namespace UILayer
             int startOffset = TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.Start);// new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.Start).Text.Length;
             int endOffset = TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.End); //new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.End).Text.Length;
             string text = range.Text;
-            NotesBrowser.AddItem(new Note(name, text, new TextRange(range.Start, range.End), startOffset, endOffset));
-            AddFlag(range, name);
+           var pointer = AddFlag(range, name);
+            NotesBrowser.AddItem(new Note(name, text, new TextRange(pointer, range.End), startOffset, endOffset));
             NotesBrowser.CloseNotes(BrowseProject.LoadedFile);
         }
 
-        public void AddFlag(TextRange range, string name)
+        internal static string TestRange(TextRange range)
+        {
+            var a = new FlowDocument();
+            var r = new TextRange(a.ContentStart, a.ContentEnd);
+            using (var stream = new MemoryStream())
+            {
+                range.Save(stream, DataFormats.XamlPackage);
+                r.Load(stream, DataFormats.XamlPackage);
+                // note.Value.Range.Save(File.Create("D:\\a.xaml"),DataFormats.XamlPackage );
+                //  r.Load(File.OpenRead("D:\\a.xaml"), DataFormats.XamlPackage);
+            }
+            return XamlWriter.Save(a);
+        }
+
+        public TextPointer AddFlag(TextRange range, string name)
         {
             range.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
-            //  new TextRange(TextBox.MainControl.Selection.Start, TextBox.MainControl.Selection.End).ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
             var tempImage = Properties.Resources.noteFlag;
             var ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
                  tempImage.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));
@@ -481,6 +500,7 @@ namespace UILayer
             imageContainer.Unloaded += BrowseProject.Element_Unloaded;
             TextBox.MainControl.EndChange();
             TextBox.MainControl.Focus();
+            return imageContainer.ElementStart;
             //  TextBox.MainControl.CaretPosition = imageContainer.ElementEnd;
         }
 
@@ -583,7 +603,6 @@ namespace UILayer
             if (!TextBox.MainControl.IsReadOnly && !string.IsNullOrWhiteSpace(TextBox.MainControl.Selection.Text))
             {
                 searchPanel.GetSearchResalt(TextBox.MainControl.Selection.Text);
-               
             }
         }
 
@@ -600,9 +619,6 @@ namespace UILayer
             SearchSelector.RestoreOriginalState(this);
             searchPanel = null;
         }
-
-       
-       
 
         private void RefreshAfterSearch(FlowDocument document)
         {

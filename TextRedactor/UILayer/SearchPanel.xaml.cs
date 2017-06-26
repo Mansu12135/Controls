@@ -41,7 +41,10 @@ namespace UILayer
             ParentControl.RedactorConteiner.BeginAnimation(Border.MarginProperty, myThicknessAnimation);
             ParentControl.ShowNotes.Visibility = Visibility.Hidden;
         }
-
+        public  void Disposing()
+        {
+            SearchSelector.RestoreOriginalState(ParentControl);
+        }
         public void Hide()
         {
             ThicknessAnimation myThicknessAnimation = new ThicknessAnimation();
@@ -50,6 +53,7 @@ namespace UILayer
             myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
             myThicknessAnimation.Completed += MyThicknessAnimation_Completed;
             ((Border)ParentControl.RedactorConteiner).BeginAnimation(Border.MarginProperty, myThicknessAnimation);
+            ParentControl.TextBox.MainControl.TextChanged -= MainControl_TextChanged;
         }
 
         private void MyThicknessAnimation_Completed(object sender, EventArgs e)
@@ -73,8 +77,22 @@ namespace UILayer
                 SearchResult.SelectedIndex = 0;
             }
             activeFindIndex = 0;
+           ParentControl.TextBox.MainControl.TextChanged -= MainControl_TextChanged;
+           ParentControl.TextBox.MainControl.TextChanged += MainControl_TextChanged;
+        }
+        private void MainControl_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ParentControl.TextBox.MainControl.TextChanged -= MainControl_TextChanged;
+            ClearSearch();
         }
 
+        private void ClearSearch()
+        {
+            if (this == null) return;
+            SearchSelector.RestoreOriginalState(ParentControl);
+            SearchSelector.ClearAll(ParentControl.TextBox.MainControl);
+            SearchResult.Items.Refresh();
+        }
         private void TextWord_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(TextWord.Text) && !string.IsNullOrEmpty(ParentControl.BrowseProject.CurentFile))
@@ -120,10 +138,10 @@ namespace UILayer
             var list = new List<SearchResult>();
             var document = ParentControl.TextBox.MainControl;//LoadFile(file);
             document.SelectAll();
-            document.Selection
-                       //   new TextRange
-                       //             (document.ContentStart, document.ContentEnd)
-                       .ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.White);
+            //document.Selection
+            //           //   new TextRange
+            //           //             (document.ContentStart, document.ContentEnd)
+            //           .ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.White);
             Regex reg = new Regex(therm, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             TextPointer position = document.Document.ContentStart;
             List<TextRange> ranges = new List<TextRange>();
@@ -233,12 +251,13 @@ namespace UILayer
                     // TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(item.End));
                     if (range.Text.Trim() != item.Text.Trim())
                     {
-                        FlowPosition = 0;
-                        return 0;
+                        //?????????????????????????????
+                        //FlowPosition = 0;
+                       // return 0;
                     }
                     //FlowPosition += to.Length - range.Text.Length;
                     range.Text = to;
-                    // count++;
+                     count++;
                 }
                 //    SaveChanges(found[0], document);
             }
@@ -267,7 +286,9 @@ namespace UILayer
             {
                 Replace(TextWord.Text, TextWordReplace.Text, FindReplaceExpression.InThisBook);
             }
+            var index = activeFindIndex;
             SearchResult.Items.Refresh();
+            activeFindIndex = index;
         }
 
         private void SearchResult_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -292,6 +313,7 @@ namespace UILayer
 
         private void GoToNextFind_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (SearchSelector.rezults.Count <= 0) return;
             activeFindIndex = activeFindIndex < SearchSelector.rezults.Count - 1 ? activeFindIndex + 1 : 0;
             ParentControl.TextBox.MainControl.Focus();
             ParentControl.TextBox.MainControl.CaretPosition = (SearchSelector.rezults[activeFindIndex].Range.Start);
@@ -299,7 +321,10 @@ namespace UILayer
 
         private void ButReplace_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            ParentControl.TextBox.MainControl.TextChanged -= MainControl_TextChanged;
+            SearchSelector.RestoreOriginalState(ParentControl);
             DoReplace();
+            ParentControl.TextBox.MainControl.TextChanged += MainControl_TextChanged;
         }
         private string GetTextAround(TextRange range)
         {
