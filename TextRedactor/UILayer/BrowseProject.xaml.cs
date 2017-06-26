@@ -572,7 +572,7 @@ namespace UILayer
         }
 
         internal void Element_Unloaded(object sender, RoutedEventArgs e)
-        {
+        {          
             var element = sender as InlineUIContainer;
             if (element != null)
             {
