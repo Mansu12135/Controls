@@ -574,11 +574,12 @@ namespace UILayer
         internal void Element_Unloaded(object sender, RoutedEventArgs e)
         {          
             var element = sender as InlineUIContainer;
+            if(element.Parent != null) { return; }
             if (element != null)
             {
                 var image = element.Child as System.Windows.Controls.Image;
                 if (image == null || image.Tag == null || !ParentControl.NotesBrowser.Notes.ContainsKey(image.Tag.ToString())) return;
-                ParentControl.NotesBrowser.Notes[image.Tag.ToString()].Range.ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
+                ParentControl.NotesBrowser.Notes[image.Tag.ToString()].Range.ApplyPropertyValue(TextElement.BackgroundProperty, null);
                 ParentControl.NotesBrowser.Notes.Remove(image.Tag.ToString());
                 ParentControl.NotesBrowser.MainControl.Items.Refresh();
             }
@@ -591,7 +592,7 @@ namespace UILayer
             {
                 var note = ParentControl.NotesBrowser.Notes.ElementAt(i);
                 var a = SuperTextRedactor.TestRange(note.Value.Range);
-                note.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
+                note.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, null);
                 for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
                 {
                     InlineUIContainer element = position.Parent as InlineUIContainer;

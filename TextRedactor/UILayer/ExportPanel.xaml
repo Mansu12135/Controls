@@ -7,11 +7,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="400"  Width="Auto" Height="Auto" BorderThickness="1,0,0,0" BorderBrush="#FFC1C1C1">
     <UserControl.Resources>
-        <ResourceDictionary>
+        <!--<ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="StyleDictionary.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        </ResourceDictionary>-->
     </UserControl.Resources>
     <Grid  Background="White">
         <Grid.ColumnDefinitions>
@@ -49,11 +49,11 @@
             </Border.BorderBrush>
             <Label Content="Export" Cursor="Hand" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold" />
         </Border>-->
-        <Border BorderThickness="1" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" Padding="34,30,39,38" Grid.RowSpan="2" Grid.Column="1">
+        <Border BorderThickness="1" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" Padding="34,30,39,38" Grid.RowSpan="2" Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
             <Border.Background>
                 <ImageBrush ImageSource="Resources/tablet2.png"/>
             </Border.Background>
-            <RichTextBox x:Name="ExportTextBox" BorderBrush="{x:Null}"  Padding="10" FontSize="6" IsUndoEnabled="False" Margin="0" HorizontalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" IsEnabled="False"/>
+            <RichTextBox x:Name="ExportTextBox" BorderBrush="{x:Null}"  Padding="10" FontSize="6" IsUndoEnabled="False" Margin="0" IsEnabled="False"/>
         </Border>
         <Border BorderThickness="1" Grid.Column="3" HorizontalAlignment="Left" Margin="10,58,0,58" Grid.Row="2" VerticalAlignment="Center" Width="28" Height="28">
             <Image x:Name="PageDown" Source="Resources/arrow-of-double-angle-pointing-down.png" MouseUp="PageDown_MouseUp" Margin="0" Cursor="Hand"></Image>

@@ -123,7 +123,7 @@ namespace UILayer
             var key = im.Tag.ToString();
             if (key == null) return;
             byte[] flag = getJPGFromImageControl(Properties.Resources.noteFlag);
-            Notes[key].Range.ApplyPropertyValue(TextElement.BackgroundProperty, System.Windows.Media.Brushes.White);
+            Notes[key].Range.ApplyPropertyValue(TextElement.BackgroundProperty, null);
             for (TextPointer position = Notes[key].Range.Start; position != null && position.CompareTo(Notes[key].Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
             {
                 InlineUIContainer element = position.Parent as InlineUIContainer;

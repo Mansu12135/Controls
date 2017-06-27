@@ -591,7 +591,7 @@ namespace UILayer
             if (searchPanel == null)
             {
                 searchPanel = new SearchPanel(this);
-                searchPanel.HidenSearch.MouseUp += HidenSearch_MouseUp;        
+                searchPanel.HidenSearch.MouseUp += HidenSearch_MouseUp;
                 searchPanel.Show();
                 searchPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                 searchPanel.VerticalAlignment = VerticalAlignment.Stretch;

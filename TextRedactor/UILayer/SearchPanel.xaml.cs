@@ -64,11 +64,17 @@ namespace UILayer
 
         public void GetSearchResalt(string value)
         {
+            if (SearchSelector.rezults.Count != 0)
+            {
+                ClearSearch();
+            }
+            //SearchResult.Items.Clear();
             //TextBox.MainControl.Test(value);
             SearchSelector.rezults = Search(value, FindReplaceExpression.InThisPage);
             //  SearchSelector.SelectAll(BrowseProject.CurentFile, TextBox.MainControl);
             //SelectSearchWord(BrowseProject.CurentFile, ResultSearch);
             SearchResult.ItemsSource = SearchSelector.rezults;
+            SearchResult.SelectionChanged -= SearchResult_SelectionChanged;
             SearchResult.SelectionChanged += SearchResult_SelectionChanged;
             TextWord.Text = value;
            
@@ -97,6 +103,7 @@ namespace UILayer
         {
             if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(TextWord.Text) && !string.IsNullOrEmpty(ParentControl.BrowseProject.CurentFile))
             {
+                ClearSearch();
                 GetSearchResalt(TextWord.Text);
             }
         }
@@ -137,7 +144,7 @@ namespace UILayer
 
             var list = new List<SearchResult>();
             var document = ParentControl.TextBox.MainControl;//LoadFile(file);
-            document.SelectAll();
+           // document.SelectAll();
             //document.Selection
             //           //   new TextRange
             //           //             (document.ContentStart, document.ContentEnd)
@@ -207,13 +214,14 @@ namespace UILayer
                         count = Replace(list, to);
                         if (count > 0)
                         {
-                            SearchSelector.rezults.Remove(SearchSelector.rezults.ElementAt(activeFindIndex));
+                            GetSearchResalt(from);
+                         //   SearchSelector.rezults.Remove(SearchSelector.rezults.ElementAt(activeFindIndex));
                         }
                         break;
                     }
                 case FindReplaceExpression.InThisPage:
                     {
-                        count = 0;
+                        count = ReplaceAllWords(Search(from, expression), to);
                         break;
                     }
                 case FindReplaceExpression.InThisParagraph:
@@ -232,7 +240,7 @@ namespace UILayer
             //SearchSelector.rezults.ForEach(item =>
             //    item.Position += FlowPosition);
            // ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, System.IO.Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
-            ParentControl.NotesBrowser.MainControl.Items.Refresh();
+          //  ParentControl.NotesBrowser.MainControl.Items.Refresh();
             return count;
         }
 
@@ -278,16 +286,21 @@ namespace UILayer
 
         public void DoReplace()
         {
+            var index = activeFindIndex;
             if ((bool)ReplaceOnce.IsChecked)
             {
                 Replace(TextWord.Text, TextWordReplace.Text, FindReplaceExpression.FirstFound);
             }
             else if ((bool)ReplaceAll.IsChecked)
             {
-                Replace(TextWord.Text, TextWordReplace.Text, FindReplaceExpression.InThisBook);
+                Replace(TextWord.Text, TextWordReplace.Text, FindReplaceExpression.InThisPage);
+               ClearSearch();
             }
-            var index = activeFindIndex;
             SearchResult.Items.Refresh();
+            if (SearchSelector.rezults.Any())
+            {
+                SearchResult.SelectedIndex = index;
+            }
             activeFindIndex = index;
         }
 
@@ -315,6 +328,7 @@ namespace UILayer
         {
             if (SearchSelector.rezults.Count <= 0) return;
             activeFindIndex = activeFindIndex < SearchSelector.rezults.Count - 1 ? activeFindIndex + 1 : 0;
+            SearchResult.SelectedIndex = activeFindIndex;
             ParentControl.TextBox.MainControl.Focus();
             ParentControl.TextBox.MainControl.CaretPosition = (SearchSelector.rezults[activeFindIndex].Range.Start);
         }
@@ -324,7 +338,8 @@ namespace UILayer
             ParentControl.TextBox.MainControl.TextChanged -= MainControl_TextChanged;
             SearchSelector.RestoreOriginalState(ParentControl);
             DoReplace();
-            ParentControl.TextBox.MainControl.TextChanged += MainControl_TextChanged;
+            activeFindIndex = SearchResult.SelectedIndex;
+           // ParentControl.TextBox.MainControl.TextChanged += MainControl_TextChanged;
         }
         private string GetTextAround(TextRange range)
         {
@@ -351,6 +366,18 @@ namespace UILayer
             }
             rezult = new TextRange(start, end).Text;
             return rezult;
+        }
+
+        private void ReplaceOnce_Checked(object sender, RoutedEventArgs e)
+        {
+            if(ReplaceAll == null) return;
+            ReplaceAll.IsChecked = !ReplaceOnce.IsChecked;
+        }
+
+        private void ReplaceAll_Checked(object sender, RoutedEventArgs e)
+        {
+            if (ReplaceOnce == null) return;
+            ReplaceOnce.IsChecked = !ReplaceAll.IsChecked;
         }
     }
 }

@@ -40,7 +40,7 @@ namespace UILayer
         {
             new TextRange
                         (control.TextBox.MainControl.Document.ContentStart, control.TextBox.MainControl.Document.ContentEnd)
-                        .ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.White);
+                        .ApplyPropertyValue(TextElement.BackgroundProperty, null);
             foreach(var item in control.NotesBrowser.Notes)
             {
                item.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);

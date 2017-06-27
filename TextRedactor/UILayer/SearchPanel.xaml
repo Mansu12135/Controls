@@ -49,8 +49,8 @@
             </Image>
         </Border>
         <TextBox x:Name="TextWordReplace" Margin="21,2,0,21" Grid.Row="2" TextWrapping="NoWrap" Text="" HorizontalAlignment="Left" VerticalAlignment="Center" Width="175" FontSize="14" Padding="0,2" FontStyle="Italic" Foreground="#FF919191" SelectionBrush="#FF8FAECD" Background="White" Grid.ColumnSpan="2" />
-        <CheckBox x:Name="ReplaceOnce" Grid.Row="2" Margin="21,30,0,0" Content="Replace" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <CheckBox x:Name="ReplaceAll" Grid.Row="2" Margin="116,30,0,0" Content="Replace all" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+        <CheckBox x:Name="ReplaceOnce" Grid.Row="2" Margin="21,30,0,0" Content="Replace" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="ReplaceOnce_Checked" IsChecked="True" />
+        <CheckBox x:Name="ReplaceAll" Grid.Row="2" Margin="116,30,0,0" Content="Replace all" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="ReplaceAll_Checked"/>
         <Border x:Name="ButReplace" BorderBrush="Black" BorderThickness="0" Grid.Column="1" HorizontalAlignment="Left" Height="13" Margin="77,8,0,0" Grid.Row="2" Grid.RowSpan="3" VerticalAlignment="Top" Width="13" Padding="0" MouseUp="ButReplace_MouseUp">
             <Image x:Name="ReplaceNextFind" Cursor="Hand" Source="Resources/arrow-of-double-angle-pointing-down.png" RenderTransformOrigin="0.5,0.5" >
                 <Image.RenderTransform>
