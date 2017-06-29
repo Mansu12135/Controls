@@ -2,20 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static UILayer.SuperTextRedactor;
+using ApplicationLayer;
 
 namespace UILayer
 {
@@ -68,11 +62,7 @@ namespace UILayer
             {
                 ClearSearch();
             }
-            //SearchResult.Items.Clear();
-            //TextBox.MainControl.Test(value);
             SearchSelector.rezults = Search(value, FindReplaceExpression.InThisPage);
-            //  SearchSelector.SelectAll(BrowseProject.CurentFile, TextBox.MainControl);
-            //SelectSearchWord(BrowseProject.CurentFile, ResultSearch);
             SearchResult.ItemsSource = SearchSelector.rezults;
             SearchResult.SelectionChanged -= SearchResult_SelectionChanged;
             SearchResult.SelectionChanged += SearchResult_SelectionChanged;
@@ -141,67 +131,30 @@ namespace UILayer
 
         private List<SearchResult> FindAll(string therm, string file)
         {
-
+            int thermLength = therm.Length;
             var list = new List<SearchResult>();
-            var document = ParentControl.TextBox.MainControl;//LoadFile(file);
-           // document.SelectAll();
-            //document.Selection
-            //           //   new TextRange
-            //           //             (document.ContentStart, document.ContentEnd)
-            //           .ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.White);
+            var document = ParentControl.TextBox.MainControl;
             Regex reg = new Regex(therm, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            TextPointer position = document.Document.ContentStart;
-            List<TextRange> ranges = new List<TextRange>();
-            int count = 0;
-            while (position != null)
+            var matchs = reg.Matches(new TextRange(document.Document.ContentStart, document.Document.ContentEnd).Text);
+            var a = new FlowDocumentWorker(document.Document);
+            TextPointer pointer = null;
+            TextRange resultRange;
+            foreach (Match match in matchs)
             {
-                if (position.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
+                pointer = a.GetTextPointer(match.Index, pointer == null);
+                resultRange = new TextRange(pointer, a.GetTextPointer(match.Index + thermLength));
+                list.Add(new SearchResult
                 {
-                    string text = position.GetTextInRun(LogicalDirection.Forward);
-                    var matchs = reg.Matches(text);
-
-                    foreach (Match match in matchs)
-                    {
-
-                        TextPointer start = position.GetPositionAtOffset(match.Index);
-                        TextPointer end = start.GetPositionAtOffset(therm.Trim().Length);
-                        TextRange textrange = new TextRange(start, end);
-                        //  ranges.Add(textrange);
-                        //       var range = new TextRange(start, end);// document.ContentStart.(position)+document.ContentStart.GetPositionAtOffset(match.Index), document.ContentStart.GetPositionAtOffset(therm.Trim().Length));
-                        list.Add(new SearchResult { Path = file, Text = GetTextAround(textrange), Range = textrange /*Start = document.ContentStart.GetOffsetToPosition(start), End = document.ContentStart.GetOffsetToPosition(end)*/});
-                        //range.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(Colors.Red));
-
-                    }
-                }
-                else
-                {
-                    count++;
-                }
-                position = position.GetNextContextPosition(LogicalDirection.Forward);
+                    Path = file,
+                    Text = GetTextAround(resultRange),
+                    Range = resultRange
+                });
+                resultRange.ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(Colors.Yellow));
             }
-            foreach (var range in list)
-            {
-                range.Range.ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(Colors.Yellow));
-                //   range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
-            }
-
-            //foreach (var item in list)
-            //{
-            //    new TextRange(document.ContentStart.GetPositionAtOffset(list.LastOrDefault().Start), document.ContentStart.GetPositionAtOffset(list.LastOrDefault().End)).
-            //     ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.Yellow);
-            //}
-            //TextPointer p = TextBox.MainControl.Document.ContentStart;
-            //while (true)
-            //{
-            //    var range = FindWordFromPosition(p, therm);
-            //    if(range == null) { break; }
-            //    list.Add(new SearchResult { Path = file, Position = TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.Start.DocumentStart), Text = range.Text });
-            //    p = range.End;
-            //}
-
 
             return list;
         }
+
         private int Replace(string from, string to, FindReplaceExpression expression)
         {
             int count = 0;

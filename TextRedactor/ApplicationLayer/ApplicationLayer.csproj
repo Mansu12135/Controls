@@ -61,6 +61,7 @@
     <Compile Include="FileSystemQueue.cs" />
     <Compile Include="FileSystemTask.cs" />
     <Compile Include="FileSystemWorker.cs" />
+    <Compile Include="FlowDocumentWorker.cs" />
     <Compile Include="IBasicPanel.cs" />
     <Compile Include="ICurrentBrowseState.cs" />
     <Compile Include="IDictionaryManager.cs" />

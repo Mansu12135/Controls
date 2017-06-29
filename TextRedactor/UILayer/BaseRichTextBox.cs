@@ -291,6 +291,7 @@ namespace UILayer
         {
             if (SaveManager == null) { return; }
             SaveManager.Dispose();
+            Thread.Join();
             Thread = null;
             SaveManager = null;
         }
