@@ -13,7 +13,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid x:Name="MainContainer" Margin="0,0,0,0">
+    <Grid x:Name="MainContainer" Margin="0,0,0,0" IsManipulationEnabled="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250*"/>
             <ColumnDefinition Width="800*"/>

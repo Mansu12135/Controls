@@ -282,7 +282,7 @@ namespace UILayer
                 exportPanel.HidenExport.MouseUp += HidenExport_MouseUp; 
                 exportPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                 exportPanel.VerticalAlignment = VerticalAlignment.Stretch;
-                exportPanel.Margin = new Thickness(NotesBrowser.ActualWidth,0, -NotesBrowser.ActualWidth, 0);
+              //  exportPanel.Margin = new Thickness(NotesBrowser.ActualWidth/2,0, -NotesBrowser.ActualWidth/2, 0);
                 exportPanel.project = BrowseProject.CurentProject;
                 exportPanel.Init(this);
                 foreach(KeyValuePair<string,Project> item in BrowseProject.MainProjectList.Items)
@@ -306,7 +306,7 @@ namespace UILayer
         private void HidenExport_MouseUp(object sender, MouseButtonEventArgs e)
         {
             exportPanel.Hide();
-             exportPanel = null;
+            exportPanel = null;
         }
 
        public ExportPanel exportPanel;

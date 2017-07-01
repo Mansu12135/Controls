@@ -162,6 +162,7 @@
     <Compile Include="FormatPanel.xaml.cs">
       <DependentUpon>FormatPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GridLengthAnimation.cs" />
     <Compile Include="InformationForm.xaml.cs">
       <DependentUpon>InformationForm.xaml</DependentUpon>
     </Compile>
