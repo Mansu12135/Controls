@@ -139,12 +139,21 @@ namespace UILayer
                         UpdateRangeOnNotes();
                     }
                     MainProjectList.Items.Refresh();
+                    if (ParentControl.Format.comboWigth.SelectedValue != null)
+                    {
+                        ParentControl.TextBox.MainControl.Document.PageWidth = Convert.ToDouble(ParentControl.Format.comboWigth.SelectedValue);
+                    }
+                    if (ParentControl.Format.comboBoxFont.SelectedValue != null)
+                    {
+                        ParentControl.Format.comboBoxFont.SelectedIndex = ParentControl.Format.comboBoxFont.Items.IndexOf(ParentControl.defaultFont);
+                    }
                 }
             }
             else
             {
                 LoadLogo();
-            }     
+            }
+
         }
         private string vProjectPath = "";
         private void LoadLogo()
@@ -163,7 +172,7 @@ namespace UILayer
             var paragraph = new Paragraph() { TextAlignment = System.Windows.TextAlignment.Center, Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF838181")) };
             paragraph.Inlines.Add(new Run("START A PROJECT") { FontWeight = FontWeights.Bold });
 
-            var romb = new System.Windows.Controls.Image() { HorizontalAlignment = HorizontalAlignment.Center, Width = 20, Height = 20};
+            var romb = new System.Windows.Controls.Image() { HorizontalAlignment = HorizontalAlignment.Center, Width = 20, Height = 20 };
             var tempImage2 = Properties.Resources.romb;
             var ScreenCapture2 = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
                  tempImage2.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));
@@ -174,7 +183,7 @@ namespace UILayer
             ParentControl.TextBox.MainControl.Document.Blocks.Add(new Paragraph(new InlineUIContainer(romb)) { TextAlignment = System.Windows.TextAlignment.Center });
 
             //flowDocument.Blocks.Add(paragraph);
-           
+
         }
         public BrowseProject(Dictionary<string, Project> collection)
         {
@@ -264,7 +273,7 @@ namespace UILayer
         {
             string path = ProjectsPath + "\\" + project + "\\Files\\" + file + ".xaml";
             if (File.Exists(path)) { return; }
-            OnCreatedFiles(new object(), new FileArgs(new List<string>{ file }, project,Happened.Created, EndFilesCreated));
+            OnCreatedFiles(new object(), new FileArgs(new List<string> { file }, project, Happened.Created, EndFilesCreated));
         }
 
         private void EndFilesCreated(bool rezult, string message, EventArgs args)
@@ -353,7 +362,7 @@ namespace UILayer
             if (LoadedFile == System.IO.Path.GetDirectoryName(file.Path) + "\\" + file.Name + ".not") { LoadedFile = ""; }
             File.Delete(file.Path);
             Notes[project].Files.RemoveAt(index);
-            if (!Dispatcher.CheckAccess()){ return; }
+            if (!Dispatcher.CheckAccess()) { return; }
             OnDeleted(project);
         }
 
@@ -390,7 +399,7 @@ namespace UILayer
         public void DeleteProject(string project)
         {
             if (!Notes.ContainsKey(project)) { return; }
-         
+
             if (!string.IsNullOrEmpty(LoadedFile) && LoadedFile.StartsWith(ProjectsPath + "\\" + project)) { LoadedFile = ""; }
             if (!string.IsNullOrEmpty(CurentFile) && CurentFile.StartsWith(ProjectsPath + "\\" + project))
             {
@@ -509,6 +518,10 @@ namespace UILayer
                 ParentControl.TextBox.MainControl.IsEnabled = true;
                 ParentControl.Format.IsEnabled = true;
             }
+            //if (ParentControl.searchPanel != null)
+            //{
+            //    ParentControl.searchPanel.ClearSearch();
+            //}
             var textBlock = (System.Windows.Controls.Label)sender;
             if (textBlock == null) return;
             if (textBlock.Tag == null) return;
@@ -516,24 +529,34 @@ namespace UILayer
             OpenFile(textBlock.Tag.ToString(), Path.GetFileNameWithoutExtension(textBlock.Tag.ToString()));
             if (!string.IsNullOrEmpty(LoadedFile))
             {
-               UpdateRangeOnNotes();
+                UpdateRangeOnNotes();
             }
             //preview for export
             //maybe do with event
-            if(ParentControl.exportPanel!= null)
+            if (ParentControl.exportPanel != null)
             {
                 ParentControl.exportPanel.LoadPreview(textBlock.Tag.ToString());
             }
             MainProjectList.Items.Refresh();
+            if (ParentControl.Format.comboWigth.SelectedValue != null)
+            {
+                ParentControl.TextBox.MainControl.Document.PageWidth = Convert.ToDouble(ParentControl.Format.comboWigth.SelectedValue);
+            }
+            if (ParentControl.Format.comboBoxFont.SelectedValue != null)
+            {
+                ParentControl.Format.comboBoxFont.SelectedIndex = ParentControl.Format.comboBoxFont.Items.IndexOf(ParentControl.defaultFont);
+            }
         }
 
         public void UpdateRangeOnNotes()
         {
             foreach (var note in ParentControl.NotesBrowser.Notes)
             {
+                var end =
+                    ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetEnd);
                 note.Value.Range = new TextRange(
                     ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetStart),
-                    ParentControl.TextBox.MainControl.Document.ContentStart.GetPositionAtOffset(note.Value.OffsetEnd));
+                    end != null ? end : ParentControl.TextBox.MainControl.Document.ContentEnd);
                 var pointer = ParentControl.AddFlag(note.Value.Range, note.Value.Name);
                 if (note.Value.Range.Start != pointer)
                 {
@@ -542,39 +565,39 @@ namespace UILayer
             }
 
             //byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
-                //for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
-                //{
-                //    InlineUIContainer element = position.Parent as InlineUIContainer;
-                //    if (element != null && element.Child is System.Windows.Controls.Image)
-                //    {
-                //        var image = element.Child as System.Windows.Controls.Image;
-                //        if (image == null) continue;
-                //        var imageSourse = image.Source as System.Windows.Media.ImageSource;
-                //        if (imageSourse == null) continue;
-                //        byte[] byt = NotesBrowser.getJPGFromImageControl(imageSourse);
-                //        //сравнивает картинки
-                //        if (byt.Length == flag.Length)
-                //        {
-                //            bool isflag = true;
-                //            for (int t = 0; t < byt.Length; t++)
-                //            {
-                //                if (byt[t] != flag[t]) { isflag = false; break; }
-                //            }
-                //            if (!isflag) continue;
-                //            image.Cursor = Cursors.Hand;
-                //            image.Tag = note.Key;
-                //            image.MouseUp += NoteFlag_MouseUp;
-                //            element.Unloaded += Element_Unloaded;
-                //            //new TextRange(element.ContentStart, element.ContentEnd).Text = string.Empty;
-                //        }
-                //    }
-                //}
+            //for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
+            //{
+            //    InlineUIContainer element = position.Parent as InlineUIContainer;
+            //    if (element != null && element.Child is System.Windows.Controls.Image)
+            //    {
+            //        var image = element.Child as System.Windows.Controls.Image;
+            //        if (image == null) continue;
+            //        var imageSourse = image.Source as System.Windows.Media.ImageSource;
+            //        if (imageSourse == null) continue;
+            //        byte[] byt = NotesBrowser.getJPGFromImageControl(imageSourse);
+            //        //сравнивает картинки
+            //        if (byt.Length == flag.Length)
+            //        {
+            //            bool isflag = true;
+            //            for (int t = 0; t < byt.Length; t++)
+            //            {
+            //                if (byt[t] != flag[t]) { isflag = false; break; }
+            //            }
+            //            if (!isflag) continue;
+            //            image.Cursor = Cursors.Hand;
+            //            image.Tag = note.Key;
+            //            image.MouseUp += NoteFlag_MouseUp;
+            //            element.Unloaded += Element_Unloaded;
+            //            //new TextRange(element.ContentStart, element.ContentEnd).Text = string.Empty;
+            //        }
+            //    }
+            //}
         }
 
         internal void Element_Unloaded(object sender, RoutedEventArgs e)
-        {          
+        {
             var element = sender as InlineUIContainer;
-            if(element.Parent != null) { return; }
+            if (element.Parent != null) { return; }
             if (element != null)
             {
                 var image = element.Child as System.Windows.Controls.Image;
@@ -585,7 +608,7 @@ namespace UILayer
             }
         }
 
-        private void UpdateOffsetOnNotes()
+        public void UpdateOffsetOnNotes()
         {
             byte[] flag = NotesBrowser.getJPGFromImageControl(Properties.Resources.noteFlag);
             for (int i = ParentControl.NotesBrowser.Notes.Count - 1; i >= 0; i--)
@@ -593,7 +616,9 @@ namespace UILayer
                 var note = ParentControl.NotesBrowser.Notes.ElementAt(i);
                 var a = SuperTextRedactor.TestRange(note.Value.Range);
                 note.Value.Range.ApplyPropertyValue(TextElement.BackgroundProperty, null);
-                for (TextPointer position = note.Value.Range.Start; position != null && position.CompareTo(note.Value.Range.End) != 1; position = position.GetNextContextPosition(LogicalDirection.Forward))
+                for (TextPointer position = note.Value.Range.Start;
+                    position != null && position.CompareTo(note.Value.Range.End) != 1;
+                    position = position.GetNextContextPosition(LogicalDirection.Forward))
                 {
                     InlineUIContainer element = position.Parent as InlineUIContainer;
                     if (element != null && element.Child is System.Windows.Controls.Image)
@@ -609,7 +634,11 @@ namespace UILayer
                             bool isflag = true;
                             for (int t = 0; t < byt.Length; t++)
                             {
-                                if (byt[t] != flag[t]) { isflag = false; break; }
+                                if (byt[t] != flag[t])
+                                {
+                                    isflag = false;
+                                    break;
+                                }
                             }
                             if (!isflag) continue;
                             element.Unloaded -= Element_Unloaded;
@@ -618,12 +647,18 @@ namespace UILayer
                         }
                     }
                 }
-                note.Value.OffsetStart = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.Start);
-                note.Value.OffsetEnd = ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.End);
+                note.Value.OffsetStart =
+                    ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.Start);
+                note.Value.OffsetEnd =
+                    ParentControl.TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(note.Value.Range.End);
+            }
+            if (ParentControl.searchPanel != null)
+            {
+                ParentControl.searchPanel.ClearSearch();
             }
         }
 
-      
+
 
         private void NoteFlag_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -634,7 +669,7 @@ namespace UILayer
             }
         }
 
-       
+
         PropertiesForm propertForm;
         private IFileSystemControl _fileSystemControlImplementation;
 
@@ -749,7 +784,7 @@ namespace UILayer
                     IsChangeFileName = false;
                 }
             }
-           // MainProjectList.Items.Refresh();
+            // MainProjectList.Items.Refresh();
             EndChangingDynamicItem();
         }
 
@@ -797,7 +832,7 @@ namespace UILayer
 
         public void SetLineSpacing()
         {
-          foreach(var block in ParentControl.TextBox.MainControl.Document.Blocks)
+            foreach (var block in ParentControl.TextBox.MainControl.Document.Blocks)
             {
                 var p = block as Paragraph;
                 if (p == null) continue;

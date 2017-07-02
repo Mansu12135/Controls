@@ -68,9 +68,9 @@ namespace UILayer
                 }
             });
             Tasks.Clear();
-            if (CalledControl != null && value != null)
+            if (value == null)
             {
-               // CalledControl.Save();
+                ((BrowseProject)CalledControl).ParentControl.updateDefaultValue();
             }
         }
 

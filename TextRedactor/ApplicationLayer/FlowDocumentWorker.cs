@@ -26,6 +26,7 @@ namespace ApplicationLayer
                     case TextPointerContext.ElementEnd: {
                             DependencyObject d = this.CurrentPosition.GetAdjacentElement(LogicalDirection.Forward);
                             if (d is Paragraph || d is LineBreak) { CurrentCharacterOffset += 2; }
+                           if (d is InlineUIContainer) { CurrentCharacterOffset += 1; }
                             break;
                         }
                     case TextPointerContext.Text: {

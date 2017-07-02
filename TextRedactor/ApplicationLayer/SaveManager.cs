@@ -63,6 +63,12 @@ namespace ApplicationLayer
         {
             while (isAlive || l.Any())
             {
+                if (Application.Current == null)
+                {
+                    isAlive = false;
+                    break;
+                }
+                
                 if (l.Count > 0)
                 {
                     Lock.Wait();

@@ -35,7 +35,7 @@ namespace UILayer
             ParentControl.RedactorConteiner.BeginAnimation(Border.MarginProperty, myThicknessAnimation);
             ParentControl.ShowNotes.Visibility = Visibility.Hidden;
         }
-        public  void Disposing()
+        public void Disposing()
         {
             SearchSelector.RestoreOriginalState(ParentControl);
         }
@@ -67,14 +67,14 @@ namespace UILayer
             SearchResult.SelectionChanged -= SearchResult_SelectionChanged;
             SearchResult.SelectionChanged += SearchResult_SelectionChanged;
             TextWord.Text = value;
-           
+
             if (SearchSelector.rezults.Any())
             {
                 SearchResult.SelectedIndex = 0;
             }
             activeFindIndex = 0;
-           ParentControl.TextBox.MainControl.TextChanged -= MainControl_TextChanged;
-           ParentControl.TextBox.MainControl.TextChanged += MainControl_TextChanged;
+            ParentControl.TextBox.MainControl.TextChanged -= MainControl_TextChanged;
+            ParentControl.TextBox.MainControl.TextChanged += MainControl_TextChanged;
         }
         private void MainControl_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -82,7 +82,7 @@ namespace UILayer
             ClearSearch();
         }
 
-        private void ClearSearch()
+        public void ClearSearch()
         {
             if (this == null) return;
             SearchSelector.RestoreOriginalState(ParentControl);
@@ -168,7 +168,7 @@ namespace UILayer
                         if (count > 0)
                         {
                             GetSearchResalt(from);
-                         //   SearchSelector.rezults.Remove(SearchSelector.rezults.ElementAt(activeFindIndex));
+                            //   SearchSelector.rezults.Remove(SearchSelector.rezults.ElementAt(activeFindIndex));
                         }
                         break;
                     }
@@ -192,8 +192,8 @@ namespace UILayer
             }
             //SearchSelector.rezults.ForEach(item =>
             //    item.Position += FlowPosition);
-           // ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, System.IO.Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
-          //  ParentControl.NotesBrowser.MainControl.Items.Refresh();
+            // ParentControl.BrowseProject.OpenFile(ParentControl.BrowseProject.CurentFile, System.IO.Path.GetFileNameWithoutExtension(ParentControl.BrowseProject.CurentFile));
+            //  ParentControl.NotesBrowser.MainControl.Items.Refresh();
             return count;
         }
 
@@ -214,11 +214,11 @@ namespace UILayer
                     {
                         //?????????????????????????????
                         //FlowPosition = 0;
-                       // return 0;
+                        // return 0;
                     }
                     //FlowPosition += to.Length - range.Text.Length;
                     range.Text = to;
-                     count++;
+                    count++;
                 }
                 //    SaveChanges(found[0], document);
             }
@@ -247,7 +247,7 @@ namespace UILayer
             else if ((bool)ReplaceAll.IsChecked)
             {
                 Replace(TextWord.Text, TextWordReplace.Text, FindReplaceExpression.InThisPage);
-               ClearSearch();
+                ClearSearch();
             }
             SearchResult.Items.Refresh();
             if (SearchSelector.rezults.Any())
@@ -288,11 +288,12 @@ namespace UILayer
 
         private void ButReplace_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (!SearchSelector.rezults.Any()) return;
             ParentControl.TextBox.MainControl.TextChanged -= MainControl_TextChanged;
             SearchSelector.RestoreOriginalState(ParentControl);
             DoReplace();
             activeFindIndex = SearchResult.SelectedIndex;
-           // ParentControl.TextBox.MainControl.TextChanged += MainControl_TextChanged;
+            // ParentControl.TextBox.MainControl.TextChanged += MainControl_TextChanged;
         }
         private string GetTextAround(TextRange range)
         {
@@ -323,7 +324,7 @@ namespace UILayer
 
         private void ReplaceOnce_Checked(object sender, RoutedEventArgs e)
         {
-            if(ReplaceAll == null) return;
+            if (ReplaceAll == null) return;
             ReplaceAll.IsChecked = !ReplaceOnce.IsChecked;
         }
 

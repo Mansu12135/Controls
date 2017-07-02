@@ -18,7 +18,7 @@ namespace UILayer
         public void Init()
         {
             ComboFont.SelectedValue = ((BrowseProject)ParentControl.CalledControl).ParentControl.defaultFont;
-            ComboMargin.SelectedValue = ((BrowseProject)ParentControl.CalledControl).ParentControl.defaultMarginWight;
+            ComboMargin.SelectedValue = ((BrowseProject)ParentControl.CalledControl).ParentControl.DefaultMarginWight;
             ComboSpacing.SelectedValue = ((BrowseProject)ParentControl.CalledControl).ParentControl.defaultSpacing;
         }
         private void ChangeDirectory_MouseUp(object sender, MouseButtonEventArgs e)
@@ -59,9 +59,9 @@ namespace UILayer
             ParentControl.AddTask(new Task(
             () =>
             {
-                if (margin != ((BrowseProject)ParentControl.CalledControl).ParentControl.defaultMarginWight)
+                if (margin != ((BrowseProject)ParentControl.CalledControl).ParentControl.DefaultMarginWight)
                 {
-                    ((BrowseProject)ParentControl.CalledControl).ParentControl.defaultMarginWight = margin;
+                    ((BrowseProject)ParentControl.CalledControl).ParentControl.DefaultMarginWight = margin;
                 }
             }));
         }

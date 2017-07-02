@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,7 +42,7 @@ namespace UILayer
           //  document = parentControl.TextBox.MainControl;
             TextBoxAuthor.Text = project.Author;
             TextBoxTitle.Text = project.Name;
-            LoadPreview(project.Files[0].Path);
+            LoadPreview(parentControl.BrowseProject.CurentFile);
 
             //ExportTextBox.Document = new FlowDocument();
             //foreach (var doc in project.Files)
@@ -141,61 +142,61 @@ namespace UILayer
         private bool needCloseNote = false;
         public void Show()
         {
-            if (!parentControl.NotesBrowser.IsVisible)
-            {
-                parentControl.NotesBrowser.Show();
-                needCloseNote = true;
-            }
-            GridLengthAnimation gla = new GridLengthAnimation();
-            gla.From = new GridLength(800, GridUnitType.Star);
-            gla.To = new GridLength(600, GridUnitType.Star); ;
-            gla.Duration = TimeSpan.FromSeconds(0.5);
-            parentControl.MainContainer.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            //if (!parentControl.NotesBrowser.IsVisible)
+            //{
+            //    parentControl.NotesBrowser.Show();
+            //    needCloseNote = true;
+            //}
+            //GridLengthAnimation gla = new GridLengthAnimation();
+            //gla.From = new GridLength(800, GridUnitType.Star);
+            //gla.To = new GridLength(600, GridUnitType.Star); ;
+            //gla.Duration = TimeSpan.FromSeconds(0.5);
+            //parentControl.MainContainer.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla);
 
 
-            GridLengthAnimation gla1 = new GridLengthAnimation();
-            gla1.From = new GridLength(250, GridUnitType.Star);
-            gla1.To = new GridLength(400, GridUnitType.Star); ;
-            gla1.Duration = TimeSpan.FromSeconds(0.5);
-            parentControl.MainContainer.ColumnDefinitions[2].BeginAnimation(ColumnDefinition.WidthProperty, gla1);
+            //GridLengthAnimation gla1 = new GridLengthAnimation();
+            //gla1.From = new GridLength(250, GridUnitType.Star);
+            //gla1.To = new GridLength(400, GridUnitType.Star); ;
+            //gla1.Duration = TimeSpan.FromSeconds(0.5);
+            //parentControl.MainContainer.ColumnDefinitions[2].BeginAnimation(ColumnDefinition.WidthProperty, gla1);
 
-            //DoubleAnimation myThicknessAnimation = new DoubleAnimation();
+            ThicknessAnimation myThicknessAnimation = new ThicknessAnimation();
             //myThicknessAnimation.From = parentControl.Colunm1.ActualWidth;
             //myThicknessAnimation.To = parentControl.Colunm1.ActualWidth -
             //                          parentControl.NotesBrowser.ActualWidth / 2;//  new Thickness(parentControl.RedactorConteiner.Margin.Left, parentControl.RedactorConteiner.Margin.Top, parentControl.NotesBrowser.ActualWidth/2, parentControl.RedactorConteiner.Margin.Bottom);
 
-            ////myThicknessAnimation.From = Margin;
-            ////myThicknessAnimation.To = new Thickness(-Margin.Left, Margin.Top, 0, Margin.Bottom);
-            //myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
+            myThicknessAnimation.From = Margin;
+            myThicknessAnimation.To = new Thickness(-Margin.Left, Margin.Top, 0, Margin.Bottom);
+            myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
             //parentControl.RedactorConteiner.BeginAnimation(GridLength, myThicknessAnimation);
 
-            // BeginAnimation(MarginProperty, myThicknessAnimation);
+            BeginAnimation(MarginProperty, myThicknessAnimation);
 
         }
 
         public void Hide()
         {
-            GridLengthAnimation gla = new GridLengthAnimation();
-            gla.From = new GridLength(600, GridUnitType.Star);
-            gla.To = new GridLength(800, GridUnitType.Star); ;
-            gla.Duration = TimeSpan.FromSeconds(0.5);
-            parentControl.MainContainer.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla);
+            //GridLengthAnimation gla = new GridLengthAnimation();
+            //gla.From = new GridLength(600, GridUnitType.Star);
+            //gla.To = new GridLength(800, GridUnitType.Star); ;
+            //gla.Duration = TimeSpan.FromSeconds(0.5);
+            //parentControl.MainContainer.ColumnDefinitions[1].BeginAnimation(ColumnDefinition.WidthProperty, gla);
 
 
-            GridLengthAnimation gla1 = new GridLengthAnimation();
-            gla1.From = new GridLength(400, GridUnitType.Star);
-            gla1.To = new GridLength(250, GridUnitType.Star); ;
-            gla1.Duration = TimeSpan.FromSeconds(0.5);
-            gla1.Completed += MyThicknessAnimation_Completed;
-            parentControl.MainContainer.ColumnDefinitions[2].BeginAnimation(ColumnDefinition.WidthProperty, gla1);
+            //GridLengthAnimation gla1 = new GridLengthAnimation();
+            //gla1.From = new GridLength(400, GridUnitType.Star);
+            //gla1.To = new GridLength(250, GridUnitType.Star); ;
+            //gla1.Duration = TimeSpan.FromSeconds(0.5);
+            //gla1.Completed += MyThicknessAnimation_Completed;
+            //parentControl.MainContainer.ColumnDefinitions[2].BeginAnimation(ColumnDefinition.WidthProperty, gla1);
 
-          
-            //ThicknessAnimation myThicknessAnimation = new ThicknessAnimation();
-            //myThicknessAnimation.From = Margin;
-            //myThicknessAnimation.To = new Thickness(-Margin.Left, Margin.Top, Margin.Left, Margin.Bottom);
-            //myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
-            //myThicknessAnimation.Completed += MyThicknessAnimation_Completed;
-            //BeginAnimation(MarginProperty, myThicknessAnimation);
+
+            ThicknessAnimation myThicknessAnimation = new ThicknessAnimation();
+            myThicknessAnimation.From = Margin;
+            myThicknessAnimation.To = new Thickness(-Margin.Left, Margin.Top, Margin.Left, Margin.Bottom);
+            myThicknessAnimation.Duration = TimeSpan.FromSeconds(0.5);
+            myThicknessAnimation.Completed += MyThicknessAnimation_Completed;
+            BeginAnimation(MarginProperty, myThicknessAnimation);
 
         }
 

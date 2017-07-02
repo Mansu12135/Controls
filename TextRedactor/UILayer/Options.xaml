@@ -19,13 +19,13 @@
         <TextBlock Text="OPTIONS" FontSize="16" FontWeight="Bold" FontFamily="Times New Roman" Foreground="#FF646464" Height="18" HorizontalAlignment="Center" VerticalAlignment="Top"  />
 
         <Label Content="Font size:" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Grid.Row="1" FontSize="16" FontWeight="Bold"/>
-        <Label Content="Resolution:" HorizontalAlignment="Left" Margin="10,195,0,0" VerticalAlignment="Top" Grid.Row="1" FontWeight="Bold"/>
+        <!--<Label Content="Resolution:" HorizontalAlignment="Left" Margin="10,195,0,0" VerticalAlignment="Top" Grid.Row="1" FontWeight="Bold"/>-->
         <Label Content="Spacing:" HorizontalAlignment="Left" Margin="10,155,0,0" VerticalAlignment="Top" Grid.Row="1" FontWeight="Bold"/>
 
         <ComboBox x:Name="ComboFont" Margin="135,80,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="144" Height="25" Grid.Row="1" ItemsSource="{Binding Source={x:Static controls:FormatPanel.FontSize}, Path=Values}" SelectionChanged="ComboFont_SelectionChanged" >
 
         </ComboBox>
-        <ComboBox Margin="135,200,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="144" Height="25" Grid.Row="1"/>
+        <!--<ComboBox Margin="135,200,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="144" Height="25" Grid.Row="1"/>-->
         <ComboBox x:Name="ComboSpacing" Margin="135,160,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="144" Height="25" Grid.Row="1" ItemsSource="{Binding Source={x:Static controls:FormatPanel.Spacing}, Path=Values}" SelectionChanged="ComboSpacing_SelectionChanged"/>
         <Label Content="Margin wight:" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" Grid.Row="1" FontWeight="Bold"/>
         <ComboBox x:Name="ComboMargin" Margin="135,120,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="144" Height="25" Grid.Row="1"  ItemsSource="{Binding Source={x:Static controls:FormatPanel.MarginWigth}, Path=Values}" SelectionChanged="ComboMargin_SelectionChanged" />

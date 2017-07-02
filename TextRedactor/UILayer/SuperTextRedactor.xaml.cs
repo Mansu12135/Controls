@@ -37,7 +37,7 @@ namespace UILayer
 
         public double defaultFont;
         public double defaultSpacing;
-        public double defaultMarginWight;
+        public double DefaultMarginWight;
 
         public SuperTextRedactor()
         {
@@ -205,9 +205,10 @@ namespace UILayer
         }
         public void SetTextWidth(string value)
         {
-            defaultMarginWight = (Convert.ToDouble(value));
-            Format.comboWigth.SelectedIndex = Format.comboWigth.Items.IndexOf(defaultMarginWight);
-            //  Format.comboWigth.Text = Format.comboWigth.Items.IndexOf(defaultMarginWight).ToString();
+            DefaultMarginWight = (Convert.ToDouble(value));
+            Format.comboWigth.SelectedIndex = Format.comboWigth.Items.IndexOf(DefaultMarginWight);
+
+            //  Format.comboWigth.Text = Format.comboWigth.Items.IndexOf(DefaultMarginWight).ToString();
         }
         public void SetTextFont(string value)
         {
@@ -266,10 +267,10 @@ namespace UILayer
 
         public void Dispose()
         {
-            if (searchPanel != null)
-            {
-                searchPanel.Disposing();
-            }
+            //if (searchPanel != null)
+            //{
+            //    searchPanel.Disposing();
+            //}
             BrowseProject.Disposing();
             TextBox.MainControl.Dispose();
         }
@@ -278,11 +279,12 @@ namespace UILayer
         {
             if (exportPanel == null)
             {
+               // BrowseProject.UpdateOffsetOnNotes();
                 exportPanel = new ExportPanel();
                 exportPanel.HidenExport.MouseUp += HidenExport_MouseUp; 
                 exportPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                 exportPanel.VerticalAlignment = VerticalAlignment.Stretch;
-              //  exportPanel.Margin = new Thickness(NotesBrowser.ActualWidth/2,0, -NotesBrowser.ActualWidth/2, 0);
+                exportPanel.Margin = new Thickness(NotesBrowser.ActualWidth,0, -NotesBrowser.ActualWidth, 0);
                 exportPanel.project = BrowseProject.CurentProject;
                 exportPanel.Init(this);
                 foreach(KeyValuePair<string,Project> item in BrowseProject.MainProjectList.Items)
@@ -307,11 +309,12 @@ namespace UILayer
         {
             exportPanel.Hide();
             exportPanel = null;
+           // BrowseProject.UpdateRangeOnNotes();
         }
 
        public ExportPanel exportPanel;
         DictionaryPanel panel;
-        SearchPanel searchPanel;
+        public SearchPanel searchPanel;
         bool inSearch = false;
         private void InitDictionary()
         {
@@ -500,7 +503,7 @@ namespace UILayer
             imageContainer.Unloaded += BrowseProject.Element_Unloaded;
             TextBox.MainControl.EndChange();
             TextBox.MainControl.Focus();
-            return imageContainer.ElementStart;
+            return imageContainer.ContentStart;
             //  TextBox.MainControl.CaretPosition = imageContainer.ElementEnd;
         }
 
@@ -654,6 +657,12 @@ namespace UILayer
             propertForm.Init();
             ((Options)propertForm.Element.Child).DirectoryPath.Text = BrowseProject.ProjectsPath;
             propertForm.ShowDialog();
+        }
+
+        public void updateDefaultValue()
+        {
+            Format.comboWigth.SelectedIndex = Format.comboWigth.Items.IndexOf(DefaultMarginWight);
+            Format.comboBoxFont.SelectedIndex = Format.comboBoxFont.Items.IndexOf(defaultFont);
         }
     }
 
