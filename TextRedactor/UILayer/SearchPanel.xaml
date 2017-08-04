@@ -13,19 +13,22 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid  Background="White" Margin="0">
+    <Grid  Background="#FFFCFCFC" Margin="0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="125*"/>
+            <ColumnDefinition Width="32*"/>
+            <ColumnDefinition Width="93*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="47*"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="18*"/>
             <RowDefinition Height="25*"/>
             <RowDefinition Height="221*"/>
         </Grid.RowDefinitions>
-        <StackPanel Margin="0,25,0,0" Grid.ColumnSpan="2">
-            <Label Content="SEARCH" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Arial Rounded MT Bold" Foreground="#FF7C7B7B"/>
+        <Image Grid.Column="2" Margin="0,-39,-68,0" Grid.RowSpan="2" VerticalAlignment="Top" Source="Resources/rombDouble2.png"/>
+
+        <StackPanel Margin="0,0,0,10" Grid.ColumnSpan="3" VerticalAlignment="Bottom">
+            <Label Content="SEARCH" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Calibri" Foreground="#FFAEADAD" FontWeight="Bold"/>
             <Border BorderThickness="1" HorizontalAlignment="Center" Height="25" Margin="0" VerticalAlignment="Center" Width="25">
                 <Border.Background>
                     <ImageBrush ImageSource="Resources/romb.png"/>
@@ -33,10 +36,10 @@
             </Border>
 
         </StackPanel>
-        <TextBox x:Name="TextWord" Margin="21,6,0,5" Grid.Row="1" TextWrapping="Wrap" Text="Enter word..." HorizontalAlignment="Left" VerticalAlignment="Center" Width="175" FontSize="14" Padding="0,2" FontStyle="Italic" Foreground="#FF919191" SelectionBrush="#FF8FAECD" Background="White" Grid.ColumnSpan="2" KeyUp="TextWord_KeyUp" >
+        <TextBox x:Name="TextWord" Margin="21,6,0,5" Grid.Row="1" TextWrapping="Wrap" Text="Enter word..." HorizontalAlignment="Left" VerticalAlignment="Center" Width="175" FontSize="14" Padding="0,2" FontStyle="Italic" Foreground="#FF919191" SelectionBrush="#FF8FAECD" Background="White" Grid.ColumnSpan="3" KeyUp="TextWord_KeyUp" LostFocus="TextWord_LostFocus" GotFocus="TextWord_GotFocus" FontFamily="Calibri" >
         </TextBox>
         <Label x:Name="HidenSearch" Content="Hide" HorizontalAlignment="Left" Margin="6,0,0,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand"/>
-        <Border BorderBrush="Black" BorderThickness="0" Grid.Column="1" HorizontalAlignment="Left" Height="13" Margin="77,12,0,0" Grid.Row="1" Grid.RowSpan="3" VerticalAlignment="Top" Width="13" Padding="0">
+        <Border BorderBrush="Black" BorderThickness="0" Grid.Column="2" HorizontalAlignment="Left" Height="13" Margin="45.333,12,0,0" Grid.Row="1" VerticalAlignment="Top" Width="13" Padding="0">
             <Image x:Name="GoToNextFind" Cursor="Hand" Source="Resources/arrow-of-double-angle-pointing-down.png" RenderTransformOrigin="0.5,0.5" MouseUp="GoToNextFind_MouseUp" >
                 <Image.RenderTransform>
                     <TransformGroup>
@@ -48,10 +51,10 @@
                 </Image.RenderTransform>
             </Image>
         </Border>
-        <TextBox x:Name="TextWordReplace" Margin="21,2,0,21" Grid.Row="2" TextWrapping="NoWrap" Text="" HorizontalAlignment="Left" VerticalAlignment="Center" Width="175" FontSize="14" Padding="0,2" FontStyle="Italic" Foreground="#FF919191" SelectionBrush="#FF8FAECD" Background="White" Grid.ColumnSpan="2" />
-        <CheckBox x:Name="ReplaceOnce" Grid.Row="2" Margin="21,30,0,0" Content="Replace" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="ReplaceOnce_Checked" IsChecked="True" />
-        <CheckBox x:Name="ReplaceAll" Grid.Row="2" Margin="116,30,0,0" Content="Replace all" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2" Checked="ReplaceAll_Checked"/>
-        <Border x:Name="ButReplace" BorderBrush="Black" BorderThickness="0" Grid.Column="1" HorizontalAlignment="Left" Height="13" Margin="77,8,0,0" Grid.Row="2" Grid.RowSpan="3" VerticalAlignment="Top" Width="13" Padding="0" MouseUp="ButReplace_MouseUp">
+        <TextBox x:Name="TextWordReplace" Margin="21,2,0,21" Grid.Row="2" TextWrapping="NoWrap" Text="" HorizontalAlignment="Left" VerticalAlignment="Center" Width="175" FontSize="14" Padding="0,2" FontStyle="Italic" Foreground="#FF919191" SelectionBrush="#FF8FAECD" Background="White" Grid.ColumnSpan="3" FontFamily="Calibri" />
+        <CheckBox x:Name="ReplaceOnce" Grid.Row="2" Margin="21,30,0,0" Content="Replace" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="ReplaceOnce_Checked" IsChecked="True" Foreground="#FF6A6A6A" />
+        <CheckBox x:Name="ReplaceAll" Grid.Row="2" Margin="116,30,0,0" Content="Replace all" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="3" Checked="ReplaceAll_Checked" Foreground="#FF6A6A6A"/>
+        <Border x:Name="ButReplace" BorderBrush="Black" BorderThickness="0" Grid.Column="2" HorizontalAlignment="Left" Height="13" Margin="45.333,8,0,0" Grid.Row="2" VerticalAlignment="Top" Width="13" Padding="0" MouseUp="ButReplace_MouseUp">
             <Image x:Name="ReplaceNextFind" Cursor="Hand" Source="Resources/arrow-of-double-angle-pointing-down.png" RenderTransformOrigin="0.5,0.5" >
                 <Image.RenderTransform>
                     <TransformGroup>
@@ -63,7 +66,7 @@
                 </Image.RenderTransform>
             </Image>
         </Border>
-        <ListBox BorderBrush="{x:Null}" BorderThickness="0" Margin="20"   x:Name="SearchResult" Grid.Row="3" Grid.ColumnSpan="2">
+        <ListBox BorderBrush="{x:Null}" BorderThickness="0" Margin="20"   x:Name="SearchResult" Grid.Row="3" Grid.ColumnSpan="3" Background="{x:Null}">
             <ListBox.Resources>
                 <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <Setter Property="Template">

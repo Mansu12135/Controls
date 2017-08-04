@@ -23,7 +23,7 @@
             <RowDefinition Height="67*"/>
             <RowDefinition Height="190*"/>
         </Grid.RowDefinitions>
-        <TextBlock HorizontalAlignment="Center" Text="PROPERTIES" VerticalAlignment="Center" Grid.ColumnSpan="2" FontSize="16" FontWeight="Bold" FontFamily="Times New Roman" Foreground="#FF646464" Height="18" Margin="314,4,313,4" Width="102"/>
+        <TextBlock HorizontalAlignment="Center" Text="PROPERTIES" VerticalAlignment="Center" Grid.ColumnSpan="2" FontSize="16" FontFamily="Calibri" Foreground="#FFAEADAD" FontWeight="Bold" Height="18" Margin="314,4,313,4" Width="102"/>
         <StackPanel Orientation="Horizontal"  Margin="20,31,0,0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="25" Width="260" >
             <TextBox x:Name="textBoxProjectName" x:FieldModifier="public" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Test project" VerticalAlignment="Top" Width="220" FontSize="14" FontFamily="Calibri" LostFocus="textBoxProjectName_LostFocus"  VerticalContentAlignment="Center" Padding="3" Foreground="#FF3C3C3C"/>
             <Border Margin="9,5,0,5">

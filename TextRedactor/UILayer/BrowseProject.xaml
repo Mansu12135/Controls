@@ -14,21 +14,26 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid x:Name="BrowseContainer" Background="White">
+    <Grid x:Name="BrowseContainer" Background="#FFFCFCFC">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="95*"/>
+            <ColumnDefinition Width="91*"/>
+            <ColumnDefinition Width="64*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="90"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         <!--<Polygon Points="50, 0 0, 50 0,80 65, 140 140, 65 80,0" StrokeThickness="0"
          Fill="#FFF1F1F1" Panel.ZIndex="-1" Grid.RowSpan="3" Grid.ColumnSpan="2" />-->
 
-        <Label x:Name="HidenProject" HorizontalAlignment="Right" Margin="0,0,8,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand">
+        <Label x:Name="HidenProject" HorizontalAlignment="Right" Margin="0,0,8,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand" Grid.ColumnSpan="2" Grid.Column="1">
             <TextBlock TextDecorations="Underline">Hide Project Panel</TextBlock>
         </Label>
 
-        <StackPanel Margin="0,25,1,0">
-            <Label Content="PROJECTS" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Arial Rounded MT Bold" Foreground="#FF7C7B7B"/>
+        <StackPanel Margin="0,0,0,10" Grid.ColumnSpan="3" VerticalAlignment="Bottom">
+            <Label Content="PROJECTS" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Calibri" Foreground="#FFAEADAD" FontWeight="Bold"/>
             <Border BorderThickness="1" HorizontalAlignment="Center" Height="22" Margin="0" VerticalAlignment="Center" Width="22">
                 <Border.Background>
                     <ImageBrush ImageSource="Resources/romb.png"/>
@@ -36,16 +41,12 @@
             </Border>
 
         </StackPanel>
-        <Border BorderThickness="1" x:Name="ButAddProject" x:FieldModifier="public" HorizontalAlignment="Center" Height="30" Margin="0,0,0,15" Grid.Row="2" VerticalAlignment="Center" >
-            <Border.BorderBrush>
-                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                    <GradientStop Color="#FF10660A" Offset="0"/>
-                    <GradientStop Color="#FF5BC355" Offset="1"/>
-                </LinearGradientBrush>
-            </Border.BorderBrush>
-            <Label Content="ADD PROJECT"  MouseDown="ButAddProject_MouseDown" Cursor="Hand" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold" />
-        </Border>
-        <ListBox x:Name="MainProjectList" ItemsSource="{Binding Notes, RelativeSource={RelativeSource FindAncestor,AncestorType=controls:BrowseProject}}"   Margin="0" Grid.Row="1" Padding="30,0" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="MainProjectList_SelectionChanged" >
+        <Button x:Name="ButAddProject" x:FieldModifier="public"  HorizontalAlignment="Center" Margin="0" Grid.Row="2" VerticalAlignment="Center" Grid.ColumnSpan="3" Click="ButAddProject_MouseDown" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">ADD PROJECT</Button>
+        <!--<Border BorderThickness="1" BorderBrush="#FF8FDC6D"  HorizontalAlignment="Center" Margin="76,6,12,22" Grid.Row="2" VerticalAlignment="Center" Grid.ColumnSpan="2" >
+           
+            <Label Content="ADD PROJECT"  MouseDown="ButAddProject_MouseDown" Cursor="Hand" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold" Foreground="#FFA4A2A2" Padding="10,7,10,7" />
+        </Border>-->
+        <ListBox x:Name="MainProjectList" ItemsSource="{Binding Notes, RelativeSource={RelativeSource FindAncestor,AncestorType=controls:BrowseProject}}"   Margin="0" Grid.Row="1" Padding="30,0" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="MainProjectList_SelectionChanged" Background="#FFFCFCFC" Grid.ColumnSpan="3" >
             <ListBox.Resources>
                 <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <Setter Property="Template">
@@ -55,7 +56,7 @@
                                     <StackPanel x:Name="stackPanel">
                                         <StackPanel  Orientation="Horizontal">
                                             <Label PreviewMouseDoubleClick="ProjectName_MouseDoubleClick" Padding="0">
-                                                <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" KeyDown="TextNameFile_OnKeyDown" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}"/>
+                                                <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}" Background="{x:Null}"/>
                                             </Label>
                                             <Border x:Name="Propert" Visibility="Hidden" Width="16" Height="16" HorizontalAlignment="Right" Cursor="Hand">
                                                 <Image Source="Resources/set.png" MouseUp="Propert_Click" Tag="{Binding Key}"></Image>
@@ -63,7 +64,7 @@
                                         </StackPanel>
                                         <ListBox x:Name="FileListBox" ItemsSource="{Binding  Value.ListFiles}"  Margin="6,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" SelectionChanged ="FileListBox_SelectionChanged" >
                                             <ListBox.Resources>
-                                                <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                                <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" >
                                                     <Setter Property="Template">
                                                         <Setter.Value>
                                                             <ControlTemplate TargetType="ListBoxItem">
@@ -71,7 +72,7 @@
                                                                     <DockPanel Cursor="Hand" HorizontalAlignment="Stretch">
                                                                         <Image Name="Romb" Source="Resources/romb.png" Margin="0,1" Height="{Binding IsOpen, Mode=OneWay}" Width="{Binding IsOpen,Mode=OneWay}" ></Image>
                                                                         <Label x:Name="buttonOpenFile" Tag="{Binding Path}" MouseDown="buttonOpenFile_MouseDown" Cursor="Hand" Height="Auto" HorizontalAlignment="Stretch" Padding="0" >
-                                                                            <TextBox x:Name="TextNameFile" BorderThickness="0"   Text="{Binding  Name}"  Tag="{Binding Path}" IsEnabled="False" ></TextBox>
+                                                                            <TextBox x:Name="TextNameFile" BorderThickness="0"   Text="{Binding  Name}"  Tag="{Binding Path}" IsEnabled="False" Background="{x:Null}" ></TextBox>
                                                                         </Label>
                                                                         <Border BorderThickness="0" Name="Edit"  Width="15"  Height="15"  HorizontalAlignment="Right" Margin="3,0,0,0" MouseUp="EditFileName_OnMouseUp">
                                                                             <Image  Name="EditFileName" Source="Resources/edit.png" Tag="{Binding Path}"  Cursor="Hand" >
@@ -140,6 +141,17 @@
                 </Style>
             </ListBox.Resources>
         </ListBox>
+        <Image Margin="-74,-17,0,-46" Source="Resources/rombDouble1.png" VerticalAlignment="Top"/>
+        <Image Margin="0,0,0,-41" Grid.Row="1" VerticalAlignment="Bottom" Grid.RowSpan="2" Source="Resources/rombDouble2.png" Stretch="None" Grid.Column="2" RenderTransformOrigin="0.5,0.5">
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleY="-1" ScaleX="1"/>
+                    <SkewTransform AngleY="0" AngleX="0"/>
+                    <RotateTransform Angle="0"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
 
 
     </Grid>

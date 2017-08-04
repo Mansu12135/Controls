@@ -277,6 +277,7 @@ namespace UILayer
 
         private void ExportButton_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if(TextBox.MainControl.saveProcess) return;
             if (exportPanel == null)
             {
                // BrowseProject.UpdateOffsetOnNotes();

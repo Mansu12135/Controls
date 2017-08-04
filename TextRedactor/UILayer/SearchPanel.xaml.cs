@@ -333,5 +333,20 @@ namespace UILayer
             if (ReplaceOnce == null) return;
             ReplaceOnce.IsChecked = !ReplaceAll.IsChecked;
         }
+
+        private void TextWord_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = sender as System.Windows.Controls.TextBox;
+            if (textBox == null) return;
+            if (String.IsNullOrWhiteSpace(textBox.Text))
+                textBox.Text = "Enter word...";
+        }
+
+        private void TextWord_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = sender as System.Windows.Controls.TextBox;
+            if (textBox == null) return;
+            textBox.Text = "";
+        }
     }
 }

@@ -16,7 +16,7 @@
 
         <TextBlock Cursor="Hand" Text="Change" Padding="0" FontSize="14" MouseUp="ChangeDirectory_MouseUp" Grid.Row="1" Margin="232,29,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Calibri" Foreground="#FFAAAAAA" TextDecorations="Underline" FontStyle="Italic"/>
 
-        <TextBlock Text="OPTIONS" FontSize="16" FontWeight="Bold" FontFamily="Times New Roman" Foreground="#FF646464" Height="18" HorizontalAlignment="Center" VerticalAlignment="Top"  />
+        <TextBlock Text="OPTIONS" FontSize="16" FontFamily="Calibri" Foreground="#FFAEADAD" FontWeight="Bold" Height="18" HorizontalAlignment="Center" VerticalAlignment="Top"  />
 
         <Label Content="Font size:" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Grid.Row="1" FontSize="16" FontWeight="Bold"/>
         <!--<Label Content="Resolution:" HorizontalAlignment="Left" Margin="10,195,0,0" VerticalAlignment="Top" Grid.Row="1" FontWeight="Bold"/>-->

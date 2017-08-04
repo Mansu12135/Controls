@@ -14,16 +14,20 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid x:Name="NotesContainer" Background="White">
+    <Grid x:Name="NotesContainer" Background="#FFFCFCFC">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="46*"/>
+            <ColumnDefinition Width="29*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="90"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Label x:Name="HidenNotes" HorizontalAlignment="Left" Margin="8,0,0,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand">
             <TextBlock TextDecorations="Underline">Hide Notes</TextBlock>
         </Label>
-        <StackPanel Margin="0,25,0,0">
-            <Label Content="NOTES" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Arial Rounded MT Bold" Foreground="#FF7C7B7B"/>
+        <StackPanel Margin="0,0,0,10" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+            <Label Content="NOTES" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Calibri" Foreground="#FFAEADAD" FontWeight="Bold"/>
             <Border BorderThickness="1" HorizontalAlignment="Center" Height="22" Margin="0" VerticalAlignment="Center" Width="22">
                 <Border.Background>
                     <ImageBrush ImageSource="Resources/romb.png"/>
@@ -32,7 +36,7 @@
 
         </StackPanel>
 
-        <ListBox x:Name="MainControl" Grid.Row="1" ItemsSource="{Binding Source={StaticResource cvs}}" Padding="30,0" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,0,0,30" SelectionChanged="MainControl_SelectionChanged" >
+        <ListBox x:Name="MainControl" Grid.Row="1" ItemsSource="{Binding Source={StaticResource cvs}}" Padding="30,0" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,0,0,30" SelectionChanged="MainControl_SelectionChanged" Background="#FFFCFCFC" Grid.ColumnSpan="2" >
             <ListBox.Resources>
                 <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <Setter Property="Template">
@@ -45,7 +49,7 @@
                             >
                                     <StackPanel x:Name="stackPanel">
                                         <DockPanel Cursor="Hand" >
-                                            <TextBox Text="{Binding Value.Name}" BorderThickness="0" Tag="{Binding Key}" Name="TextName" HorizontalAlignment="Stretch" FontSize="14" IsEnabled="False"/>
+                                            <TextBox Text="{Binding Value.Name}" BorderThickness="0" Tag="{Binding Key}" Name="TextName" HorizontalAlignment="Stretch" FontSize="14" IsEnabled="False" Background="{x:Null}"/>
                                             <Border BorderThickness="0" Name="Edit" Tag="{Binding Key}" Width="15"  Height="15"  MouseDown="EditNoteName_MouseDown"  HorizontalAlignment="Right" Margin="3,0,0,0">
                                                 <Image  Name="EditNoteName" Source="Resources/edit.png" Cursor="Hand" >
                                                 </Image>
@@ -55,7 +59,7 @@
                                                 </Image>
                                             </Border>
                                         </DockPanel>
-                                        <TextBox Text="{Binding Value.Text, Mode=TwoWay}" BorderThickness="0,0,0,0" Margin="0,6,0,0"  Name="TextValue" BorderBrush="{x:Null}"  Width="{Binding ActualWidth, ElementName=stackPanel}"  TextWrapping="Wrap" HorizontalAlignment="Stretch" PreviewMouseDown="TextValue_PreviewMouseDown"  />
+                                        <TextBox Text="{Binding Value.Text, Mode=TwoWay}" BorderThickness="0,0,0,0" Margin="0,6,0,0"  Name="TextValue" BorderBrush="{x:Null}"  Width="{Binding ActualWidth, ElementName=stackPanel}"  TextWrapping="Wrap" HorizontalAlignment="Stretch" PreviewMouseDown="TextValue_PreviewMouseDown" Background="{x:Null}"  />
                                     </StackPanel>
                                 </Border>
                                 <ControlTemplate.Triggers>
@@ -77,6 +81,7 @@
             </ListBox.Resources>
 
         </ListBox>
+        <Image Grid.Column="1" Margin="0,-39,-68,0" Grid.RowSpan="2" VerticalAlignment="Top" Source="Resources/rombDouble2.png"/>
     </Grid>
 </local:BasicPanel>
 

@@ -25,8 +25,8 @@
         <Border Width="30" HorizontalAlignment="Left" Margin="22,18,0,0" Padding="0" VerticalAlignment="Top" Height="29">
             <Image x:Name="CanselBut" Cursor="Hand" MouseUp="CanselBut_MouseUp"  Source="Resources/CloseGray.png" Margin="0" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top"></Image>
         </Border>
-        <Button x:Name="OK" Content="OK" HorizontalAlignment="Right" Margin="0,5,125,0" VerticalAlignment="Top" Width="75" Click="OK_Click" Grid.Row="2" Height="30"/>
-        <Button x:Name="Apply" Content="APPLY" HorizontalAlignment="Right" Margin="0,5,25,0" VerticalAlignment="Top" Width="75" Click="Apply_Click" Grid.Row="2" Height="30"/>
+        <Button x:Name="OK" Content="OK" HorizontalAlignment="Right" Margin="0,5,125,0" VerticalAlignment="Top" Click="OK_Click" Grid.Row="2"/>
+        <Button x:Name="Apply" Content="APPLY" HorizontalAlignment="Right" Margin="0,5,25,0" VerticalAlignment="Top" Click="Apply_Click" Grid.Row="2"/>
         <Border x:Name="Element"  Margin="21,0,26,0" Grid.Row="1"/>
     </Grid>
 </Window>

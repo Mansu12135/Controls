@@ -464,7 +464,7 @@ namespace UILayer
             Notes[project].Files.Add(new LoadedFile(filePath, ProjectsPath + "\\" + project));
         }
 
-        private void ButAddProject_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ButAddProject_MouseDown(object sender, RoutedEventArgs e)
         {
             OnCreateProject(sender, new ProjectArgs(GenerateName("NewProject", ProjectsPath), Happened.Created, Callback));
         }
@@ -712,12 +712,7 @@ namespace UILayer
             CurentProject = project;
         }
 
-        private void TextNameFile_OnKeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void ProjectName_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+       private void ProjectName_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             Label lab = sender as Label;
             if (lab != null)
@@ -839,5 +834,7 @@ namespace UILayer
                 p.LineHeight = p.FontSize + ParentControl.defaultSpacing;
             }
         }
+
+       
     }
 }

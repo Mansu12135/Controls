@@ -92,7 +92,7 @@ namespace UILayer
             ExportTextBox.Document.Blocks.AddRange(doc.Blocks.ToList());
 
         }
-        private void ButAddCover_Click(object sender, RoutedEventArgs e)
+        private void ButAddCover_Click(object sender, MouseButtonEventArgs e)
         {
             var dialog = new OpenFileDialog();
             dialog.CheckPathExists = true;
@@ -228,6 +228,7 @@ namespace UILayer
         {
             ExportTextBox.ScrollToVerticalOffset(ExportTextBox.VerticalOffset - ExportTextBox.ViewportHeight);
         }
+
     }
     public class ExportInfo
     {

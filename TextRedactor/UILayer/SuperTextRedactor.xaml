@@ -32,10 +32,10 @@
                                 <TranslateTransform/>
                             </TransformGroup>
                         </LinearGradientBrush.RelativeTransform>
-                        <GradientStop Color="#E0C3C3C3" Offset="0"/>
-                        <GradientStop Color="#E0C3C3C3" Offset="1"/>
-                        <GradientStop Color="White" Offset="0.979"/>
-                        <GradientStop Color="White" Offset="0.021"/>
+                        <GradientStop Color="#FFE8E8E8" Offset="0"/>
+                        <GradientStop Color="#FFE8E8E8" Offset="1"/>
+                        <GradientStop Color="White" Offset="0.987"/>
+                        <GradientStop Color="White" Offset="0.013"/>
                     </LinearGradientBrush>
                 </Grid.Background>
                 <Grid.RowDefinitions>
@@ -64,7 +64,7 @@
                         <MenuItem Header="Donate" Cursor="Hand"></MenuItem>
                     </MenuItem>
                 </Menu>
-                <local:SuperRichTextBox x:Name="TextBox" x:FieldModifier="public" Margin="0,0" Grid.Row="2" Width="Auto" Grid.Column="1"/>
+                <local:SuperRichTextBox x:Name="TextBox" x:FieldModifier="public" Margin="0,0" Grid.Row="2" Width="Auto" Grid.Column="1" BorderBrush="#AFE2E2E2" BorderThickness="0,0.7,0,0"/>
                 <local:FormatPanel x:Name="Format" x:FieldModifier="public" Height="50" Width="Auto" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" IsEnabled="False" />
                 <Label x:Name="ShowProject" Visibility="Hidden" HorizontalAlignment="Left" Margin="18,0,0,0" VerticalAlignment="Center" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand" VerticalContentAlignment="Center" MouseUp="ShowProject_MouseUp" Grid.Row="1">
                     <TextBlock TextDecorations="Underline">Show Project Panel</TextBlock>

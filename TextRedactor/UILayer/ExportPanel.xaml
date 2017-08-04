@@ -16,19 +16,26 @@
     <Grid  Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="94*"/>
-            <ColumnDefinition Width="106*"/>
-            <ColumnDefinition Width="105*"/>
+            <ColumnDefinition Width="29*"/>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="27*"/>
+            <ColumnDefinition Width="72*"/>
+            <ColumnDefinition Width="33*"/>
             <ColumnDefinition Width="94*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20*"/>
-            <RowDefinition Height="41*"/>
-            <RowDefinition Height="36*"/>
-            <RowDefinition Height="38*"/>
+            <RowDefinition Height="80*"/>
+            <RowDefinition Height="33*"/>
+            <RowDefinition Height="131*"/>
+            <RowDefinition Height="105*"/>
+            <RowDefinition Height="39*"/>
+            <RowDefinition Height="152*"/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        <StackPanel Margin="0,25,-1,0" Grid.ColumnSpan="4">
-            <Label Content="EXPORT PANEL" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Arial Rounded MT Bold" Foreground="#FF7C7B7B"/>
+        <Image Grid.Column="4" Margin="0,-59,-29,0" Grid.RowSpan="2" VerticalAlignment="Top" Source="Resources/rombDouble2.png" Grid.ColumnSpan="3" HorizontalAlignment="Right"/>
+
+        <StackPanel Margin="0,25,-1,0" Grid.ColumnSpan="7">
+            <Label Content="EXPORT PANEL" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Calibri" Foreground="#FFAEADAD" FontWeight="Bold"/>
             <Border BorderThickness="1" HorizontalAlignment="Center" Height="25" Margin="0" VerticalAlignment="Center" Width="25">
                 <Border.Background>
                     <ImageBrush ImageSource="Resources/romb.png"/>
@@ -39,7 +46,7 @@
 
 
         <Label x:Name="HidenExport" Content="Hide export panel" HorizontalAlignment="Left" Margin="6,0,0,0" VerticalAlignment="Top" Foreground="#FFAEADAD" FontStyle="Italic" Cursor="Hand" Height="26" Width="102" Grid.ColumnSpan="2"/>
-        <Button  x:Name="ButExport" Content="EXPORT" Cursor="Hand" x:FieldModifier="public" Grid.ColumnSpan="4" FontFamily="Segoe UI Semibold"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Grid.Row="4" Click="ButExport_Click"/>
+        <Button  x:Name="ButExport" Content="EXPORT" Cursor="Hand" x:FieldModifier="public" Grid.ColumnSpan="3" FontFamily="Segoe UI Semibold"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Grid.Row="6" Click="ButExport_Click" Grid.Column="2" MinWidth="75" Width="99" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
         <!--<Border BorderThickness="1" x:Name="ButExport" x:FieldModifier="public" Height="30" Margin="175,15,175,16" Grid.Row="4" Width="100" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Border.BorderBrush>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
@@ -49,42 +56,38 @@
             </Border.BorderBrush>
             <Label Content="Export" Cursor="Hand" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold" />
         </Border>-->
-        <Border BorderThickness="1" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" Padding="26,32,30,39" Grid.RowSpan="2" Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+        <Border BorderThickness="1" Margin="0" Grid.Row="1" Grid.ColumnSpan="5" Padding="0" Grid.RowSpan="4" Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
             <Border.Background>
                 <ImageBrush ImageSource="Resources/tablet2.png"/>
             </Border.Background>
-            <RichTextBox x:Name="ExportTextBox" BorderBrush="{x:Null}"  Padding="10" FontSize="6" IsUndoEnabled="False" Margin="0" IsEnabled="False" Background="{x:Null}"/>
         </Border>
-        <Border BorderThickness="1" Grid.Column="3" HorizontalAlignment="Left" Margin="10,64,0,58" Grid.Row="2" VerticalAlignment="Center" Width="28" Height="28">
+        <RichTextBox x:Name="ExportTextBox" BorderBrush="{x:Null}"  Padding="10" FontSize="6" IsUndoEnabled="False" Margin="0" IsEnabled="False" Background="{x:Null}" Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="3"/>
+
+        <Border BorderThickness="1" Grid.Column="6" HorizontalAlignment="Left" Margin="10,61,0,16" Grid.Row="3" VerticalAlignment="Center" Width="28" Height="28">
             <Image x:Name="PageDown" Source="Resources/arrow-of-double-angle-pointing-down.png" MouseUp="PageDown_MouseUp" Margin="0" Cursor="Hand"></Image>
         </Border>
-        <Border BorderThickness="1" Grid.Column="3" HorizontalAlignment="Left" Margin="10,64,0,62" Grid.Row="1" VerticalAlignment="Center" Width="28" Height="28">
+        <Border BorderThickness="1" Grid.Column="6" HorizontalAlignment="Left" Margin="10,36,0,67" Grid.Row="2" VerticalAlignment="Center" Width="28" Height="28">
             <Image x:Name="PageUp" Source="Resources/double-up-arrow-angles.png" MouseUp="PageUp_MouseUp" Cursor="Hand"></Image>
         </Border>
-        <Label Content="Title:" HorizontalAlignment="Right" Margin="0,5,15,0" Grid.Row="3" VerticalAlignment="Top" Padding="2" FontFamily="Segoe UI Semibold" FontSize="10" Height="17" Width="26"/>
-        <TextBox x:Name="TextBoxTitle" Height="24" Margin="0,4,0,0" Grid.Row="3" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Padding="0" FontFamily="Times New Roman" VerticalContentAlignment="Center" FontSize="10" BorderBrush="#FFCCCED3" Foreground="#FF8D8D8D" FontStyle="Italic" Grid.Column="1" HorizontalContentAlignment="Stretch"/>
-        <Label Content="Author:" HorizontalAlignment="Right" Margin="0,32,15,0" Grid.Row="3" VerticalAlignment="Top" Padding="2" FontFamily="Segoe UI Semibold" FontSize="10" Height="17" Width="38"/>
-        <TextBox x:Name="TextBoxAuthor" Height="24" Margin="0,30,0,0" Grid.Row="3" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Padding="0" FontFamily="Times New Roman" VerticalContentAlignment="Center" FontSize="10" BorderBrush="#FFCCCED3" Foreground="#FF8D8D8D" FontStyle="Italic" Grid.Column="1" HorizontalContentAlignment="Stretch"/>
-        <TextBlock Text="Publishing date:" HorizontalAlignment="Right" Margin="0,56,15,0" Grid.Row="3" VerticalAlignment="Top" Padding="2" FontFamily="Segoe UI Semibold" FontSize="10" Width="52" Height="27" TextWrapping="Wrap" TextAlignment="Right"/>
-        <Button x:Name="ButAddCover" Margin="55,97,0,0" Grid.Row="3" Grid.ColumnSpan="2"  Cursor="Hand" HorizontalAlignment="Left" FontFamily="Segoe UI Semibold" FontSize="10" VerticalAlignment="Top" Content="ADD COVER" Click="ButAddCover_Click" Height="27" Width="75"></Button>
-        <!--
-        <Border BorderThickness="1" x:Name="ButAddCover2" Height="21" Margin="82,112,0,0" Grid.Row="3" Width="63" Grid.ColumnSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Border.BorderBrush>
-                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                    <GradientStop Color="#FF10660A" Offset="0"/>
-                    <GradientStop Color="#FF5BC355" Offset="1"/>
-                </LinearGradientBrush>
-            </Border.BorderBrush>
-            <Label x:Name="ButAddCover1" Content="ADD COVER" Cursor="Hand" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="10" Padding="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-        </Border>-->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="42,106,0,0" Grid.Row="3" VerticalAlignment="Top" Grid.Column="1" Height="22" Width="15">
+        <Label Content="Title:" HorizontalAlignment="Right" Margin="0,5,15,0" Grid.Row="5" VerticalAlignment="Top" Padding="2" FontFamily="Segoe UI Semibold" FontSize="10" Height="17" Width="26"/>
+        <TextBox x:Name="TextBoxTitle" Height="24" Margin="0,4,0,0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2,0,0,0" FontFamily="Calibri" VerticalContentAlignment="Center" FontSize="12" BorderBrush="#FFCCCED3" Foreground="#FFB9B9B9" FontStyle="Italic" Grid.Column="1" HorizontalContentAlignment="Stretch" Grid.ColumnSpan="3" />
+        <Label Content="Author:" HorizontalAlignment="Right" Margin="0,32,15,0" Grid.Row="5" VerticalAlignment="Top" Padding="2" FontFamily="Segoe UI Semibold" FontSize="10" Height="17" Width="38"/>
+        <TextBox x:Name="TextBoxAuthor" Height="24" Margin="0,30,0,0" Grid.Row="5" TextWrapping="Wrap"  VerticalAlignment="Top" Padding="2,0,0,0" FontFamily="Calibri" VerticalContentAlignment="Center" FontSize="12" BorderBrush="#FFCCCED3" Foreground="#FFB9B9B9" FontStyle="Italic" Grid.Column="1" HorizontalContentAlignment="Stretch" Grid.ColumnSpan="3" />
+        <TextBlock Text="Publishing date:" HorizontalAlignment="Right" Margin="0,56,15,0" Grid.Row="5" VerticalAlignment="Top" Padding="2" FontFamily="Segoe UI Semibold" FontSize="10" Width="52" Height="27" TextWrapping="Wrap" TextAlignment="Right"/>
+        <!--<Button x:Name="ButAddCover1" Margin="55,97,0,0" Grid.Row="5" Grid.ColumnSpan="3"  Cursor="Hand" HorizontalAlignment="Left" FontFamily="Segoe UI Semibold" FontSize="10" VerticalAlignment="Top" Content="ADD COVER" Click="ButAddCover_Click" Padding="0"/>-->
+
+
+        <Border BorderThickness="1" x:Name="ButAddCover2" Margin="0,97,0,0" Grid.Row="5" Grid.ColumnSpan="2"  Cursor="Hand" HorizontalAlignment="Left"  VerticalAlignment="Top" Padding="0" BorderBrush="#FF8FDC6D" Grid.Column="1">
+            <Label x:Name="ButAddCover" Content="ADD COVER" Cursor="Hand" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="10" Padding="10,7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MouseDown="ButAddCover_Click" />
+        </Border>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4,104,0,0" Grid.Row="5" VerticalAlignment="Top" Grid.Column="3" Grid.ColumnSpan="3">
             <Label x:Name="ImageName" FontStyle="Italic" FontFamily="Times New Roman" FontSize="10" Foreground="#FFA2A2A2" Content=""/>
-            <Border Width="5" Margin="0,0,0,4">
+            <Border Margin="0,0,0,4" Width="5">
                 <Image x:Name="DeleteImage" Source="Resources/close_icon.png" MouseUp="DeleteImage_MouseUp" Cursor="Hand" Visibility="Hidden"/>
             </Border>
         </StackPanel>
-        <RadioButton x:Name="CheckEpub" Content="EPUB" Grid.Column="2"  FontFamily="Segoe UI Semibold" FontSize="10" HorizontalAlignment="Left" Margin="22,10,0,0" Grid.Row="3" VerticalAlignment="Top" Height="14" Width="43" IsChecked="True"/>
-        <RadioButton x:Name="CheckMobi" Content="MOBI" Grid.Column="2" HorizontalAlignment="Left" Margin="22,30,0,0"  FontFamily="Segoe UI Semibold" FontSize="10" Grid.Row="3" VerticalAlignment="Top" Height="14" Width="45"/>
-        <DatePicker  Grid.Column="1" Margin="0,57,0,0" Grid.Row="3" HorizontalContentAlignment="Stretch" VerticalAlignment="Top"/>
+        <RadioButton x:Name="CheckEpub" Content="EPUB" Grid.Column="4"  FontFamily="Segoe UI Semibold" FontSize="10" HorizontalAlignment="Left" Margin="22,10,0,0" Grid.Row="5" VerticalAlignment="Top" Height="14" Width="43" IsChecked="True"/>
+        <RadioButton x:Name="CheckMobi" Content="MOBI" Grid.Column="4" HorizontalAlignment="Left" Margin="22,30,0,0"  FontFamily="Segoe UI Semibold" FontSize="10" Grid.Row="5" VerticalAlignment="Top" Height="14" Width="45"/>
+        <DatePicker  Grid.Column="1" Margin="0,57,0,0" Grid.Row="5" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="3" BorderBrush="#FFCCCED3" Foreground="#FFB9B9B9" Padding="2,2,0,2" FontFamily="Calibri" FontSize="12" FontStyle="Italic"/>
     </Grid>
 </UserControl>

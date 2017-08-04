@@ -115,7 +115,7 @@
                   BorderThickness="2"
                             Padding="0"
                    BorderBrush="{DynamicResource GreenBorderColor}"         >
-                        <Label VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <Label VerticalContentAlignment="Stretch"  FontFamily="Segoe UI Semibold" Foreground="#FFA4A2A2" Padding="10,7,10,7"  HorizontalContentAlignment="Stretch">
                             <ContentPresenter Margin="0"                                              
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
@@ -148,8 +148,8 @@
     <Color x:Key="SelectedBackgroundColor">#FFC5CBF9</Color>
     <Color x:Key="SelectedUnfocusedColor">#FFDDDDDD</Color>
 
-    <Color x:Key="ControlLightColor">#FFDFDEDE</Color>
-    <Color x:Key="ControlMediumColor">#FFE1E1E1</Color>
+    <Color x:Key="ControlLightColor">#FFEFF0F5</Color>
+    <Color x:Key="ControlMediumColor">#FFEFF0F5</Color>
     <Color x:Key="ControlDarkColor">#FF211AA9</Color>
 
     <Color x:Key="ControlMouseOverColor">#FFCBCBD5</Color>
@@ -304,10 +304,10 @@
                                         <TranslateTransform/>
                                     </TransformGroup>
                                 </LinearGradientBrush.RelativeTransform>
-                                <GradientStop Color="#E0C3C3C3" Offset="0"/>
-                                <GradientStop Color="#E0C3C3C3" Offset="1"/>
-                                <GradientStop Color="#FFE4E4E4" Offset="0.979"/>
-                                <GradientStop Color="#FFE4E4E4" Offset="0.021"/>
+                                <GradientStop Color="#FFEFF0F5" Offset="0"/>
+                                <GradientStop Color="#FFEFF0F5" Offset="1"/>
+                                <GradientStop Color="#FFEFF0F1" Offset="0.979"/>
+                                <GradientStop Color="#FFEFF0F1" Offset="0.021"/>
                             </LinearGradientBrush>
 
                         </Border.Background>

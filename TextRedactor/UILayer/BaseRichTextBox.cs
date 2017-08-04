@@ -23,7 +23,7 @@ namespace UILayer
         private int PrevTextPointer;
         private TextRangeList<TextRange> RangeList;
         private Thread Thread { get; set; }
-
+        public bool saveProcess = false;
         public BaseRichTextBox()
         {
             ContextMenu = new ContextMenu();
@@ -319,11 +319,13 @@ namespace UILayer
                 {
                     Parent.TextBox.ProgBar.Visibility = Visibility.Hidden;
                     Parent.TextBox.StateLabel.Content = "saved";
+                    saveProcess = false;
                 }
                 else
                 {
                     Parent.TextBox.ProgBar.Visibility = Visibility.Visible;
                     Parent.TextBox.StateLabel.Content = "saving";
+                    saveProcess = true;
                 }
                 //  Parent.TextBox.StateLabel.Content = status + inQueue.ToString();
         }
