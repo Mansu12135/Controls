@@ -166,6 +166,7 @@
     <Compile Include="InformationForm.xaml.cs">
       <DependentUpon>InformationForm.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MarginConverter.cs" />
     <Compile Include="MyCommands.cs" />
     <Compile Include="Note.cs" />
     <Compile Include="Note.designer.cs">
@@ -420,6 +421,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Themes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\словарь.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

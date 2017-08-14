@@ -27,6 +27,7 @@ namespace UILayer
         public BaseRichTextBox()
         {
             ContextMenu = new ContextMenu();
+            ContextMenu.Focusable = false;
             DictionaryManager = new DictionaryManager();
             AutoSave = true;
             Document.IsOptimalParagraphEnabled = true;
@@ -358,7 +359,7 @@ namespace UILayer
         private void AddCustomMenuItems()
         {
             ContextMenu.Items.Add(new Separator());
-            MenuItemDictionary = new MenuItem() { Header = "Look up in dictionary", Tag = "dictionary" };
+            MenuItemDictionary = new MenuItem() { Header = "Look up in dictionary", Tag = "dictionary", Focusable = false };
             MenuItemDictionary.Click += Parent.ButtonDictionary_MouseUp;
             ContextMenu.Items.Add(MenuItemDictionary);
         }
@@ -368,7 +369,7 @@ namespace UILayer
             SpellingError spellingError = GetSpellingError(CaretPosition);
             if (spellingError == null)
             {
-                menuItem = new MenuItem() { Header = "No Suggestions", IsEnabled = false };
+                menuItem = new MenuItem() { Header = "No Suggestions", IsEnabled = false,Focusable = false};
                 ContextMenu.Items.Add(menuItem);
             }
             else
@@ -381,25 +382,26 @@ namespace UILayer
                         FontWeight = FontWeights.Bold,
                         Command = EditingCommands.CorrectSpellingError,
                         CommandParameter = suggestion,
-                        CommandTarget = this
+                        CommandTarget = this,
+                        Focusable = false
                     };
                     menu.Items.Add(menuItem);
                 }
             }
             ContextMenu.Items.Add(new Separator());
-            menuItem = new MenuItem() { Header = "Ignore All", Command = EditingCommands.IgnoreSpellingError, CommandTarget = this };
+            menuItem = new MenuItem() { Header = "Ignore All", Command = EditingCommands.IgnoreSpellingError, CommandTarget = this, Focusable = false };
             ContextMenu.Items.Add(menuItem);
             ContextMenu.Items.Add(new Separator());
         }
         private void AddBasicMenuItems(ContextMenu menu)
         {
-            ContextMenu.Items.Add(new MenuItem() { Command = ApplicationCommands.Cut });
-            ContextMenu.Items.Add(new MenuItem() { Command = ApplicationCommands.Copy });
-            ContextMenu.Items.Add(new MenuItem() { Command = ApplicationCommands.Paste });
+            ContextMenu.Items.Add(new MenuItem() { Command = ApplicationCommands.Cut, Focusable = false });
+            ContextMenu.Items.Add(new MenuItem() { Command = ApplicationCommands.Copy, Focusable = false });
+            ContextMenu.Items.Add(new MenuItem() { Command = ApplicationCommands.Paste, Focusable = false });
             ContextMenu.Items.Add(new Separator());
-            ContextMenu.Items.Add(new MenuItem() { Command = ApplicationCommands.Delete });
+            ContextMenu.Items.Add(new MenuItem() { Command = ApplicationCommands.Delete, Focusable = false });
             ContextMenu.Items.Add(new Separator());
-            ContextMenu.Items.Add(new MenuItem() { Command = ApplicationCommands.SelectAll });
+            ContextMenu.Items.Add(new MenuItem() { Command = ApplicationCommands.SelectAll, Focusable = false });
         }
         public void AddMenuItem(object menuItem)
         {

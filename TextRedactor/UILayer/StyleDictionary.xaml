@@ -3,6 +3,7 @@
                     xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
                     
                     xmlns:local="clr-namespace:UILayer">
+    <local:MarginConverter x:Key="marginConverter"></local:MarginConverter>
     <Style x:Key="ScrollBarLineButtonStyle" TargetType="{x:Type RepeatButton}">
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="Template">

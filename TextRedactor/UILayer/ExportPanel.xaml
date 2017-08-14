@@ -63,10 +63,26 @@
         </Border>
         <RichTextBox x:Name="ExportTextBox" BorderBrush="{x:Null}"  Padding="10" FontSize="6" IsUndoEnabled="False" Margin="0" IsEnabled="False" Background="{x:Null}" Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="3"/>
 
-        <Border BorderThickness="1" Grid.Column="6" HorizontalAlignment="Left" Margin="10,61,0,16" Grid.Row="3" VerticalAlignment="Center" Width="28" Height="28">
+        <Border BorderThickness="1" Grid.Column="6" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="2" VerticalAlignment="Bottom" Width="28" Height="28" RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Border.RenderTransform>
             <Image x:Name="PageDown" Source="Resources/arrow-of-double-angle-pointing-down.png" MouseUp="PageDown_MouseUp" Margin="0" Cursor="Hand"></Image>
         </Border>
-        <Border BorderThickness="1" Grid.Column="6" HorizontalAlignment="Left" Margin="10,36,0,67" Grid.Row="2" VerticalAlignment="Center" Width="28" Height="28">
+        <Border BorderThickness="1" HorizontalAlignment="Right" Margin="0,0,10,0" Grid.Row="2" VerticalAlignment="Bottom" Width="28" Height="28" RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Border.RenderTransform>
             <Image x:Name="PageUp" Source="Resources/double-up-arrow-angles.png" MouseUp="PageUp_MouseUp" Cursor="Hand"></Image>
         </Border>
         <Label Content="Title:" HorizontalAlignment="Right" Margin="0,5,15,0" Grid.Row="5" VerticalAlignment="Top" Padding="2" FontFamily="Segoe UI Semibold" FontSize="10" Height="17" Width="26"/>

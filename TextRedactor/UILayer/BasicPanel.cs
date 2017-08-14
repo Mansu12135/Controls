@@ -100,6 +100,8 @@ namespace UILayer
         {
             CloneTextBox = new TextBox();
             Grid.SetRow(CloneTextBox, 1);
+           // Grid.SetZIndex(CloneTextBox, 1);
+            Grid.SetColumnSpan(CloneTextBox,3);
             CloneTextBox.Height = originalControl.ActualHeight;
             CloneTextBox.Width = originalControl.ActualWidth;
             InitializeBinding();

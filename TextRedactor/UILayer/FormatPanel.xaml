@@ -209,6 +209,13 @@
                     </Label.Background>
                 </Label>
             </Border>
+            <Border BorderThickness="1" Margin="10,0,0,0" VerticalAlignment="Top" Width="20">
+                <Label x:Name="LabelDict" x:FieldModifier="public" Padding="0" HorizontalContentAlignment="Center" Height="20" VerticalAlignment="Top" Cursor="Hand">
+                    <Label.Background>
+                        <ImageBrush ImageSource="Resources/словарь.png"/>
+                    </Label.Background>
+                </Label>
+            </Border>
             <Border BorderBrush="#FF33A000" BorderThickness="1" Margin="15,-3,0,-3" Width="72">
                 <Label  Name="ExportButton" Content="EXPORT" HorizontalContentAlignment="Center" Cursor="Hand"/>
             </Border>

@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:converters="clr-namespace:ApplicationLayer;assembly=ApplicationLayer"
              xmlns:applicationLayer="clr-namespace:ApplicationLayer;assembly=ApplicationLayer"
-             mc:Ignorable="d" 
+           
+                     mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="250">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -46,7 +47,7 @@
            
             <Label Content="ADD PROJECT"  MouseDown="ButAddProject_MouseDown" Cursor="Hand" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold" Foreground="#FFA4A2A2" Padding="10,7,10,7" />
         </Border>-->
-        <ListBox x:Name="MainProjectList" ItemsSource="{Binding Notes, RelativeSource={RelativeSource FindAncestor,AncestorType=controls:BrowseProject}}"   Margin="0" Grid.Row="1" Padding="30,0" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="MainProjectList_SelectionChanged" Background="#FFFCFCFC" Grid.ColumnSpan="3" >
+        <ListBox x:Name="MainProjectList" ItemsSource="{Binding Notes, RelativeSource={RelativeSource FindAncestor,AncestorType=controls:BrowseProject}}"   Margin="0" Grid.Row="1" Padding="30,0" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="MainProjectList_SelectionChanged" Background="{x:Null}" Grid.ColumnSpan="3" >
             <ListBox.Resources>
                 <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <Setter Property="Template">
@@ -54,14 +55,28 @@
                             <ControlTemplate TargetType="ListBoxItem">
                                 <Border Name="HighlightBorder"  BorderBrush="Transparent" BorderThickness="1" CornerRadius="5" Padding="0,0,0,6">
                                     <StackPanel x:Name="stackPanel">
-                                        <StackPanel  Orientation="Horizontal">
+                                        <Border HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="17*"/>
+                                                    <ColumnDefinition Width="3*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Label PreviewMouseDoubleClick="ProjectName_MouseDoubleClick" Padding="0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                                    <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" VerticalAlignment="Center" AllowDrop="False" Background="{x:Null}" MinHeight="22"/>
+                                                </Label>
+                                                <Border x:Name="Propert" Visibility="Hidden" Width="16" Height="16" HorizontalAlignment="Center" Cursor="Hand" Grid.Column="1">
+                                                    <Image Source="Resources/set.png" MouseUp="Propert_Click" Tag="{Binding Key}"></Image>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                        <!--<StackPanel  Orientation="Horizontal">
                                             <Label PreviewMouseDoubleClick="ProjectName_MouseDoubleClick" Padding="0">
                                                 <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}" Background="{x:Null}"/>
                                             </Label>
                                             <Border x:Name="Propert" Visibility="Hidden" Width="16" Height="16" HorizontalAlignment="Right" Cursor="Hand">
                                                 <Image Source="Resources/set.png" MouseUp="Propert_Click" Tag="{Binding Key}"></Image>
                                             </Border>
-                                        </StackPanel>
+                                        </StackPanel>-->
                                         <ListBox x:Name="FileListBox" ItemsSource="{Binding  Value.ListFiles}"  Margin="6,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" SelectionChanged ="FileListBox_SelectionChanged" >
                                             <ListBox.Resources>
                                                 <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" >
@@ -69,17 +84,21 @@
                                                         <Setter.Value>
                                                             <ControlTemplate TargetType="ListBoxItem">
                                                                 <Border Name="HighlightBorder2" Padding="0" BorderBrush="Transparent" BorderThickness="0">
-                                                                    <DockPanel Cursor="Hand" HorizontalAlignment="Stretch">
-                                                                        <Image Name="Romb" Source="Resources/romb.png" Margin="0,1" Height="{Binding IsOpen, Mode=OneWay}" Width="{Binding IsOpen,Mode=OneWay}" ></Image>
-                                                                        <Label x:Name="buttonOpenFile" Tag="{Binding Path}" MouseDown="buttonOpenFile_MouseDown" Cursor="Hand" Height="Auto" HorizontalAlignment="Stretch" Padding="0" >
-                                                                            <TextBox x:Name="TextNameFile" BorderThickness="0"   Text="{Binding  Name}"  Tag="{Binding Path}" IsEnabled="False" Background="{x:Null}" ></TextBox>
+                                                                    <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="17*"/>
+                                                                            <ColumnDefinition Width="3*"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Image Name="Romb" Source="Resources/romb.png" Margin="0,1" Height="{Binding IsOpen, Mode=OneWay}" Width="{Binding IsOpen,Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" ></Image>
+                                                                        <Label x:Name="buttonOpenFile" Tag="{Binding Path}" Margin="{Binding ElementName=Romb, Path=Height, Converter={StaticResource marginConverter}}" MouseDown="buttonOpenFile_MouseDown" Cursor="Hand" Height="Auto" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Padding="0" >
+                                                                            <TextBox x:Name="TextNameFile" BorderThickness="0"   Text="{Binding  Name}"  Tag="{Binding Path}" IsEnabled="False" Background="{x:Null}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" MinHeight="22"></TextBox>
                                                                         </Label>
-                                                                        <Border BorderThickness="0" Name="Edit"  Width="15"  Height="15"  HorizontalAlignment="Right" Margin="3,0,0,0" MouseUp="EditFileName_OnMouseUp">
+                                                                        <Border BorderThickness="0" Name="Edit"  Grid.Column="1"  Width="15"  Height="15"  HorizontalAlignment="Right" Margin="3,0,0,0" MouseUp="EditFileName_OnMouseUp">
                                                                             <Image  Name="EditFileName" Source="Resources/edit.png" Tag="{Binding Path}"  Cursor="Hand" >
                                                                             </Image>
                                                                         </Border>
                                                                         <!--Width="{Binding Path=ActualWidth, ElementName=stackPanel, Converter={converters:PercentageConverter}, ConverterParameter='20'}"-->
-                                                                    </DockPanel>
+                                                                    </Grid>
                                                                 </Border>
                                                                 <ControlTemplate.Triggers>
                                                                     <Trigger Property="IsMouseOver" Value="True">
@@ -141,7 +160,7 @@
                 </Style>
             </ListBox.Resources>
         </ListBox>
-        <Image Margin="-74,-17,0,-46" Source="Resources/rombDouble1.png" VerticalAlignment="Top"/>
+        <Image Margin="-74,-17,0,-46" Source="Resources/rombDouble1.png" VerticalAlignment="Top" Panel.ZIndex="-1"/>
         <Image Margin="0,0,0,-41" Grid.Row="1" VerticalAlignment="Bottom" Grid.RowSpan="2" Source="Resources/rombDouble2.png" Stretch="None" Grid.Column="2" RenderTransformOrigin="0.5,0.5">
             <Image.RenderTransform>
                 <TransformGroup>

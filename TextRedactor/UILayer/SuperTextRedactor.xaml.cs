@@ -76,6 +76,12 @@ namespace UILayer
             Format.comboWigth.KeyDown += ComboWigth_KeyDown;
             Format.NumerCombo.SelectionChanged += NumerCombo_SelectionChanged;
             Format.bublCombo.SelectionChanged += BublCombo_SelectionChanged;
+            Format.LabelDict.MouseUp += LabelDict_MouseUp;
+        }
+
+        private void LabelDict_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            TextBox.MainControl.SpellCheck.IsEnabled = !TextBox.MainControl.SpellCheck.IsEnabled;
         }
 
         private void BublCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
