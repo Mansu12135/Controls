@@ -62,9 +62,7 @@ namespace UILayer
             private get { return filePath; }
         }
         private string filePath = "";
-
-        public int LetterCount { get; set; }
-        public int WordCount { get; set; }
+       public WordStatistic wordStatistic = new WordStatistic();
         public string WordLetterCount { get; set; } 
         public bool AutoSave { get; set; }
 
@@ -319,13 +317,11 @@ namespace UILayer
                 if (status == SaveManagerStatus.Stoped)
                 {
                     Parent.TextBox.ProgBar.Visibility = Visibility.Hidden;
-                    Parent.TextBox.StateLabel.Content = "saved";
                     saveProcess = false;
                 }
                 else
                 {
                     Parent.TextBox.ProgBar.Visibility = Visibility.Visible;
-                    Parent.TextBox.StateLabel.Content = "saving";
                     saveProcess = true;
                 }
                 //  Parent.TextBox.StateLabel.Content = status + inQueue.ToString();
@@ -348,10 +344,18 @@ namespace UILayer
             var change = e.Changes.Where(x => x.AddedLength != x.RemovedLength).FirstOrDefault();//.OrderByDescending(item => item.Offset + item.AddedLength + item.RemovedLength).First();
             if (RangeList == null || change == null) { return; }
                 RangeList.OnTextRangeChanged(change.Offset);
+            UpdateWordCount();
             //PreviousParagraphCount = Document.Blocks.ToList().Count - 1;
             //vParagraphCount = PreviousParagraphCount;
             //return;
             //ParagraphCount = 0;
+        }
+
+        public void UpdateWordCount()
+        {
+            string text = new TextRange(Document.ContentStart, Document.ContentEnd).Text;
+            wordStatistic.WordCount = text.Split(new string[] { " ","\r\n" }, StringSplitOptions.RemoveEmptyEntries).Length;
+            wordStatistic.LetterCount = text.Length;
         }
 
         private MenuItem MenuItemDictionary;

@@ -213,6 +213,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TextRedactor.resx</DependentUpon>
     </Compile>
+    <Compile Include="WordStatistic.cs" />
     <Compile Include="XComboBox.cs" />
     <Compile Include="XToggleButton.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

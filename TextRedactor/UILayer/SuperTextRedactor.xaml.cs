@@ -32,8 +32,8 @@ namespace UILayer
         private Command OnlyProjectCommand;
         private Command ProjectAndNoteCommand;
         internal Window Parent;
-       // private int FlowPosition;
-       // private int activeFindIndex;
+        // private int FlowPosition;
+        // private int activeFindIndex;
 
         public double defaultFont;
         public double defaultSpacing;
@@ -66,7 +66,7 @@ namespace UILayer
             // Format.ButtonDictionary.MouseUp += ButtonDictionary_MouseUp;
             Format.ExportButton.MouseUp += ExportButton_MouseUp;
             //Format.ButListNum.MouseUp += ButListNum_MouseUp;
-          //  Format.ButListBubl.MouseUp += ButListBubl_MouseUp;
+            //  Format.ButListBubl.MouseUp += ButListBubl_MouseUp;
             BrowseProject.HidenProject.MouseUp += HidenProject_MouseUp;
             NotesBrowser.HidenNotes.MouseUp += HidenNotes_MouseUp;
             TextBox.MainControl.Parent = this;
@@ -144,7 +144,7 @@ namespace UILayer
             }
             var listItem = new ListItem();
             list.ListItems.Add(listItem);
-            TextBox.MainControl.Document.Blocks.InsertBefore(TextBox.MainControl.CaretPosition.Paragraph,list);
+            TextBox.MainControl.Document.Blocks.InsertBefore(TextBox.MainControl.CaretPosition.Paragraph, list);
             Format.NumerCombo.SelectedIndex = -1;
         }
 
@@ -260,7 +260,7 @@ namespace UILayer
                 BrowseProject.Show();
             }
         }
-       
+
         private void HidenNotes_MouseUp(object sender, MouseButtonEventArgs e)
         {
             NotesBrowser.Hide();
@@ -283,18 +283,18 @@ namespace UILayer
 
         private void ExportButton_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if(TextBox.MainControl.saveProcess) return;
+            if (TextBox.MainControl.saveProcess) return;
             if (exportPanel == null)
             {
-               // BrowseProject.UpdateOffsetOnNotes();
+                // BrowseProject.UpdateOffsetOnNotes();
                 exportPanel = new ExportPanel();
-                exportPanel.HidenExport.MouseUp += HidenExport_MouseUp; 
+                exportPanel.HidenExport.MouseUp += HidenExport_MouseUp;
                 exportPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                 exportPanel.VerticalAlignment = VerticalAlignment.Stretch;
-                exportPanel.Margin = new Thickness(NotesBrowser.ActualWidth,0, -NotesBrowser.ActualWidth, 0);
+                exportPanel.Margin = new Thickness(NotesBrowser.ActualWidth, 0, -NotesBrowser.ActualWidth, 0);
                 exportPanel.project = BrowseProject.CurentProject;
                 exportPanel.Init(this);
-                foreach(KeyValuePair<string,Project> item in BrowseProject.MainProjectList.Items)
+                foreach (KeyValuePair<string, Project> item in BrowseProject.MainProjectList.Items)
                 {
                     if (item.Value != BrowseProject.CurentProject)
                     {
@@ -303,7 +303,7 @@ namespace UILayer
                 }
                 Format.IsEnabled = false;
                 TextBox.IsEnabled = false;
-                 Grid.SetColumn(exportPanel, 2);
+                Grid.SetColumn(exportPanel, 2);
                 Grid.SetRowSpan(exportPanel, 2);
                 System.Windows.Controls.Panel.SetZIndex(exportPanel, 2);
                 MainContainer.Children.Add(exportPanel);
@@ -316,10 +316,10 @@ namespace UILayer
         {
             exportPanel.Hide();
             exportPanel = null;
-           // BrowseProject.UpdateRangeOnNotes();
+            // BrowseProject.UpdateRangeOnNotes();
         }
 
-       public ExportPanel exportPanel;
+        public ExportPanel exportPanel;
         DictionaryPanel panel;
         public SearchPanel searchPanel;
         bool inSearch = false;
@@ -328,14 +328,14 @@ namespace UILayer
             if (panel == null)
             {
                 panel = new DictionaryPanel(this);
-                panel.HidenDictionary.MouseUp += HidenDictionary_MouseUp; 
+                panel.HidenDictionary.MouseUp += HidenDictionary_MouseUp;
                 panel.TextWord.KeyUp += TextWord_KeyUp;
                 panel.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                 panel.VerticalAlignment = VerticalAlignment.Stretch;
-               Grid.SetColumn(panel, 2);
+                Grid.SetColumn(panel, 2);
                 Grid.SetRowSpan(panel, 2);
                 System.Windows.Controls.Panel.SetZIndex(panel, 1);
-               MainContainer.Children.Add(panel);
+                MainContainer.Children.Add(panel);
                 panel.Show();
             }
             panel.TextWord.Text = GetCurrentWord();
@@ -403,23 +403,35 @@ namespace UILayer
         }
         private void ShowDictionaryResult(string word)
         {
-            string defenition = "";
-            string thesaurus = "";
-            panel.defenition = string.Empty;
-            panel.synonimus = string.Empty;
+            List<Inline> defenition = new List<Inline>();
+            List<Inline> thesaurus = new List<Inline>();
+            panel.defenition = defenition;
+            panel.synonimus = thesaurus;
             List<Structure> result = TextBox.MainControl.GetInformation(panel.TextWord.Text.Trim());
             if (result == null) return;
             foreach (var item in result)
             {
-                defenition += item.Term + Environment.NewLine + item.PartOfSpeech + Environment.NewLine;
+                defenition.Add(new Run(item.Term + "  -  ") { FontWeight = FontWeights.Bold });
+                defenition.Add(new Run(item.PartOfSpeech) { FontWeight = FontWeights.Bold });
+                defenition.Add(new Run(Environment.NewLine));
+
                 foreach (var def in item.Definitions)
-                    defenition += def + Environment.NewLine;
-                thesaurus += "Synonyms:" + Environment.NewLine;
-                foreach (var def in item.Synonyms)
-                    thesaurus += def + Environment.NewLine;
-                thesaurus += "Antonyms:" + Environment.NewLine;
-                foreach (var def in item.Antonyms)
-                    thesaurus += def + Environment.NewLine;
+                    defenition.Add(new Run(def + Environment.NewLine) { FontStyle = FontStyles.Italic });
+                if (item.Synonyms.Count > 0)
+                {
+                    thesaurus.Add(new Run("Synonyms:") { FontWeight = FontWeights.Bold });
+                    thesaurus.Add(new Run(Environment.NewLine));
+                    foreach (var def in item.Synonyms)
+                        thesaurus.Add(new Run(def + Environment.NewLine) { FontStyle = FontStyles.Italic });
+                }
+                if (item.Antonyms.Count > 0)
+                {
+                    thesaurus.Add(new Run("Antonyms:") { FontWeight = FontWeights.Bold });
+                    thesaurus.Add(new Run(Environment.NewLine));
+                    foreach (var def in item.Antonyms)
+                        thesaurus.Add(new Run(def + Environment.NewLine) { FontStyle = FontStyles.Italic });
+                }
+
             }
             panel.defenition = defenition;
             panel.synonimus = thesaurus;
@@ -461,7 +473,7 @@ namespace UILayer
             string name = NotesBrowser.GenerateName("Note");
             //   range.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
 
-            
+
             AddNote(range, name);
             NotesBrowser.MainControl.Items.Refresh();
         }
@@ -470,7 +482,7 @@ namespace UILayer
             int startOffset = TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.Start);// new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.Start).Text.Length;
             int endOffset = TextBox.MainControl.Document.ContentStart.GetOffsetToPosition(range.End); //new TextRange(TextBox.MainControl.Document.ContentStart, TextBox.MainControl.Selection.End).Text.Length;
             string text = range.Text;
-           var pointer = AddFlag(range, name);
+            var pointer = AddFlag(range, name);
             NotesBrowser.AddItem(new Note(name, text, new TextRange(pointer, range.End), startOffset, endOffset));
             NotesBrowser.CloseNotes(BrowseProject.LoadedFile);
         }
@@ -492,7 +504,7 @@ namespace UILayer
         public TextPointer AddFlag(TextRange range, string name)
         {
             range.ApplyPropertyValue(TextElement.BackgroundProperty, Brushes.PaleGreen);
-            var tempImage = Properties.Resources.noteFlag;
+            var tempImage = Properties.Resources.romb;
             var ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
                  tempImage.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));
             var image = new Image();
@@ -557,7 +569,7 @@ namespace UILayer
             //}
         }
 
-      
+
         public void InitFullScr(Window w)
         {
             if (!(w is ISettings)) { throw new Exception(); }
@@ -646,13 +658,13 @@ namespace UILayer
                 }
             }
         }
-       
+
 
         private void AboutInformationOnClick(object sender, RoutedEventArgs e)
         {
             var form = new InformationForm();
-            form.Top = Parent.Top + 105;
-            form.Left = Parent.Left + Parent.Width / 2 - form.Width / 2;
+            //form.Top = Parent.Top + 105;
+            //form.Left = Parent.Left + Parent.Width / 2 - form.Width / 2;
             form.ShowDialog();
         }
         PropertiesForm propertForm;
@@ -670,6 +682,17 @@ namespace UILayer
         {
             Format.comboWigth.SelectedIndex = Format.comboWigth.Items.IndexOf(DefaultMarginWight);
             Format.comboBoxFont.SelectedIndex = Format.comboBoxFont.Items.IndexOf(defaultFont);
+            TextPointer curCaret = TextBox.MainControl.CaretPosition;
+            Block curBlock = TextBox.MainControl.Document.Blocks.Where
+                (x => x.ContentStart.CompareTo(curCaret) == -1 && x.ContentEnd.CompareTo(curCaret) == 1).FirstOrDefault();
+            if (curBlock != null)
+            {
+                Paragraph curParagraph = curBlock as Paragraph;
+                Run newRun = new Run();
+                newRun.FontSize = defaultFont;
+                curParagraph.Inlines.Add(newRun);
+                TextBox.MainControl.CaretPosition = newRun.ElementStart;
+            }
         }
     }
 

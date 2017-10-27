@@ -127,9 +127,12 @@ namespace UILayer
                 }
                 else
                 {
-                    if (!ParentControl.TextBox.MainControl.IsEnabled)
+                    if (ParentControl.TextBox.MainControl.IsReadOnly)
                     {
-                        ParentControl.TextBox.MainControl.IsEnabled = true;
+                        ParentControl.TextBox.MainControl.IsReadOnly = false;
+                        ParentControl.TextBox.CountLeterInfo.Visibility = Visibility.Visible;
+                        ParentControl.TextBox.Logo.Visibility = Visibility.Collapsed;
+
                         ParentControl.Format.IsEnabled = true;
                     }
                     OpenFile(proj.Value.Files[0].Path, Path.GetFileNameWithoutExtension(proj.Value.Files[0].Path));
@@ -158,33 +161,23 @@ namespace UILayer
         private string vProjectPath = "";
         private void LoadLogo()
         {
-            ParentControl.TextBox.MainControl.IsEnabled = false;
+            ParentControl.TextBox.MainControl.IsReadOnly = true;
             ParentControl.Format.IsEnabled = false;
-            var logo = new System.Windows.Controls.Image() { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Top, MaxWidth = 250 };
-            var tempImage = Properties.Resources.grey_logo;
-            var ScreenCapture = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(tempImage.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(250, 200));
-            logo.Source = ScreenCapture;
-
-            //BitmapImage bi = new BitmapImage(new Uri(@"/Resources/grey_logo.png", UriKind.Relative));
-            //var image = new System.Windows.Controls.Image() { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Top, MaxWidth = 250, Width = 200, Height = 200 };
-            //image.Source = bi;
-
-            var paragraph = new Paragraph() { TextAlignment = System.Windows.TextAlignment.Center, Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF838181")) };
-            paragraph.Inlines.Add(new Run("START A PROJECT") { FontWeight = FontWeights.Bold });
-
-            var romb = new System.Windows.Controls.Image() { HorizontalAlignment = HorizontalAlignment.Center, Width = 20, Height = 20 };
-            var tempImage2 = Properties.Resources.romb;
-            var ScreenCapture2 = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                 tempImage2.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(20, 20));
-            romb.Source = ScreenCapture2;
+            ParentControl.TextBox.CountLeterInfo.Visibility = Visibility.Hidden;
+            ParentControl.TextBox.Logo.Visibility = Visibility.Visible;
+            ParentControl.TextBox.ButAddProj.MouseUp -= AddProjectFromMainScreen;
+            ParentControl.TextBox.ButAddProj.MouseUp += AddProjectFromMainScreen;
             ParentControl.TextBox.MainControl.Document.Blocks.Clear();
-            ParentControl.TextBox.MainControl.Document.Blocks.Add(new Paragraph(new InlineUIContainer(logo)) { TextAlignment = System.Windows.TextAlignment.Center });
-            ParentControl.TextBox.MainControl.Document.Blocks.Add(paragraph);
-            ParentControl.TextBox.MainControl.Document.Blocks.Add(new Paragraph(new InlineUIContainer(romb)) { TextAlignment = System.Windows.TextAlignment.Center });
 
-            //flowDocument.Blocks.Add(paragraph);
 
         }
+
+        private void AddProjectFromMainScreen(object sender, MouseButtonEventArgs e)
+        {
+            OnCreateProject(sender, new ProjectArgs(GenerateName("NewProject", ProjectsPath), Happened.Created, Callback));
+
+        }
+
         public BrowseProject(Dictionary<string, Project> collection)
         {
             InitializeComponent();
@@ -505,6 +498,9 @@ namespace UILayer
                 return;
             }
             ParentControl.TextBox.MainControl.FilePath = path;
+            ParentControl.TextBox.MainControl.UpdateWordCount();
+            ParentControl.updateDefaultValue();
+            ParentControl.TextBox.UpdateLayout();
         }
         private void buttonOpenFile_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -513,9 +509,12 @@ namespace UILayer
                 IsChangeFileName = false;
                 return;
             }
-            if (!ParentControl.TextBox.MainControl.IsEnabled)
+            if (ParentControl.TextBox.MainControl.IsReadOnly)
             {
-                ParentControl.TextBox.MainControl.IsEnabled = true;
+                ParentControl.TextBox.MainControl.IsReadOnly = false;
+                ParentControl.TextBox.CountLeterInfo.Visibility = Visibility.Visible;
+                ParentControl.TextBox.Logo.Visibility = Visibility.Collapsed;
+
                 ParentControl.Format.IsEnabled = true;
             }
             //if (ParentControl.searchPanel != null)
@@ -694,25 +693,8 @@ namespace UILayer
             MainProjectList.Items.Refresh();
         }
 
-        private void MainProjectList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (MainProjectList.SelectedItem != null)
-            {
-                CurentProject = ((KeyValuePair<string, Project>)MainProjectList.SelectedItem).Value;
-            }
-        }
 
-        private void FileListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var list = sender as ListBox;
-            if (list == null || list.ItemsSource == null) return;
-            CurentFile = ((LoadedFile)list.SelectedItem).Path;
-            Project project = Notes.Where(x => x.Value.ListFiles == (List<LoadedFile>)list.ItemsSource).FirstOrDefault().Value;
-            if (project == null) { return; }
-            CurentProject = project;
-        }
-
-       private void ProjectName_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ProjectName_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             Label lab = sender as Label;
             if (lab != null)
@@ -720,7 +702,7 @@ namespace UILayer
                 TextBox text = lab.Content as TextBox;
                 if (text != null)
                 {
-                    BeginChangingDynamicItem(text);
+                    BeginChangingDynamicItem(text, MainProjectList);
                     ChangedFileName = false;
                 }
             }
@@ -734,14 +716,14 @@ namespace UILayer
         protected override void AddDynamicControls()
         {
             BrowseContainer.Children.Add(CloneTextBox);
+            BrowseContainer.Children.Add(DisableBorder);
             CloneTextBox.Focus();
-            MainProjectList.IsEnabled = false;
         }
 
         protected override void RemoveDynamicControls()
         {
             BrowseContainer.Children.Remove(CloneTextBox);
-            MainProjectList.IsEnabled = true;
+            BrowseContainer.Children.Remove(DisableBorder);
         }
 
         protected override void CloneTextBox_LostFocus(object sender, EventArgs e)
@@ -772,7 +754,18 @@ namespace UILayer
                 }
                 else
                 {
-                    LoadedFile file = Notes[CurentProject.Name].Files.Where(item => item.Path == CloneTextBox.Tag.ToString()).FirstOrDefault();
+                    LoadedFile file = null;
+                    foreach (var proj in Notes)
+                    {
+                        foreach (var f in proj.Value.Files)
+                        {
+                            if (f.Path == CloneTextBox.Tag.ToString())
+                            {
+                                file = f;
+                                break;
+                            }
+                        }
+                    }
                     if (file == null) { return; }
                     string directoryPath = Path.GetDirectoryName(file.Path) + "\\";
                     RenameFileInProject(Directory.GetParent(directoryPath).Parent.Name, file, CloneTextBox.Text);
@@ -799,7 +792,7 @@ namespace UILayer
             var textbox = lab.Content as TextBox;
             if (textbox != null)
             {
-                BeginChangingDynamicItem(textbox);
+                BeginChangingDynamicItem(textbox, MainProjectList);
                 ChangedFileName = true;
                 IsChangeFileName = true;
             }
@@ -835,6 +828,6 @@ namespace UILayer
             }
         }
 
-       
+
     }
 }

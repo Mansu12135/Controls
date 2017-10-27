@@ -156,14 +156,15 @@ namespace UILayer
         protected override void AddDynamicControls()
         {
             NotesContainer.Children.Add(CloneTextBox);
+            NotesContainer.Children.Add(DisableBorder);
+
             CloneTextBox.Focus();
-            MainControl.IsEnabled = false;
         }
 
         protected override void RemoveDynamicControls()
         {
             NotesContainer.Children.Remove(CloneTextBox);
-            MainControl.IsEnabled = true;
+            NotesContainer.Children.Remove(DisableBorder);
         }
 
         protected override void CloneTextBox_LostFocus(object sender, EventArgs e)
@@ -255,7 +256,7 @@ namespace UILayer
             var t = panel.Children[0] as TextBox;
             if (t != null)
             {
-                BeginChangingDynamicItem(t);
+                BeginChangingDynamicItem(t, MainControl);
             }
         }
 

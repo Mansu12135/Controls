@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:UILayer" x:Class="UILayer.InformationForm"
         WindowStyle="None"
         AllowsTransparency="True"
-        Title="MainWindow" Width="549.747" Height="452.395" WindowStartupLocation="Manual" ResizeMode="NoResize">
+        Title="MainWindow" Width="650" Height="600" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -22,15 +22,50 @@
             </Border.BorderBrush>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="390*"/>
-                    <RowDefinition Height="49*"/>
+                    <RowDefinition Height="113*"/>
+                    <RowDefinition Height="416*"/>
+                    <RowDefinition Height="67*"/>
                 </Grid.RowDefinitions>
-                <Button x:Name="OK" Content="Ok" HorizontalAlignment="Left" Margin="426,1,0,0" VerticalAlignment="Center" Width="88" Click="OK_OnClick" IsDefault="True" Grid.Row="1"/>
-                <Image x:Name="Emblem" Height="77" Margin="0,15,0,0" VerticalAlignment="Top" Width="83" Source="Resources/emblem.png" Stretch="Fill" HorizontalAlignment="Center"/>
-                <RichTextBox x:Name="Info" HorizontalAlignment="Center" Height="281" Margin="35,110,35,0" VerticalAlignment="Top" Width="480" Block.TextAlignment="Center" BorderThickness="0" IsReadOnly="True">
+                <Button x:Name="OK" Content="Ok" HorizontalAlignment="Left" Margin="426,17,0,16" VerticalAlignment="Center" Width="88" Click="OK_OnClick" IsDefault="True" Grid.Row="2" Height="34"/>
+                <Image x:Name="Emblem" Height="78" Margin="281,18,281,17" VerticalAlignment="Center" Width="84" Source="Resources/emblem.png" Stretch="Fill" HorizontalAlignment="Center"/>
+                <RichTextBox x:Name="Info" HorizontalAlignment="Center" BorderThickness="0" IsReadOnly="True" Grid.Row="1" HorizontalContentAlignment="Center" Block.TextAlignment="Center" Width="576" IsDocumentEnabled="True">
                     <FlowDocument>
                         <Paragraph>
-                            <Run Text=""/>
+                            <Run FontWeight="Bold" FontSize="16" Text="ABOUT" TextDecorations="Underline" Block.TextAlignment="Center"/>
+                        </Paragraph>
+                        <Paragraph TextIndent="25" TextAlignment="Justify">
+                            <Run FontSize="14" Text="Winkle is a writing app I developed for myself to meet my needs as a self-published author and because I was never fully satisfied with the software available on the market at the present time. There are many other remarkable apps that may meet your needs better than Winkle, but I stress that my app is not about the market. I am not trying to convince myself or anyone else that my app is the best, better than anything out there, that you need it, or that you need to buy it. I just needed something to meet my needs and I had the opportunity to create it. Winkle will continue to receive constant updates that will improve usability and add new features. Feel free to get in touch with me at " Block.TextAlignment="Justify"/>
+                            <Run Text=" "/>
+                            <Run Foreground="Black" FontWeight="Bold" FontSize="14" FontFamily="Comic Sans MS" Text="support@winkleapp.com" TextDecorations="Underline"/>
+                            <Run Text=" "/>
+                            <Run FontSize="14" Text="for any questions, concerns or support."/>
+                        </Paragraph>
+                        <Paragraph TextIndent="25" TextAlignment="Justify">
+                            <Run FontSize="14" Text="If you enjoy using my app, please help support its continued development by donating or spreading the word about it."/>
+                        </Paragraph>
+                        <Paragraph>
+                            <Run FontWeight="Bold" FontSize="16" Text="Winkle is free to use, with no restrictions on its features." TextDecorations="Underline" Block.TextAlignment="Center" FontFamily="Comic Sans MS"/>
+                        </Paragraph>
+                        <Paragraph>
+                            <Run FontSize="14" Text="Copyright © 2017. All rights reserved." FontFamily="Candara"/>
+                            <LineBreak/>
+                            <Run FontSize="14" Text="A project by " FontFamily="Candara"/>
+                            <Hyperlink  RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://samokish.ca/">
+                                <Run Text="Ivan Samokish" Foreground="Black"/>
+                            </Hyperlink>
+                            <LineBreak/>
+                            <Run FontSize="14" Text="Published by " FontFamily="Candara"/>
+                            <Hyperlink  RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://smokyfish.com/">
+                                <Run Text="Smokyfish Studios" Foreground="Black"/>
+                            </Hyperlink>
+                            <LineBreak/>
+                            <Hyperlink  RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://winkleapp.com/terms-and-conditions/">
+                                <Run Text="Terms  &amp; Conditions" Foreground="Black"/>
+                            </Hyperlink>
+                            <Run Text=" | " Foreground="Black"/>
+                            <Hyperlink  RequestNavigate="Hyperlink_RequestNavigate" NavigateUri="https://winkleapp.com/privacy-policy//">
+                                <Run Text="Privacy Policy" Foreground="Black"/>
+                            </Hyperlink>
                         </Paragraph>
                     </FlowDocument>
                 </RichTextBox>

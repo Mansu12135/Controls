@@ -47,15 +47,16 @@
            
             <Label Content="ADD PROJECT"  MouseDown="ButAddProject_MouseDown" Cursor="Hand" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Semibold" Foreground="#FFA4A2A2" Padding="10,7,10,7" />
         </Border>-->
-        <ListBox x:Name="MainProjectList" ItemsSource="{Binding Notes, RelativeSource={RelativeSource FindAncestor,AncestorType=controls:BrowseProject}}"   Margin="0" Grid.Row="1" Padding="30,0" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="MainProjectList_SelectionChanged" Background="{x:Null}" Grid.ColumnSpan="3" >
+        <ListBox x:Name="MainProjectList" ItemsSource="{Binding Notes, RelativeSource={RelativeSource FindAncestor,AncestorType=controls:BrowseProject}}"   Margin="0" Grid.Row="1" Padding="30,0" BorderBrush="{x:Null}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Visible" Background="{x:Null}" Grid.ColumnSpan="3" >
             <ListBox.Resources>
                 <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">
-                                <Border Name="HighlightBorder"  BorderBrush="Transparent" BorderThickness="1" CornerRadius="5" Padding="0,0,0,6">
-                                    <StackPanel x:Name="stackPanel">
-                                        <Border HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0">
+                                <Border Name="HighlightBorder"  BorderBrush="Transparent"  Background="{x:Null}" BorderThickness="1" CornerRadius="5" Padding="0,0,0,6">
+                                  <StackPanel x:Name="stackPanel"  Background="{x:Null}">
+                                        <Border HorizontalAlignment="Stretch" VerticalAlignment="Top"  Background="{x:Null}" Margin="0">
+                                          
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="17*"/>
@@ -69,21 +70,13 @@
                                                 </Border>
                                             </Grid>
                                         </Border>
-                                        <!--<StackPanel  Orientation="Horizontal">
-                                            <Label PreviewMouseDoubleClick="ProjectName_MouseDoubleClick" Padding="0">
-                                                <TextBox  x:Name="TextProjName" FontWeight="Bold" FontSize="14" IsEnabled="False" BorderThickness="0" Cursor="Arrow" Text="{Binding Key, Mode=OneTime}"  Tag="{Binding Key}" Background="{x:Null}"/>
-                                            </Label>
-                                            <Border x:Name="Propert" Visibility="Hidden" Width="16" Height="16" HorizontalAlignment="Right" Cursor="Hand">
-                                                <Image Source="Resources/set.png" MouseUp="Propert_Click" Tag="{Binding Key}"></Image>
-                                            </Border>
-                                        </StackPanel>-->
-                                        <ListBox x:Name="FileListBox" ItemsSource="{Binding  Value.ListFiles}"  Margin="6,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" SelectionChanged ="FileListBox_SelectionChanged" >
+                                      <ListBox x:Name="FileListBox" ItemsSource="{Binding  Value.ListFiles}"  Margin="6,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" >
                                             <ListBox.Resources>
                                                 <Style x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem" >
                                                     <Setter Property="Template">
                                                         <Setter.Value>
                                                             <ControlTemplate TargetType="ListBoxItem">
-                                                                <Border Name="HighlightBorder2" Padding="0" BorderBrush="Transparent" BorderThickness="0">
+                                                                <Border Name="HighlightBorder2" Padding="0"  Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0">
                                                                     <Grid>
                                                                         <Grid.ColumnDefinitions>
                                                                             <ColumnDefinition Width="17*"/>
@@ -97,34 +90,15 @@
                                                                             <Image  Name="EditFileName" Source="Resources/edit.png" Tag="{Binding Path}"  Cursor="Hand" >
                                                                             </Image>
                                                                         </Border>
-                                                                        <!--Width="{Binding Path=ActualWidth, ElementName=stackPanel, Converter={converters:PercentageConverter}, ConverterParameter='20'}"-->
                                                                     </Grid>
                                                                 </Border>
                                                                 <ControlTemplate.Triggers>
                                                                     <Trigger Property="IsMouseOver" Value="True">
                                                                         <Setter TargetName="HighlightBorder2" Property="Background" Value="Transparent"/>
                                                                     </Trigger>
-                                                                    <!--<Trigger Property="IsSelected" Value="True">
-                                                                        <Setter TargetName="HighlightBorder2" Property="Background" Value="Transparent"/>
-                                                                        <Setter TargetName="Romb" Property="Width" Value="10"/>
-                                                                        <Setter TargetName="Romb" Property="Height" Value="12"/>
-
-                                                                    </Trigger>-->
                                                                     <Trigger Property="IsKeyboardFocused" Value="True">
                                                                         <Setter TargetName="HighlightBorder2" Property="Background" Value="Transparent"/>
-                                                                        <!--<Setter TargetName="Romb" Property="Width" Value="10"/>
-                                                                        <Setter TargetName="Romb" Property="Height" Value="12"/>-->
-
                                                                     </Trigger>
-                                                                    <!--<Trigger Property="IsSelected" Value="False">
-                                                                        <Setter TargetName="HighlightBorder2" Property="Background" Value="Transparent"/>
-                                                                        <Setter TargetName="Romb" Property="Width" Value="0"/>
-                                                                        <Setter TargetName="Romb" Property="Height" Value="0"/>
-
-                                                                    </Trigger>-->
-                                                                    <!--<Trigger Property="TextBox.IsEnabled" Value="False">
-                                                                        <Setter TargetName="TextNameFile" Property="Foreground" Value="Red" />
-                                                                    </Trigger>-->
                                                                 </ControlTemplate.Triggers>
                                                             </ControlTemplate>
                                                         </Setter.Value>
@@ -138,6 +112,9 @@
                                     </StackPanel>
                                 </Border>
                                 <ControlTemplate.Triggers>
+                                    <Trigger Property="Control.IsEnabled" Value="False">
+                                        <Setter  Property="Control.Background" Value="Yellow"/>
+                                    </Trigger>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter TargetName="HighlightBorder" Property="Background" Value="Transparent"/>
                                         <Setter TargetName="Propert" Property="Visibility" Value="Visible"/>
@@ -157,6 +134,7 @@
                         </Setter.Value>
                     </Setter>
                     <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                   
                 </Style>
             </ListBox.Resources>
         </ListBox>

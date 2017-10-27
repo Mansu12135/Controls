@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using ApplicationLayer;
 using System.Windows.Media.Animation;
 using System;
+using System.Windows.Documents;
+using System.Collections.Generic;
 
 namespace UILayer
 {
@@ -17,21 +19,22 @@ namespace UILayer
             ParentControl = Parent;
         }
         private SuperTextRedactor ParentControl;
-        public string defenition = "";
-        public string synonimus = "";
+        public List<Inline> defenition;
+        public List<Inline> synonimus;
         private void ModeDictionary_Checked(object sender, RoutedEventArgs e)
         {
             var but = sender as RadioButton;
             if (but == null) return;
+            DictionaryResult.Inlines.Clear();
             if (but.Name == "ModeDictionary")
             {
-                DictionaryResult.Text = defenition;
+                DictionaryResult.Inlines.AddRange(defenition);
             }
             else if (but.Name == "ModeThesaurus")
             {
-                DictionaryResult.Text = synonimus;
+                DictionaryResult.Inlines.AddRange(synonimus);
+
             }
-            // but.t
         }
 
         public void Show()

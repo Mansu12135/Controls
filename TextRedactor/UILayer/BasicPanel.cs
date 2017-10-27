@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using ApplicationLayer;
 using Gma.UserActivityMonitor;
 using Binding = System.Windows.Data.Binding;
@@ -22,6 +23,7 @@ namespace UILayer
         protected bool IsValid { get; set; }
         private char[] WrongSymbols = System.IO.Path.GetInvalidFileNameChars();
         protected TextBox CloneTextBox { get; private set; }
+        protected Border DisableBorder { get; private set; }
         protected Rectangle CloneTextBoxLocation { get; private set; }
 
         protected Dictionary<string, T> ItemsCollection = new Dictionary<string, T>();
@@ -48,6 +50,7 @@ namespace UILayer
         {
             DettachDynamicEvents();
             CloneTextBox = null;
+            DisableBorder = null;
         }
         protected string BindingPath { get; set; }
 
@@ -104,6 +107,7 @@ namespace UILayer
             Grid.SetColumnSpan(CloneTextBox,3);
             CloneTextBox.Height = originalControl.ActualHeight;
             CloneTextBox.Width = originalControl.ActualWidth;
+            Grid.SetZIndex(CloneTextBox,3);
             InitializeBinding();
             CloneTextBox.Text = originalControl.Text;
             CloneTextBox.FontSize = originalControl.FontSize;
@@ -114,7 +118,19 @@ namespace UILayer
             CloneTextBox.Tag = originalControl.Tag;
             AttachDynamicEvents();
         }
+        private void InitializeDynamicControls(ListBox originalControl)
+        {
+            DisableBorder = new Border();
+            Grid.SetRow(DisableBorder, 1);
+            // Grid.SetZIndex(CloneTextBox, 1);
+            Grid.SetColumnSpan(DisableBorder, 3);
+            DisableBorder.Height = originalControl.ActualHeight;
+            DisableBorder.Width = originalControl.ActualWidth;
+            Grid.SetZIndex(DisableBorder, 2);
+            DisableBorder.IsEnabled = false;
+            DisableBorder.Background = new SolidColorBrush(Colors.Transparent);
 
+        }
         private void InitializeBinding()
         {
             Binding binding = new Binding();
@@ -198,10 +214,11 @@ namespace UILayer
             HookManager.MouseDown -= CloneTextBox_LostFocus;
             CloneTextBox.KeyDown -= CloneTextBox_KeyDown;
         }
-        protected void BeginChangingDynamicItem(TextBox originalControl)
+        protected void BeginChangingDynamicItem(TextBox originalControl, ListBox disableBorder)
         {
             CloneTextBoxLocation = GetCloneControlLocation(originalControl);
             InitializeDynamicControls(originalControl);
+            InitializeDynamicControls(disableBorder);
             AddDynamicControls();
             HookManager.MouseDown -= CloneTextBox_LostFocus;
             HookManager.MouseDown += CloneTextBox_LostFocus;

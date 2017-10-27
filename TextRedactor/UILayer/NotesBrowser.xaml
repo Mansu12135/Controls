@@ -42,25 +42,33 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">
-                                <Border Name="HighlightBorder2"  
-                            Padding="0,0,0,8"
-                            BorderBrush="Transparent"
-                            BorderThickness="1"
-                            >
+                                <Border Name="HighlightBorder2"  Padding="0,0,0,8" BorderBrush="Transparent">
                                     <StackPanel x:Name="stackPanel">
-                                        <DockPanel Cursor="Hand" >
+                                        <Border HorizontalAlignment="Stretch" VerticalAlignment="Top"  Background="{x:Null}" Margin="0">
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"></RowDefinition>
+                                                    <RowDefinition Height="Auto"></RowDefinition>
+                                                </Grid.RowDefinitions>
                                             <TextBox Text="{Binding Value.Name}" BorderThickness="0" Tag="{Binding Key}" Name="TextName" HorizontalAlignment="Stretch" FontSize="14" IsEnabled="False" Background="{x:Null}"/>
-                                            <Border BorderThickness="0" Name="Edit" Tag="{Binding Key}" Width="15"  Height="15"  MouseDown="EditNoteName_MouseDown"  HorizontalAlignment="Right" Margin="3,0,0,0">
+                                            <Border BorderThickness="0" Name="Edit" Tag="{Binding Key}" Width="15"  Height="15"  MouseDown="EditNoteName_MouseDown"  HorizontalAlignment="Right" Margin="3,0,0,0" Grid.Column="1">
                                                 <Image  Name="EditNoteName" Source="Resources/edit.png" Cursor="Hand" >
                                                 </Image>
                                             </Border>
-                                            <Border Width="15" BorderThickness="0" HorizontalAlignment="Right" Padding="0" Height="15"  Margin="3,0,0,0">
-                                                <Image Tag="{Binding Value.Name}" x:Name="DelNote" Source="Resources/closeNote.png" MouseUp="DelNote_MouseUp">
+                                            <Border Width="15" BorderThickness="0" HorizontalAlignment="Right" Padding="0" Height="15"  Margin="3,0,0,0" Grid.Column="2">
+                                                    <Image Tag="{Binding Value.Name}" x:Name="DelNote" Cursor="Hand" Source="Resources/closeNote.png" MouseUp="DelNote_MouseUp">
                                                 </Image>
                                             </Border>
-                                        </DockPanel>
-                                        <TextBox Text="{Binding Value.Text, Mode=TwoWay}" BorderThickness="0,0,0,0" Margin="0,6,0,0"  Name="TextValue" BorderBrush="{x:Null}"  Width="{Binding ActualWidth, ElementName=stackPanel}"  TextWrapping="Wrap" HorizontalAlignment="Stretch" PreviewMouseDown="TextValue_PreviewMouseDown" Background="{x:Null}"  />
-                                    </StackPanel>
+                                        <TextBox Text="{Binding Value.Text, Mode=TwoWay}" MaxWidth="{Binding ElementName=HighlightBorder2, Path=ActualWidth}"  Margin="0,6,0,0"  Name="TextValue" TextWrapping="Wrap" HorizontalAlignment="Stretch" PreviewMouseDown="TextValue_PreviewMouseDown" Background="{x:Null}" Grid.Row="1" Grid.ColumnSpan="3" BorderBrush="{x:Null}" BorderThickness="0"  />
+                                    </Grid>
+                                            </Border>
+                                            </StackPanel>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">

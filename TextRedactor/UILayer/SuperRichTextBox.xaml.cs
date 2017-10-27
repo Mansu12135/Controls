@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using EpubConvertor;
 
 namespace UILayer
 {
@@ -12,6 +15,9 @@ namespace UILayer
         public SuperRichTextBox()
         {
             InitializeComponent();
+            DataContext = MainControl.wordStatistic;
+            MainControl.UpdateWordCount();
+            MainControl.UpdateLayout();
             // AttachEventHandler();
         }
 

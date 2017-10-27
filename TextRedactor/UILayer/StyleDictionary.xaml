@@ -92,7 +92,7 @@
 
     <Style TargetType="{x:Type ScrollBar}">
         <Setter Property="Template" Value="{StaticResource VerticalScrollBar}"/>
-    </Style>
+   </Style>
 
     <!-- Button -->
     <SolidColorBrush x:Key="GreenBorderColor" Color="#FF8FDC6D"/>

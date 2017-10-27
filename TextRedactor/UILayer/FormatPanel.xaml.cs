@@ -15,7 +15,6 @@ namespace UILayer
             InitializeComponent();
             List list = new List();
             list.MarkerStyle = TextMarkerStyle.Square;
-            var listItem = new ListItem();
             NumerCombo.Items.Add(new TextBlock() {Text = "1. 2. 3.", Tag = "Decimal" , Margin = new Thickness(3)});
             NumerCombo.Items.Add(new TextBlock() { Text = "a. b. c.", Tag = "LowerLatin", Margin = new Thickness(3) });
             NumerCombo.Items.Add(new TextBlock() { Text = "i. ii. iii.", Tag = "LowerRoman", Margin = new Thickness(3) });

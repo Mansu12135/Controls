@@ -5,9 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="clr-namespace:UILayer"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              x:Class="UILayer.FormatPanel" 
              mc:Ignorable="d" d:DesignWidth="800" Height="50" Width="Auto">
     <UserControl.Resources>
+        <CollectionViewSource x:Key="SortedFontsCollection" Source="{Binding Source={x:Static Fonts.SystemFontFamilies}}" >
+            <CollectionViewSource.SortDescriptions>
+                <componentModel:SortDescription PropertyName="Source" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
         <Style x:Key="ComboBoxStyle" TargetType="{x:Type ComboBox}">
             <!--<Setter Property="FocusVisualStyle" Value="{StaticResource ComboBoxFocusVisual}"/>-->
             <Setter Property="Foreground" Value="#FF436B13"/>
@@ -154,7 +161,7 @@
     </UserControl.Resources>
     <Grid>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="17,14,0,14">
-            <controls:XComboBox x:Name="FontFamily"  Command="{x:Static controls:MyCommands.SetFontFamily}" Background="#FFFDFDFD" BorderThickness="0.5" BorderBrush="#FFC5C5C5" HorizontalAlignment="Left"  Width="119"  ItemsSource="{x:Static Fonts.SystemFontFamilies}" SelectedIndex="0" >
+            <controls:XComboBox x:Name="FontFamily"  Command="{x:Static controls:MyCommands.SetFontFamily}" Background="#FFFDFDFD" BorderThickness="0.5" BorderBrush="#FFC5C5C5" HorizontalAlignment="Left"  Width="119"  ItemsSource="{Binding Source={StaticResource SortedFontsCollection}}" SelectedIndex="0" >
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontFamily="{Binding}"/>

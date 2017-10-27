@@ -14,16 +14,16 @@ namespace UILayer
         public InformationForm()
         {
             InitializeComponent();
-            TextRange tr = new TextRange(Info.Document.ContentStart, Info.Document.ContentEnd);
-            using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(HtmlToXamlConverter.ConvertHtmlToXaml(TextRedactor.ResourceManager.GetString("Information"), false))))
-            {
-                tr.Load(ms, DataFormats.Xaml);
             }
-        }
 
         private void OK_OnClick(object sender, RoutedEventArgs e)
         {
             Close();
         }
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
+        }
+
     }
 }
